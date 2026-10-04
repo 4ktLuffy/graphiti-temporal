@@ -1,0 +1,27 @@
+{
+ "signature": [
+  "rule",
+  "falkordb"
+ ],
+ "from_seed": 2000,
+ "ops_before": 5,
+ "ops": [
+  {
+   "via": "triplet",
+   "subject": "Alice",
+   "slot": "employer",
+   "value": "Hooli",
+   "year": 1997,
+   "reworded": true
+  }
+ ],
+ "backends": [
+  "falkordb"
+ ],
+ "concurrency": false,
+ "finding": {
+  "oracle": "rule",
+  "backend": "falkordb",
+  "detail": "search as of Alice started before 1997 or after 1998: got ['Alice is employed by Hooli'], stored state says []"
+ }
+}

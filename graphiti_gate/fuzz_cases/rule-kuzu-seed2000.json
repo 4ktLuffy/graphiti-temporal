@@ -1,0 +1,27 @@
+{
+ "signature": [
+  "rule",
+  "kuzu"
+ ],
+ "from_seed": 2000,
+ "ops_before": 5,
+ "ops": [
+  {
+   "via": "triplet",
+   "subject": "Alice",
+   "slot": "employer",
+   "value": "Hooli",
+   "year": 1997,
+   "reworded": true
+  }
+ ],
+ "backends": [
+  "kuzu"
+ ],
+ "concurrency": false,
+ "finding": {
+  "oracle": "rule",
+  "backend": "kuzu",
+  "detail": "search as of Alice started before 1997 or after 1998: got ['Alice is employed by Hooli'], stored state says []"
+ }
+}
