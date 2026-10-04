@@ -1,0 +1,12 @@
+id: bulk/same-fact-two-episodes
+title: The same fact in two episodes of one bulk batch becomes one edge citing both
+source: https://github.com/getzep/graphiti/issues/1872 (reporter-stated outcome; PR #1873)
+family: bulk
+via: bulk_dedupe
+judge: oracle
+incoming: []
+bulk:
+  - [{src: Alice, rel: WORKS_AT, dst: Acme, fact: Alice works at Acme, valid: 2024-01-01}]
+  - [{src: Alice, rel: WORKS_AT, dst: Acme, fact: Alice works at Acme, valid: 2024-01-01}]
+expect_bulk:
+  Alice works at Acme: {one_edge: true, episodes: 2}

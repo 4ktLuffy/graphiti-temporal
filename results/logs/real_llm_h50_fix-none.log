@@ -1,0 +1,13 @@
+{"n_history": 50, "seed": 1001, "live_retired": false, "open_after": ["Alice moved to Berlin.", "Alice lives in Colombo"], "error": null, "llm_calls": 4, "tokens": 14030}
+{"n_history": 50, "seed": 1000, "live_retired": false, "open_after": ["Alice moved to Berlin.", "Alice lives in Warsaw"], "error": null, "llm_calls": 4, "tokens": 14064}
+{"n_history": 50, "seed": 1002, "live_retired": false, "open_after": ["Alice moved to Berlin.", "Alice lives in Montreal"], "error": null, "llm_calls": 3, "tokens": 1929}
+{"n_history": 50, "seed": 1003, "live_retired": false, "open_after": ["Alice moved to Berlin.", "Alice lives in Taipei"], "error": null, "llm_calls": 4, "tokens": 5157}
+{"n_history": 50, "seed": 1004, "live_retired": false, "open_after": ["Alice moved to Berlin.", "Alice lives in Apia"], "error": null, "llm_calls": 4, "tokens": 17115}
+{"n_history": 50, "seed": 1005, "live_retired": false, "open_after": ["Alice moved to Berlin.", "Alice lives in Kabul"], "error": null, "llm_calls": 4, "tokens": 16098}
+{"n_history": 50, "seed": 1006, "live_retired": false, "open_after": ["Alice moved to Berlin.", "Alice lives in Auckland"], "error": null, "llm_calls": 4, "tokens": 22983}
+{"n_history": 50, "seed": 1007, "live_retired": false, "open_after": ["Alice moved to Berlin.", "Alice lives in Anchorage"], "error": null, "llm_calls": 4, "tokens": 2931}
+{"n_history": 50, "seed": 1008, "live_retired": false, "open_after": ["Alice moved to Berlin.", "Alice lives in Perth"], "error": null, "llm_calls": 4, "tokens": 3004}
+{"n_history": 50, "seed": 1009, "live_retired": false, "open_after": ["Alice moved to Berlin.", "Alice lives in Perth"], "error": null, "llm_calls": 4, "tokens": 1948}
+{"n_history": 50, "seed": 1010, "live_retired": false, "open_after": ["Alice moved to Berlin.", "Alice lives in Antwerp"], "error": null, "llm_calls": 4, "tokens": 3101}
+{"n_history": 50, "seed": 1011, "live_retired": false, "open_after": ["Alice moved to Berlin.", "Alice lives in Seville"], "error": null, "llm_calls": 4, "tokens": 3130}
+codex:gpt-5.6-luna@low fix=none history=50: current home retired 0/12 [0.00, 0.24], errors 0, tokens 105490, 493s

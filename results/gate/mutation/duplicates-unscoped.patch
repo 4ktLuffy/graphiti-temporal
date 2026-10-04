@@ -1,0 +1,11 @@
+--- a/graphiti_core/utils/maintenance/edge_operations.py
++++ b/graphiti_core/utils/maintenance/edge_operations.py
+@@ -396,7 +396,7 @@
+                 extracted_edge.fact,
+                 group_ids=[extracted_edge.group_id],
+                 config=EDGE_HYBRID_SEARCH_RRF,
+-                search_filter=SearchFilters(edge_uuids=[edge.uuid for edge in valid_edges]),
++                search_filter=SearchFilters(),
+             )
+             for extracted_edge, valid_edges in zip(extracted_edges, valid_edges_list, strict=True)
+         ]

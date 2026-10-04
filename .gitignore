@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.env
+.gate/
+results/gate/mutation/junit-*.xml
+.ruff_cache/
+drafts/

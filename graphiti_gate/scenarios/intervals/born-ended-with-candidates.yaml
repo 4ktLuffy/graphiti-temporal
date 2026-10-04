@@ -1,0 +1,14 @@
+id: intervals/born-ended-with-candidates
+title: A fact that arrives already ended is marked expired when other facts exist
+source: Graphiti edge_operations.py resolve_extracted_edge ("if resolved_edge.invalid_at and not resolved_edge.expired_at")
+family: re-assertion
+judge: oracle
+facts:
+  - {id: home, src: Alex, rel: LIVES_IN, dst: Boston, fact: Alex lives in Boston, valid: 2018-01-01,
+     claim: [Alex, home, Boston]}
+incoming:
+  - {id: stint, src: Alex, rel: WORKED_AT, dst: Initech, fact: Alex worked at Initech in 2019,
+     valid: 2019-01-01, invalid: 2020-01-01, claim: [Alex, employer, Initech]}
+expect:
+  stint: {invalid_at: 2020-01-01, expired: true}
+  home: {open: true}

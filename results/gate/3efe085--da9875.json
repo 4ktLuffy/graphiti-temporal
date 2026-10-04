@@ -1,0 +1,237 @@
+{
+ "revision": "3efe085",
+ "label": "3efe085, base 3efe085",
+ "scenarios": {
+  "invalidation/depth-20": {
+   "id": "invalidation/depth-20",
+   "family": "history-depth",
+   "status": "expected",
+   "judge": "oracle",
+   "title": "The current home is retired after 20 past homes",
+   "source": "graphiti-temporal FINDINGS.md F1 (unreported)",
+   "verdict": "fail",
+   "passes": 0,
+   "repeats": 3,
+   "first": {
+    "passed": false,
+    "failures": [
+     "live: expected invalid_at 2024-06-01, got open",
+     "live: expected expired=True, got open",
+     "Alice/home: expected open ['new'], got ['live', 'new']"
+    ],
+    "state": {
+     "live": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "1990-01-01T00:00:00+00:00",
+      "invalid_at": null,
+      "expired": false,
+      "episodes": 1,
+      "fact": "Alice has made her home in Tokyo since 1990"
+     },
+     "new": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2024-06-01T00:00:00+00:00",
+      "invalid_at": null,
+      "expired": false,
+      "episodes": 1,
+      "fact": "Alice lives in Berlin"
+     }
+    },
+    "judge_calls": [
+     {
+      "new_fact": "Alice lives in Berlin",
+      "shown": [
+       "Alice lives in Oslo",
+       "Alice lives in Paris",
+       "Alice lives in Rome",
+       "Alice lives in Lima",
+       "Alice lives in Cairo",
+       "Alice lives in Athens",
+       "Alice lives in Delhi",
+       "Alice lives in Seoul",
+       "Alice lives in Quito",
+       "Alice lives in Dublin"
+      ],
+      "duplicates": [],
+      "contradicted": [
+       "Alice lives in Oslo",
+       "Alice lives in Paris",
+       "Alice lives in Rome",
+       "Alice lives in Lima",
+       "Alice lives in Cairo",
+       "Alice lives in Athens",
+       "Alice lives in Delhi",
+       "Alice lives in Seoul",
+       "Alice lives in Quito",
+       "Alice lives in Dublin"
+      ]
+     }
+    ]
+   },
+   "live": false,
+   "runs": null
+  },
+  "invalidation/depth-5-control": {
+   "id": "invalidation/depth-5-control",
+   "family": "history-depth",
+   "status": "expected",
+   "judge": "oracle",
+   "title": "Control - with 5 past homes the current home is retired",
+   "source": "graphiti-temporal FINDINGS.md F1 (control below the 10-result limit)",
+   "verdict": "pass",
+   "passes": 3,
+   "repeats": 3,
+   "first": {
+    "passed": true,
+    "failures": [],
+    "state": {
+     "live": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "1990-01-01T00:00:00+00:00",
+      "invalid_at": "2024-06-01T00:00:00+00:00",
+      "expired": true,
+      "episodes": 1,
+      "fact": "Alice has made her home in Tokyo since 1990"
+     },
+     "new": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2024-06-01T00:00:00+00:00",
+      "invalid_at": null,
+      "expired": false,
+      "episodes": 1,
+      "fact": "Alice lives in Berlin"
+     }
+    },
+    "judge_calls": [
+     {
+      "new_fact": "Alice lives in Berlin",
+      "shown": [
+       "Alice lives in Paris",
+       "Alice lives in Oslo",
+       "Alice lives in Rome",
+       "Alice lives in Lima",
+       "Alice lives in Cairo",
+       "Alice has made her home in Tokyo since 1990"
+      ],
+      "duplicates": [],
+      "contradicted": [
+       "Alice lives in Paris",
+       "Alice lives in Oslo",
+       "Alice lives in Rome",
+       "Alice lives in Lima",
+       "Alice lives in Cairo",
+       "Alice has made her home in Tokyo since 1990"
+      ]
+     }
+    ]
+   },
+   "live": false,
+   "runs": null
+  },
+  "intervals/move-control": {
+   "id": "intervals/move-control",
+   "family": "end-only",
+   "status": "expected",
+   "judge": "oracle",
+   "title": "Control - a plain move retires the previous home",
+   "source": "https://github.com/getzep/graphiti/issues/1841 (scenario 1, works today)",
+   "verdict": "pass",
+   "passes": 3,
+   "repeats": 3,
+   "first": {
+    "passed": true,
+    "failures": [],
+    "state": {
+     "whitefield": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2026-01-01T00:00:00+00:00",
+      "invalid_at": "2026-03-01T00:00:00+00:00",
+      "expired": true,
+      "episodes": 1,
+      "fact": "Kiran lives in Whitefield"
+     },
+     "ecity": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2026-03-01T00:00:00+00:00",
+      "invalid_at": null,
+      "expired": false,
+      "episodes": 1,
+      "fact": "Kiran lives in Electronic City"
+     }
+    },
+    "judge_calls": [
+     {
+      "new_fact": "Kiran lives in Electronic City",
+      "shown": [
+       "Kiran lives in Whitefield"
+      ],
+      "duplicates": [],
+      "contradicted": [
+       "Kiran lives in Whitefield"
+      ]
+     }
+    ]
+   },
+   "live": false,
+   "runs": null
+  },
+  "invalidation/unrelated-over-eager": {
+   "id": "invalidation/unrelated-over-eager",
+   "family": "over-invalidation",
+   "status": "expected",
+   "judge": "over_eager",
+   "title": "An unrelated fact does not retire a job when the judge over-flags",
+   "source": "https://github.com/getzep/graphiti/issues/1728 (reporter-stated outcome)",
+   "verdict": "fail",
+   "passes": 0,
+   "repeats": 3,
+   "first": {
+    "passed": false,
+    "failures": [
+     "job: expected open, got 2024-03-01, expired"
+    ],
+    "state": {
+     "job": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2022-01-01T00:00:00+00:00",
+      "invalid_at": "2024-03-01T00:00:00+00:00",
+      "expired": true,
+      "episodes": 1,
+      "fact": "Alice works at Acme as a security engineer"
+     },
+     "org": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2024-03-01T00:00:00+00:00",
+      "invalid_at": null,
+      "expired": false,
+      "episodes": 1,
+      "fact": "Alice administers the Acme GitHub organization"
+     }
+    },
+    "judge_calls": [
+     {
+      "new_fact": "Alice administers the Acme GitHub organization",
+      "shown": [
+       "Alice works at Acme as a security engineer"
+      ],
+      "duplicates": [],
+      "contradicted": [
+       "Alice works at Acme as a security engineer"
+      ]
+     }
+    ]
+   },
+   "live": false,
+   "runs": null
+  }
+ },
+ "scenario_set": "results/gate/history-scenarios"
+}

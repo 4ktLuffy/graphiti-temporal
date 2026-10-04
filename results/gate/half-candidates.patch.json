@@ -1,0 +1,828 @@
+{
+ "revision": "patch:./results/gate/mutation/half-candidates.patch",
+ "label": "patch:./results/gate/mutation/half-candidates.patch, base 5d47d4d, patch 7861fae",
+ "trials": [
+  {
+   "trial": 0,
+   "homes": 18,
+   "single_current": true,
+   "chronology": false,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1,
+   "mismatches": [
+    {
+     "fact": "Alice lives in Caracas",
+     "start": "1910-01-01",
+     "want_end": "1918-01-01",
+     "got_end": "1920-01-01",
+     "arrived": 0
+    },
+    {
+     "fact": "Alice rents a flat in Nairobi",
+     "start": "1924-01-01",
+     "want_end": "1926-01-01",
+     "got_end": "1951-01-01",
+     "arrived": 17
+    },
+    {
+     "fact": "Alice lives in Havana",
+     "start": "1926-01-01",
+     "want_end": "1937-01-01",
+     "got_end": "1953-01-01",
+     "arrived": 5
+    },
+    {
+     "fact": "Alice rents a flat in Kunming",
+     "start": "1951-01-01",
+     "want_end": "1953-01-01",
+     "got_end": "1974-01-01",
+     "arrived": 2
+    },
+    {
+     "fact": "Alice lives in Varna",
+     "start": "1953-01-01",
+     "want_end": "1974-01-01",
+     "got_end": "2004-01-01",
+     "arrived": 12
+    },
+    {
+     "fact": "Alice moved to Yakutsk",
+     "start": "2006-01-01",
+     "want_end": "2016-01-01",
+     "got_end": "2017-01-01",
+     "arrived": 15
+    }
+   ],
+   "order": [
+    2,
+    10,
+    8,
+    1,
+    0,
+    6,
+    17,
+    15,
+    13,
+    16,
+    12,
+    4,
+    9,
+    11,
+    3,
+    14,
+    7,
+    5
+   ]
+  },
+  {
+   "trial": 1,
+   "homes": 14,
+   "single_current": true,
+   "chronology": false,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1,
+   "mismatches": [
+    {
+     "fact": "Alice is now based in Honolulu",
+     "start": "1909-01-01",
+     "want_end": "1913-01-01",
+     "got_end": "1922-01-01",
+     "arrived": 10
+    },
+    {
+     "fact": "Alice moved to Tirana",
+     "start": "1913-01-01",
+     "want_end": "1922-01-01",
+     "got_end": "1925-01-01",
+     "arrived": 9
+    },
+    {
+     "fact": "Alice is now based in Utrecht",
+     "start": "1922-01-01",
+     "want_end": "1925-01-01",
+     "got_end": "1938-01-01",
+     "arrived": 13
+    },
+    {
+     "fact": "Alice lives in Vienna",
+     "start": "1938-01-01",
+     "want_end": "1939-01-01",
+     "got_end": "1994-01-01",
+     "arrived": 12
+    },
+    {
+     "fact": "Alice moved to Urumqi",
+     "start": "1948-01-01",
+     "want_end": "1960-01-01",
+     "got_end": "1983-01-01",
+     "arrived": 6
+    },
+    {
+     "fact": "Alice has made a home in Apia",
+     "start": "1961-01-01",
+     "want_end": "1983-01-01",
+     "got_end": "1994-01-01",
+     "arrived": 2
+    }
+   ],
+   "order": [
+    10,
+    11,
+    8,
+    12,
+    3,
+    5,
+    6,
+    13,
+    9,
+    1,
+    0,
+    7,
+    4,
+    2
+   ]
+  },
+  {
+   "trial": 2,
+   "homes": 11,
+   "single_current": false,
+   "chronology": false,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 2,
+   "mismatches": [
+    {
+     "fact": "Alice lives in Utrecht",
+     "start": "1919-01-01",
+     "want_end": "1927-01-01",
+     "got_end": "1931-01-01",
+     "arrived": 9
+    },
+    {
+     "fact": "Alice has made a home in Sofia",
+     "start": "1930-01-01",
+     "want_end": "1931-01-01",
+     "got_end": "1952-01-01",
+     "arrived": 6
+    },
+    {
+     "fact": "Alice moved to Tirana",
+     "start": "1931-01-01",
+     "want_end": "1952-01-01",
+     "got_end": "1954-01-01",
+     "arrived": 10
+    },
+    {
+     "fact": "Alice has made a home in Gdansk",
+     "start": "1955-01-01",
+     "want_end": "1975-01-01",
+     "got_end": "1996-01-01",
+     "arrived": 0
+    },
+    {
+     "fact": "Alice lives in Lima",
+     "start": "1975-01-01",
+     "want_end": "1996-01-01",
+     "got_end": null,
+     "arrived": 4
+    }
+   ],
+   "order": [
+    7,
+    9,
+    6,
+    10,
+    8,
+    5,
+    3,
+    2,
+    0,
+    1,
+    4
+   ]
+  },
+  {
+   "trial": 3,
+   "homes": 2,
+   "single_current": true,
+   "chronology": true,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1,
+   "mismatches": [],
+   "order": [
+    0,
+    1
+   ]
+  },
+  {
+   "trial": 4,
+   "homes": 7,
+   "single_current": false,
+   "chronology": false,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 2,
+   "mismatches": [
+    {
+     "fact": "Alice is now based in Nairobi",
+     "start": "1910-01-01",
+     "want_end": "1917-01-01",
+     "got_end": "1928-01-01",
+     "arrived": 3
+    },
+    {
+     "fact": "Alice has made a home in Lhasa",
+     "start": "1928-01-01",
+     "want_end": "1942-01-01",
+     "got_end": "1948-01-01",
+     "arrived": 2
+    },
+    {
+     "fact": "Alice lives in Beirut",
+     "start": "1942-01-01",
+     "want_end": "1948-01-01",
+     "got_end": "1971-01-01",
+     "arrived": 5
+    },
+    {
+     "fact": "Alice moved to Cologne",
+     "start": "1948-01-01",
+     "want_end": "1971-01-01",
+     "got_end": null,
+     "arrived": 0
+    }
+   ],
+   "order": [
+    4,
+    1,
+    2,
+    0,
+    5,
+    3,
+    6
+   ]
+  },
+  {
+   "trial": 5,
+   "homes": 3,
+   "single_current": true,
+   "chronology": true,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1,
+   "mismatches": [],
+   "order": [
+    0,
+    2,
+    1
+   ]
+  },
+  {
+   "trial": 6,
+   "homes": 4,
+   "single_current": true,
+   "chronology": true,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1,
+   "mismatches": [],
+   "order": [
+    2,
+    0,
+    1,
+    3
+   ]
+  },
+  {
+   "trial": 7,
+   "homes": 18,
+   "single_current": false,
+   "chronology": false,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 3,
+   "mismatches": [
+    {
+     "fact": "Alice is now based in Amman",
+     "start": "1904-01-01",
+     "want_end": "1907-01-01",
+     "got_end": "1921-01-01",
+     "arrived": 8
+    },
+    {
+     "fact": "Alice rents a flat in Reykjavik",
+     "start": "1921-01-01",
+     "want_end": "1924-01-01",
+     "got_end": "1933-01-01",
+     "arrived": 0
+    },
+    {
+     "fact": "Alice moved to Hobart",
+     "start": "1947-01-01",
+     "want_end": "1962-01-01",
+     "got_end": "1981-01-01",
+     "arrived": 17
+    },
+    {
+     "fact": "Alice rents a flat in Seville",
+     "start": "1962-01-01",
+     "want_end": "1970-01-01",
+     "got_end": "1977-01-01",
+     "arrived": 4
+    },
+    {
+     "fact": "Alice is now based in Tunis",
+     "start": "1970-01-01",
+     "want_end": "1977-01-01",
+     "got_end": "1981-01-01",
+     "arrived": 16
+    },
+    {
+     "fact": "Alice has made a home in Geneva",
+     "start": "1984-01-01",
+     "want_end": "1996-01-01",
+     "got_end": "2000-01-01",
+     "arrived": 9
+    }
+   ],
+   "order": [
+    2,
+    13,
+    16,
+    11,
+    6,
+    9,
+    3,
+    8,
+    0,
+    10,
+    12,
+    1,
+    4,
+    14,
+    17,
+    15,
+    7,
+    5
+   ]
+  },
+  {
+   "trial": 8,
+   "homes": 10,
+   "single_current": true,
+   "chronology": false,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1,
+   "mismatches": [
+    {
+     "fact": "Alice rents a flat in Skopje",
+     "start": "1958-01-01",
+     "want_end": "1962-01-01",
+     "got_end": "1964-01-01",
+     "arrived": 6
+    },
+    {
+     "fact": "Alice is now based in Chisinau",
+     "start": "1968-01-01",
+     "want_end": "1974-01-01",
+     "got_end": "1983-01-01",
+     "arrived": 7
+    }
+   ],
+   "order": [
+    3,
+    8,
+    6,
+    0,
+    2,
+    1,
+    4,
+    7,
+    9,
+    5
+   ]
+  },
+  {
+   "trial": 9,
+   "homes": 4,
+   "single_current": true,
+   "chronology": true,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1,
+   "mismatches": [],
+   "order": [
+    1,
+    3,
+    2,
+    0
+   ]
+  },
+  {
+   "trial": 10,
+   "homes": 4,
+   "single_current": true,
+   "chronology": true,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1,
+   "mismatches": [],
+   "order": [
+    2,
+    0,
+    3,
+    1
+   ]
+  },
+  {
+   "trial": 11,
+   "homes": 7,
+   "single_current": true,
+   "chronology": true,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1,
+   "mismatches": [],
+   "order": [
+    3,
+    4,
+    6,
+    5,
+    2,
+    0,
+    1
+   ]
+  },
+  {
+   "trial": 12,
+   "homes": 8,
+   "single_current": true,
+   "chronology": false,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1,
+   "mismatches": [
+    {
+     "fact": "Alice lives in Varna",
+     "start": "1901-01-01",
+     "want_end": "1971-01-01",
+     "got_end": "1989-01-01",
+     "arrived": 5
+    },
+    {
+     "fact": "Alice moved to Samara",
+     "start": "1991-01-01",
+     "want_end": "2004-01-01",
+     "got_end": "2008-01-01",
+     "arrived": 6
+    },
+    {
+     "fact": "Alice has made a home in Turin",
+     "start": "2004-01-01",
+     "want_end": "2008-01-01",
+     "got_end": "2022-01-01",
+     "arrived": 1
+    }
+   ],
+   "order": [
+    3,
+    5,
+    0,
+    6,
+    2,
+    1,
+    4,
+    7
+   ]
+  },
+  {
+   "trial": 13,
+   "homes": 6,
+   "single_current": true,
+   "chronology": true,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1,
+   "mismatches": [],
+   "order": [
+    3,
+    1,
+    0,
+    2,
+    5,
+    4
+   ]
+  },
+  {
+   "trial": 14,
+   "homes": 21,
+   "single_current": false,
+   "chronology": false,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 4,
+   "mismatches": [
+    {
+     "fact": "Alice has made a home in Dakar",
+     "start": "1916-01-01",
+     "want_end": "1922-01-01",
+     "got_end": "1939-01-01",
+     "arrived": 16
+    },
+    {
+     "fact": "Alice lives in Geneva",
+     "start": "1933-01-01",
+     "want_end": "1939-01-01",
+     "got_end": "1941-01-01",
+     "arrived": 2
+    },
+    {
+     "fact": "Alice rents a flat in Dhaka",
+     "start": "1939-01-01",
+     "want_end": "1941-01-01",
+     "got_end": "1986-01-01",
+     "arrived": 15
+    },
+    {
+     "fact": "Alice is now based in Caracas",
+     "start": "1949-01-01",
+     "want_end": "1958-01-01",
+     "got_end": "1961-01-01",
+     "arrived": 19
+    },
+    {
+     "fact": "Alice rents a flat in Jakarta",
+     "start": "1958-01-01",
+     "want_end": "1961-01-01",
+     "got_end": "1976-01-01",
+     "arrived": 1
+    },
+    {
+     "fact": "Alice lives in Dalian",
+     "start": "1970-01-01",
+     "want_end": "1976-01-01",
+     "got_end": null,
+     "arrived": 13
+    }
+   ],
+   "order": [
+    12,
+    7,
+    3,
+    11,
+    2,
+    17,
+    15,
+    8,
+    14,
+    5,
+    16,
+    13,
+    18,
+    10,
+    20,
+    4,
+    0,
+    19,
+    9,
+    6,
+    1
+   ]
+  },
+  {
+   "trial": 15,
+   "homes": 12,
+   "single_current": true,
+   "chronology": false,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1,
+   "mismatches": [
+    {
+     "fact": "Alice has made a home in Riga",
+     "start": "1938-01-01",
+     "want_end": "1943-01-01",
+     "got_end": "1987-01-01",
+     "arrived": 9
+    },
+    {
+     "fact": "Alice is now based in Ulaanbaatar",
+     "start": "1958-01-01",
+     "want_end": "1959-01-01",
+     "got_end": "1987-01-01",
+     "arrived": 10
+    }
+   ],
+   "order": [
+    10,
+    7,
+    8,
+    11,
+    1,
+    5,
+    9,
+    3,
+    6,
+    2,
+    4,
+    0
+   ]
+  },
+  {
+   "trial": 16,
+   "homes": 16,
+   "single_current": false,
+   "chronology": false,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 2,
+   "mismatches": [
+    {
+     "fact": "Alice rents a flat in Lhasa",
+     "start": "1901-01-01",
+     "want_end": "1906-01-01",
+     "got_end": "1907-01-01",
+     "arrived": 6
+    },
+    {
+     "fact": "Alice lives in Utrecht",
+     "start": "1906-01-01",
+     "want_end": "1907-01-01",
+     "got_end": "1936-01-01",
+     "arrived": 14
+    },
+    {
+     "fact": "Alice rents a flat in Calgary",
+     "start": "1925-01-01",
+     "want_end": "1936-01-01",
+     "got_end": "1944-01-01",
+     "arrived": 11
+    },
+    {
+     "fact": "Alice lives in Accra",
+     "start": "1936-01-01",
+     "want_end": "1944-01-01",
+     "got_end": "1965-01-01",
+     "arrived": 13
+    },
+    {
+     "fact": "Alice rents a flat in Lisbon",
+     "start": "1963-01-01",
+     "want_end": "1965-01-01",
+     "got_end": "1969-01-01",
+     "arrived": 3
+    },
+    {
+     "fact": "Alice lives in Kathmandu",
+     "start": "1965-01-01",
+     "want_end": "1969-01-01",
+     "got_end": "1982-01-01",
+     "arrived": 15
+    }
+   ],
+   "order": [
+    13,
+    15,
+    11,
+    8,
+    10,
+    12,
+    0,
+    3,
+    14,
+    7,
+    2,
+    4,
+    6,
+    5,
+    1,
+    9
+   ]
+  },
+  {
+   "trial": 17,
+   "homes": 22,
+   "single_current": false,
+   "chronology": false,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 3,
+   "mismatches": [
+    {
+     "fact": "Alice has made a home in Tallinn",
+     "start": "1901-01-01",
+     "want_end": "1902-01-01",
+     "got_end": "1924-01-01",
+     "arrived": 1
+    },
+    {
+     "fact": "Alice is now based in Lisbon",
+     "start": "1902-01-01",
+     "want_end": "1915-01-01",
+     "got_end": "1917-01-01",
+     "arrived": 13
+    },
+    {
+     "fact": "Alice lives in Colombo",
+     "start": "1917-01-01",
+     "want_end": "1922-01-01",
+     "got_end": "1923-01-01",
+     "arrived": 3
+    },
+    {
+     "fact": "Alice is now based in Gothenburg",
+     "start": "1922-01-01",
+     "want_end": "1923-01-01",
+     "got_end": "1924-01-01",
+     "arrived": 19
+    },
+    {
+     "fact": "Alice moved to Geneva",
+     "start": "1923-01-01",
+     "want_end": "1924-01-01",
+     "got_end": "1963-01-01",
+     "arrived": 15
+    },
+    {
+     "fact": "Alice is now based in Bratislava",
+     "start": "1924-01-01",
+     "want_end": "1929-01-01",
+     "got_end": "1938-01-01",
+     "arrived": 8
+    }
+   ],
+   "order": [
+    18,
+    0,
+    20,
+    3,
+    17,
+    12,
+    19,
+    15,
+    6,
+    21,
+    2,
+    11,
+    9,
+    1,
+    8,
+    5,
+    14,
+    16,
+    10,
+    4,
+    7,
+    13
+   ]
+  },
+  {
+   "trial": 18,
+   "homes": 5,
+   "single_current": true,
+   "chronology": true,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1,
+   "mismatches": [],
+   "order": [
+    1,
+    3,
+    2,
+    4,
+    0
+   ]
+  },
+  {
+   "trial": 19,
+   "homes": 7,
+   "single_current": true,
+   "chronology": false,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1,
+   "mismatches": [
+    {
+     "fact": "Alice rents a flat in Hamburg",
+     "start": "1939-01-01",
+     "want_end": "1943-01-01",
+     "got_end": "1998-01-01",
+     "arrived": 6
+    }
+   ],
+   "order": [
+    4,
+    3,
+    1,
+    0,
+    6,
+    5,
+    2
+   ]
+  }
+ ]
+}

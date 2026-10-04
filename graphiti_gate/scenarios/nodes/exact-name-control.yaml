@@ -1,0 +1,11 @@
+id: nodes/exact-name-control
+title: Control - an entity with the same name and embedding resolves to itself
+source: Graphiti node_operations.py resolve_extracted_nodes (semantic candidates, then exact name)
+family: node-dedup
+via: nodes
+judge: oracle
+incoming: []
+nodes:
+  - {id: dgia, name: DGIA}
+incoming_nodes: [DGIA]
+expect_nodes: {DGIA: dgia}

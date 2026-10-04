@@ -1,0 +1,18 @@
+id: intervals/reassertion
+title: A fact true again after it ended starts a new interval
+source: https://github.com/getzep/graphiti/issues/1865 (reporter-stated outcome, exact repro)
+family: re-assertion
+judge: scripted
+facts:
+  - {id: old, src: Alex, rel: ASSIGNED_TO, dst: Payments, fact: Alex is assigned to Payments.,
+     valid: 2026-01-01, invalid: 2026-01-11, claim: [Alex, assignment, Payments]}
+incoming:
+  - {id: again, src: Alex, rel: ASSIGNED_TO, dst: Payments, fact: Alex is assigned to Payments.,
+     valid: 2026-01-21, claim: [Alex, assignment, Payments]}
+script:
+  Alex is assigned to Payments.:
+    duplicates: [Alex is assigned to Payments.]
+expect:
+  old: {invalid_at: 2026-01-11}
+  again: {open: true}
+  open_in_slot: {Alex/assignment: [again]}

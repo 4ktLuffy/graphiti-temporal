@@ -1,0 +1,13 @@
+{"n_history": 50, "seed": 1000, "live_retired": true, "open_after": ["Alice moved to Berlin."], "error": null, "llm_calls": 4, "tokens": 4938}
+{"n_history": 50, "seed": 1001, "live_retired": true, "open_after": ["Alice moved to Berlin."], "error": null, "llm_calls": 4, "tokens": 13850}
+{"n_history": 50, "seed": 1002, "live_retired": true, "open_after": ["Alice moved to Berlin."], "error": null, "llm_calls": 3, "tokens": 3660}
+{"n_history": 50, "seed": 1003, "live_retired": true, "open_after": ["Alice moved to Berlin."], "error": null, "llm_calls": 4, "tokens": 13827}
+{"n_history": 50, "seed": 1004, "live_retired": true, "open_after": ["Alice moved to Berlin."], "error": null, "llm_calls": 4, "tokens": 22803}
+{"n_history": 50, "seed": 1005, "live_retired": false, "open_after": ["Alice moved to Berlin.", "Alice lives in Kabul"], "error": null, "llm_calls": 5, "tokens": 23790}
+{"n_history": 50, "seed": 1007, "live_retired": true, "open_after": ["Alice moved to Berlin."], "error": null, "llm_calls": 4, "tokens": 2776}
+{"n_history": 50, "seed": 1006, "live_retired": true, "open_after": ["Alice moved to Berlin."], "error": null, "llm_calls": 4, "tokens": 4862}
+{"n_history": 50, "seed": 1008, "live_retired": true, "open_after": ["Alice moved to Berlin."], "error": null, "llm_calls": 4, "tokens": 2814}
+{"n_history": 50, "seed": 1009, "live_retired": true, "open_after": ["Alice moved to Berlin."], "error": null, "llm_calls": 4, "tokens": 2895}
+{"n_history": 50, "seed": 1010, "live_retired": true, "open_after": ["Alice moved to Berlin."], "error": null, "llm_calls": 4, "tokens": 12830}
+{"n_history": 50, "seed": 1011, "live_retired": true, "open_after": ["Alice moved to Berlin."], "error": null, "llm_calls": 4, "tokens": 2887}
+codex:gpt-5.6-luna@low fix=both history=50: current home retired 11/12 [0.65, 0.99], errors 0, tokens 111932, 481s

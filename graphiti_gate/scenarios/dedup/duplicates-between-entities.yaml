@@ -1,0 +1,20 @@
+id: dedup/duplicates-between-entities
+title: A fact is never merged into an identical sentence about a different entity
+source: Graphiti edge_operations.py (duplicate candidates are the edges between the same two entities)
+family: duplicates
+judge: scripted
+facts:
+  - {id: board_a, src: Alice, rel: MEMBER_OF, dst: Acme board, fact: Alice joined the board,
+     valid: 2023-01-01}
+incoming:
+  - {id: board_b, src: Alice, rel: MEMBER_OF, dst: Globex board, fact: Alice joined the board,
+     valid: 2024-01-01}
+script:
+  Alice joined the board:
+    duplicates: [Alice joined the board]
+expect:
+  board_b: {open: true, merged: false}
+  board_a: {open: true}
+note: >-
+  The judge marks the identical sentence as a duplicate (a plausible model error). Graphiti only
+  offers same-endpoint edges as duplicate candidates, so the Acme fact must not absorb the Globex one.

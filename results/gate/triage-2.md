@@ -1,0 +1,22 @@
+| scenario | main | pr:1729 | pr:1772 | pr:1940 | pr:1867 | patch:upstream/01-invalidation-candidates.patch |
+|---|---|---|---|---|---|---|
+| `dedup/duplicate-retires-old` | pass | pass | pass | pass | pass | pass |
+| `dedup/semantic-duplicate` | pass | pass | pass | pass | pass | pass |
+| `intervals/backfill-between` | pass | pass | pass | pass | pass | pass |
+| `intervals/backfill-ended` | pass | pass | pass | pass | pass | pass |
+| `intervals/backfill-open` | pass | pass | pass | pass | pass | pass |
+| `intervals/born-ended-expired` | FAIL | FAIL | FAIL | FAIL | pass | FAIL |
+| `intervals/end-only-later-start` | pass | pass | pass | pass | pass | pass |
+| `intervals/end-only-no-extend` | pass | pass | pass | pass | pass | pass |
+| `intervals/end-only-release` | FAIL | FAIL | FAIL | pass | FAIL | FAIL |
+| `intervals/move-control` | pass | pass | pass | pass | pass | pass |
+| `intervals/reassertion` | FAIL | FAIL | FAIL | FAIL | pass | FAIL |
+| `intervals/reassertion-overlap-control` | pass | pass | pass | pass | pass | pass |
+| `invalidation/additive-over-eager` | FAIL | FAIL | FAIL | FAIL | FAIL | FAIL |
+| `invalidation/depth-20` | FAIL | FAIL | FAIL | FAIL | FAIL | pass |
+| `invalidation/depth-20-backfill` | FAIL | FAIL | FAIL | FAIL | FAIL | pass |
+| `invalidation/depth-20-triplet` | FAIL | FAIL | FAIL | FAIL | FAIL | pass |
+| `invalidation/depth-5-control` | pass | pass | pass | pass | pass | pass |
+| `invalidation/same-slot-over-eager-control` | pass | pass | pass | pass | pass | pass |
+| `invalidation/unrelated-over-eager` | FAIL | pass | FAIL | FAIL | FAIL | FAIL |
+| `judge/under-resolving-silent` | pass | pass | pass | pass | pass | pass |

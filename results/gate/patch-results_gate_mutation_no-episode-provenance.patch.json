@@ -1,0 +1,188 @@
+{
+ "revision": "patch:results/gate/mutation/no-episode-provenance.patch",
+ "label": "patch:results/gate/mutation/no-episode-provenance.patch, base 5d47d4d, patch ac28120",
+ "scenarios": {
+  "intervals/born-ended-with-candidates": {
+   "id": "intervals/born-ended-with-candidates",
+   "family": "re-assertion",
+   "status": "expected",
+   "judge": "oracle",
+   "title": "A fact that arrives already ended is marked expired when other facts exist",
+   "source": "Graphiti edge_operations.py resolve_extracted_edge (\"if resolved_edge.invalid_at and not resolved_edge.expired_at\")",
+   "verdict": "pass",
+   "passes": 3,
+   "repeats": 3,
+   "first": {
+    "passed": true,
+    "failures": [],
+    "state": {
+     "home": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2018-01-01T00:00:00+00:00",
+      "invalid_at": null,
+      "expired": false,
+      "episodes": 1
+     },
+     "stint": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2019-01-01T00:00:00+00:00",
+      "invalid_at": "2020-01-01T00:00:00+00:00",
+      "expired": true,
+      "episodes": 1
+     }
+    },
+    "judge_calls": [
+     {
+      "new_fact": "Alex worked at Initech in 2019",
+      "shown": [
+       "Alex lives in Boston"
+      ],
+      "duplicates": [],
+      "contradicted": []
+     }
+    ]
+   },
+   "graphiti_core": "./.gate/venvs/0c99847a91424303/lib/python3.14/site-packages/graphiti_core/__init__.py"
+  },
+  "dedup/duplicate-provenance": {
+   "id": "dedup/duplicate-provenance",
+   "family": "duplicates",
+   "status": "expected",
+   "judge": "oracle",
+   "title": "A restated fact records the new episode on the fact it merges into",
+   "source": "Graphiti edge_operations.py (resolved_edge.episodes.append on a duplicate)",
+   "verdict": "fail",
+   "passes": 0,
+   "repeats": 3,
+   "first": {
+    "passed": false,
+    "failures": [
+     "resides: expected 2 episodes, got 1"
+    ],
+    "state": {
+     "lives": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2020-01-01T00:00:00+00:00",
+      "invalid_at": null,
+      "expired": false,
+      "episodes": 1
+     },
+     "resides": {
+      "present": true,
+      "merged_into": "lives",
+      "valid_at": "2020-01-01T00:00:00+00:00",
+      "invalid_at": null,
+      "expired": false,
+      "episodes": 1
+     }
+    },
+    "judge_calls": [
+     {
+      "new_fact": "Alice resides in Berlin",
+      "shown": [
+       "Alice lives in Berlin"
+      ],
+      "duplicates": [
+       "Alice lives in Berlin"
+      ],
+      "contradicted": []
+     }
+    ]
+   },
+   "graphiti_core": "./.gate/venvs/0c99847a91424303/lib/python3.14/site-packages/graphiti_core/__init__.py"
+  },
+  "dedup/duplicates-between-entities": {
+   "id": "dedup/duplicates-between-entities",
+   "family": "duplicates",
+   "status": "expected",
+   "judge": "scripted",
+   "title": "A fact is never merged into an identical sentence about a different entity",
+   "source": "Graphiti edge_operations.py (duplicate candidates are the edges between the same two entities)",
+   "verdict": "pass",
+   "passes": 3,
+   "repeats": 3,
+   "first": {
+    "passed": true,
+    "failures": [],
+    "state": {
+     "board_a": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2023-01-01T00:00:00+00:00",
+      "invalid_at": null,
+      "expired": false,
+      "episodes": 1
+     },
+     "board_b": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2024-01-01T00:00:00+00:00",
+      "invalid_at": null,
+      "expired": false,
+      "episodes": 1
+     }
+    },
+    "judge_calls": [
+     {
+      "new_fact": "Alice joined the board",
+      "shown": [
+       "Alice joined the board"
+      ],
+      "duplicates": [],
+      "contradicted": []
+     }
+    ]
+   },
+   "graphiti_core": "./.gate/venvs/0c99847a91424303/lib/python3.14/site-packages/graphiti_core/__init__.py"
+  },
+  "intervals/same-day-start": {
+   "id": "intervals/same-day-start",
+   "family": "intervals",
+   "status": "expected",
+   "judge": "oracle",
+   "title": "A contradicting fact that starts the same day does not retire the other",
+   "source": "Graphiti edge_operations.py resolve_edge_contradictions (strict \"<\" on start dates)",
+   "verdict": "pass",
+   "passes": 3,
+   "repeats": 3,
+   "first": {
+    "passed": true,
+    "failures": [],
+    "state": {
+     "acme": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2024-03-01T00:00:00+00:00",
+      "invalid_at": null,
+      "expired": false,
+      "episodes": 1
+     },
+     "globex": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2024-03-01T00:00:00+00:00",
+      "invalid_at": null,
+      "expired": false,
+      "episodes": 1
+     }
+    },
+    "judge_calls": [
+     {
+      "new_fact": "Alice works at Globex",
+      "shown": [
+       "Alice works at Acme"
+      ],
+      "duplicates": [],
+      "contradicted": [
+       "Alice works at Acme"
+      ]
+     }
+    ]
+   },
+   "graphiti_core": "./.gate/venvs/0c99847a91424303/lib/python3.14/site-packages/graphiti_core/__init__.py"
+  }
+ }
+}

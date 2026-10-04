@@ -1,0 +1,14 @@
+id: nodes/exact-name-below-cosine
+title: An entity with the exact same name is found even when its stored embedding disagrees
+source: https://github.com/getzep/graphiti/issues/1734 (reporter-stated outcome; PR #1741)
+family: node-dedup
+via: nodes
+judge: oracle
+incoming: []
+nodes:
+  - {id: dgia, name: DGIA, embedding_of: Direction generale de l information et de l administration}
+incoming_nodes: [DGIA]
+expect_nodes: {DGIA: dgia}
+note: >-
+  The stored name embedding was made from a longer text, so cosine similarity to "DGIA" is below
+  Graphiti's 0.6 floor, as the reporter measured with Gemini embeddings (0.52-0.63).

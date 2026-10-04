@@ -1,0 +1,42 @@
+# A drop-in GitHub Actions workflow for getzep/graphiti: runs the memory-logic gate on every pull
+# request that touches resolution or search code, and attaches the scorecard to the run summary.
+# It needs Neo4j only (no model, no API key); the gate takes about a minute.
+#
+# To adopt: copy to .github/workflows/ and copy scenarios/ next to it (or point --scenarios at
+# them). It never comments on the PR; the scorecard goes to the job summary.
+name: Memory-logic gate
+
+on:
+  pull_request:
+    paths:
+      - 'graphiti_core/utils/maintenance/**'
+      - 'graphiti_core/search/**'
+      - 'graphiti_core/prompts/dedupe_*.py'
+      - 'graphiti_core/graphiti.py'
+
+permissions:
+  contents: read
+
+jobs:
+  gate:
+    runs-on: depot-ubuntu-22.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Start Neo4j (the version in unit_tests.yml)
+        run: |
+          docker run -d --name neo4j --network host -e NEO4J_AUTH=neo4j/testpass neo4j:5.26-community
+          for i in $(seq 1 60); do curl -sf http://127.0.0.1:7474 >/dev/null && break; sleep 2; done
+      - uses: astral-sh/setup-uv@v6
+      - name: Install the gate
+        run: uv tool install "graphiti-temporal @ git+https://github.com/4ktLuffy/graphiti-temporal"
+      - name: Scorecard against the base branch
+        env:
+          NEO4J_URI: bolt://127.0.0.1:7687
+          NEO4J_USER: neo4j
+          NEO4J_PASSWORD: testpass
+        run: |
+          graphiti-gate diff "${{ github.event.pull_request.base.sha }}" "path:${{ github.workspace }}" \
+            --repeats 3 >> "$GITHUB_STEP_SUMMARY"

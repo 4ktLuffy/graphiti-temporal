@@ -1,0 +1,16 @@
+id: intervals/same-day-start
+title: A contradicting fact that starts the same day does not retire the other
+source: Graphiti edge_operations.py resolve_edge_contradictions (strict "<" on start dates)
+family: intervals
+judge: oracle
+facts:
+  - {id: acme, src: Alice, rel: WORKS_AT, dst: Acme, fact: Alice works at Acme, valid: 2024-03-01,
+     claim: [Alice, employer, Acme]}
+incoming:
+  - {id: globex, src: Alice, rel: WORKS_AT, dst: Globex, fact: Alice works at Globex,
+     valid: 2024-03-01, claim: [Alice, employer, Globex]}
+expect:
+  acme: {open: true}
+note: >-
+  Graphiti retires a contradicted fact only if it started strictly earlier, so neither interval is
+  cut to zero length; which of two same-day facts is right is left to later evidence.

@@ -1,0 +1,10 @@
+--- a/graphiti_core/utils/maintenance/edge_operations.py
++++ b/graphiti_core/utils/maintenance/edge_operations.py
+@@ -746,7 +746,6 @@
+     resolved_edge = extracted_edge
+     for duplicate_fact_id in duplicate_fact_ids:
+         resolved_edge = related_edges[duplicate_fact_id]
+-        break
+ 
+     if duplicate_fact_ids and episode is not None:
+         resolved_edge.episodes.append(episode.uuid)

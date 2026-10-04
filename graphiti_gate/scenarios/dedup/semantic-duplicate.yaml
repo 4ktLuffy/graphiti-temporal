@@ -1,0 +1,15 @@
+id: dedup/semantic-duplicate
+title: A reworded fact merges into the fact it repeats, which stays open
+source: Graphiti prompts/dedupe_edges.py (duplicate detection)
+family: duplicates
+judge: oracle
+facts:
+  - {id: lives, src: Alice, rel: LIVES_IN, dst: Berlin, fact: Alice lives in Berlin, valid: 2020-01-01,
+     claim: [Alice, home, Berlin]}
+incoming:
+  - {id: resides, src: Alice, rel: LIVES_IN, dst: Berlin, fact: Alice resides in Berlin,
+     valid: 2024-01-01, claim: [Alice, home, Berlin]}
+expect:
+  resides: {merged_into: lives}
+  lives: {open: true}
+  open_in_slot: {Alice/home: [lives]}

@@ -1,0 +1,22 @@
+id: invalidation/depth-20-backfill
+title: After 20 past homes, a home learned late is still closed by the home that followed it
+source: graphiti-temporal DESIGN.md (the filter must keep later facts that have since ended)
+family: history-depth
+judge: oracle
+moves: {subject: Alice, rel: LIVES_IN, count: 20, start: 1950, slot: home}
+facts:
+  - {id: lima, src: Alice, rel: LIVES_IN, dst: Lima, fact: Alice settled down in Lima in 1999,
+     valid: 1999-01-01, invalid: 2003-01-01, claim: [Alice, home, Lima]}
+  - {id: live, src: Alice, rel: LIVES_IN, dst: Tokyo, fact: Alice has made her home in Tokyo since 2003,
+     valid: 2003-01-01, claim: [Alice, home, Tokyo]}
+incoming:
+  - {id: quito, src: Alice, rel: LIVES_IN, dst: Quito, fact: Alice lives in Quito, valid: 1995-06-01,
+     claim: [Alice, home, Quito]}
+expect:
+  quito: {invalid_at: 1999-01-01}
+  lima: {invalid_at: 2003-01-01}
+  live: {open: true}
+  open_in_slot: {Alice/home: [live]}
+note: >-
+  Quito (1995) falls after the generated moves (1950-1990) and before Lima; Graphiti should end it
+  at Lima's start. Lima has ended, so a "valid facts only" filter would lose it.

@@ -1,0 +1,13 @@
+{"meta": {"fix": "1", "graphiti_core": "4f98b7ca45fef96925dc04134c42c526df73bb28", "neo4j": "5.26.2", "llm": "codex:gpt-5.6-luna@low", "argv": ["--fix", "1", "--n-history", "20", "--trials", "12", "--parallel", "2", "--out", "results/real_llm_h20_fix-1.jsonl"], "seconds": 383.3}}
+{"n_history": 20, "seed": 1000, "live_retired": true, "open_after": ["Alice moved to Berlin."], "error": null, "llm_calls": 4, "tokens": 4897}
+{"n_history": 20, "seed": 1001, "live_retired": true, "open_after": ["Alice moved to Berlin."], "error": null, "llm_calls": 3, "tokens": 12675}
+{"n_history": 20, "seed": 1002, "live_retired": true, "open_after": ["Alice moved to Berlin."], "error": null, "llm_calls": 4, "tokens": 11797}
+{"n_history": 20, "seed": 1003, "live_retired": true, "open_after": ["Alice moved to Berlin."], "error": null, "llm_calls": 3, "tokens": 3694}
+{"n_history": 20, "seed": 1004, "live_retired": true, "open_after": ["Alice moved to Berlin."], "error": null, "llm_calls": 3, "tokens": 31665}
+{"n_history": 20, "seed": 1005, "live_retired": true, "open_after": ["Alice moved to Berlin."], "error": null, "llm_calls": 3, "tokens": 1706}
+{"n_history": 20, "seed": 1006, "live_retired": true, "open_after": ["Alice moved to Berlin."], "error": null, "llm_calls": 3, "tokens": 11667}
+{"n_history": 20, "seed": 1007, "live_retired": true, "open_after": ["Alice moved to Berlin."], "error": null, "llm_calls": 3, "tokens": 1615}
+{"n_history": 20, "seed": 1008, "live_retired": true, "open_after": ["Alice moved to Berlin."], "error": null, "llm_calls": 3, "tokens": 1613}
+{"n_history": 20, "seed": 1009, "live_retired": true, "open_after": ["Alice moved to Berlin."], "error": null, "llm_calls": 4, "tokens": 11789}
+{"n_history": 20, "seed": 1010, "live_retired": true, "open_after": ["Alice moved to Berlin."], "error": null, "llm_calls": 4, "tokens": 14808}
+{"n_history": 20, "seed": 1011, "live_retired": true, "open_after": ["Alice moved to Berlin."], "error": null, "llm_calls": 4, "tokens": 2776}

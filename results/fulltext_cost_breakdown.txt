@@ -1,0 +1,12 @@
+  1000 raw hits only, no limit                      22.8 ms  rows 1000
+  1000 hits + re-MATCH by uuid, no limit            63.5 ms  rows 1000
+  1000 hits used directly + filter, no limit        23.6 ms  rows 20
+  1000 over-fetch 200 + re-MATCH + filter           25.9 ms  rows 20
+ 10000 raw hits only, no limit                      46.2 ms  rows 10000
+ 10000 hits + re-MATCH by uuid, no limit           503.0 ms  rows 10000
+ 10000 hits used directly + filter, no limit       103.8 ms  rows 20
+ 10000 over-fetch 200 + re-MATCH + filter           31.4 ms  rows 20
+ 50000 raw hits only, no limit                     163.7 ms  rows 50000
+ 50000 hits + re-MATCH by uuid, no limit          2496.9 ms  rows 50000
+ 50000 hits used directly + filter, no limit       355.8 ms  rows 20
+ 50000 over-fetch 200 + re-MATCH + filter           45.9 ms  rows 20

@@ -1,0 +1,19 @@
+id: judge/under-resolving-silent
+title: A judge that stays silent retires nothing (documents the under-resolving persona)
+source: https://github.com/getzep/graphiti/pull/1772 (measured judge under-resolution)
+family: judge-errors
+judge: under_resolving
+moves: {subject: Alice, rel: LIVES_IN, count: 3, start: 1950, slot: home}
+facts:
+  - {id: live, src: Alice, rel: LIVES_IN, dst: Tokyo, fact: Alice has made her home in Tokyo since 1990,
+     valid: 1990-01-01, claim: [Alice, home, Tokyo]}
+incoming:
+  - {id: new, src: Alice, rel: LIVES_IN, dst: Hamburg, fact: Alice lives in Hamburg,
+     valid: 2024-06-01, claim: [Alice, home, Hamburg]}
+expect:
+  new: {open: true}
+  live: {open: true}
+note: >-
+  The under_resolving judge is silent for "Alice lives in Hamburg" (sha256 parity), so nothing is
+  retired and the slot keeps two open facts. This documents the persona's effect: a judge that
+  stays silent leaves contradictions in place, whatever the retrieval does.

@@ -1,0 +1,15 @@
+id: intervals/backfill-open
+title: A past home learned late is closed by the later home
+source: Graphiti edge_operations.py resolve_extracted_edge (new edge expired by a later candidate)
+family: back-fill
+judge: oracle
+facts:
+  - {id: rome, src: Alice, rel: LIVES_IN, dst: Rome, fact: Alice lives in Rome, valid: 2015-01-01,
+     claim: [Alice, home, Rome]}
+incoming:
+  - {id: paris, src: Alice, rel: LIVES_IN, dst: Paris, fact: Alice lives in Paris, valid: 2010-01-01,
+     claim: [Alice, home, Paris]}
+expect:
+  paris: {invalid_at: 2015-01-01}
+  rome: {open: true}
+  open_in_slot: {Alice/home: [rome]}

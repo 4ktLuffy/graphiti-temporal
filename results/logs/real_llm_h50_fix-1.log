@@ -1,0 +1,13 @@
+{"n_history": 50, "seed": 1001, "live_retired": true, "open_after": ["Alice moved to Berlin."], "error": null, "llm_calls": 4, "live_shown": true, "resolve_replies": [{"duplicate_facts": [], "contradicted_facts": [0]}]}
+{"n_history": 50, "seed": 1000, "live_retired": true, "open_after": ["Alice moved to Berlin."], "error": null, "llm_calls": 4, "live_shown": true, "resolve_replies": [{"duplicate_facts": [], "contradicted_facts": [0]}]}
+{"n_history": 50, "seed": 1002, "live_retired": true, "open_after": ["Alice moved to Berlin."], "error": null, "llm_calls": 3, "live_shown": true, "resolve_replies": [{"duplicate_facts": [], "contradicted_facts": [0]}]}
+{"n_history": 50, "seed": 1003, "live_retired": true, "open_after": ["Alice moved to Berlin."], "error": null, "llm_calls": 4, "live_shown": true, "resolve_replies": [{"duplicate_facts": [], "contradicted_facts": [0]}]}
+{"n_history": 50, "seed": 1004, "live_retired": true, "open_after": ["Alice moved to Berlin."], "error": null, "llm_calls": 4, "live_shown": true, "resolve_replies": [{"duplicate_facts": [], "contradicted_facts": [0]}]}
+{"n_history": 50, "seed": 1005, "live_retired": true, "open_after": ["Alice moved to Berlin."], "error": null, "llm_calls": 4, "live_shown": true, "resolve_replies": [{"duplicate_facts": [], "contradicted_facts": [0]}]}
+{"n_history": 50, "seed": 1006, "live_retired": true, "open_after": ["Alice moved to Berlin."], "error": null, "llm_calls": 4, "live_shown": true, "resolve_replies": [{"duplicate_facts": [], "contradicted_facts": [0]}]}
+{"n_history": 50, "seed": 1007, "live_retired": true, "open_after": ["Alice moved to Berlin."], "error": null, "llm_calls": 4, "live_shown": true, "resolve_replies": [{"duplicate_facts": [], "contradicted_facts": [0]}]}
+{"n_history": 50, "seed": 1008, "live_retired": true, "open_after": ["Alice moved to Berlin."], "error": null, "llm_calls": 4, "live_shown": true, "resolve_replies": [{"duplicate_facts": [], "contradicted_facts": [0]}]}
+{"n_history": 50, "seed": 1009, "live_retired": true, "open_after": ["Alice moved to Berlin."], "error": null, "llm_calls": 4, "live_shown": true, "resolve_replies": [{"duplicate_facts": [], "contradicted_facts": [0]}]}
+{"n_history": 50, "seed": 1010, "live_retired": true, "open_after": ["Alice moved to Berlin."], "error": null, "llm_calls": 4, "live_shown": true, "resolve_replies": [{"duplicate_facts": [], "contradicted_facts": [0]}]}
+{"n_history": 50, "seed": 1011, "live_retired": true, "open_after": ["Alice moved to Berlin."], "error": null, "llm_calls": 4, "live_shown": true, "resolve_replies": [{"duplicate_facts": [], "contradicted_facts": [1]}]}
+codex:gpt-5.6-luna@low fix=1 history=50: current home retired 12/12 [0.76, 1.00], errors 0, live fact shown 12/12, 1348s

@@ -1,0 +1,23 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 203, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "./graphiti_gate/mutate.py", line 149, in <module>
+    main()
+    ~~~~^^
+  File "./graphiti_gate/mutate.py", line 128, in main
+    run, props = gate_verdicts(f'patch:{patch}', args.repeats, args.trials)
+                 ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "./graphiti_gate/mutate.py", line 84, in gate_verdicts
+    props = cli.props(spec, trials, 25, seed=7)
+  File "./graphiti_gate/cli.py", line 120, in props
+    tag = ' **untested**' if r['executed'] == 0 else ''
+    ^^^^^^^^^^^^^^^^^^
+  File "./graphiti_gate/revisions.py", line 76, in prepare
+    ensure_mirror()
+    ~~~~~~~~~~~~~^^
+  File "./graphiti_gate/revisions.py", line 64, in ensure_mirror
+    _git('fetch', '--quiet', 'origin', 'main')
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "./graphiti_gate/revisions.py", line 54, in _git
+    raise RevisionError(f'git {" ".join(args)} failed: {result.stderr.strip()[-500:]}')
+graphiti_gate.revisions.RevisionError: git fetch --quiet origin main failed: fatal: unable to access 'https://github.com/getzep/graphiti.git/': Error in the HTTP2 framing layer

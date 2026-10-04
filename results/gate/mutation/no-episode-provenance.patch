@@ -1,0 +1,11 @@
+--- a/graphiti_core/utils/maintenance/edge_operations.py
++++ b/graphiti_core/utils/maintenance/edge_operations.py
+@@ -749,7 +749,7 @@
+         break
+ 
+     if duplicate_fact_ids and episode is not None:
+-        resolved_edge.episodes.append(episode.uuid)
++        pass
+ 
+     # Process contradicted facts (continuous indexing across both lists)
+     contradicted_facts: list[int] = response_object.contradicted_facts

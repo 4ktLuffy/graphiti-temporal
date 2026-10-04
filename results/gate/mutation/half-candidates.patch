@@ -1,0 +1,12 @@
+--- a/graphiti_core/search/search_config_recipes.py
++++ b/graphiti_core/search/search_config_recipes.py
+@@ -112,7 +112,8 @@
+     edge_config=EdgeSearchConfig(
+         search_methods=[EdgeSearchMethod.bm25, EdgeSearchMethod.cosine_similarity],
+         reranker=EdgeReranker.rrf,
+-    )
++    ),
++    limit=5,
+ )
+ 
+ # performs a hybrid search over edges with mmr reranking

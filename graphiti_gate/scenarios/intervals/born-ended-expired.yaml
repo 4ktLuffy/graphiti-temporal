@@ -1,0 +1,11 @@
+id: intervals/born-ended-expired
+title: A fact that arrives already ended is marked expired even with nothing to compare against
+source: https://github.com/getzep/graphiti/issues/1865 (interval finalisation), graphiti-temporal DESIGN.md
+family: re-assertion
+judge: oracle
+facts: []
+incoming:
+  - {id: stint, src: Alex, rel: WORKED_AT, dst: Initech, fact: Alex worked at Initech in 2019,
+     valid: 2019-01-01, invalid: 2020-01-01, claim: [Alex, employer, Initech]}
+expect:
+  stint: {invalid_at: 2020-01-01, expired: true}

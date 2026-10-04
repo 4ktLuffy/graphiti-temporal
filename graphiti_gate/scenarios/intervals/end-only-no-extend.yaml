@@ -1,0 +1,16 @@
+id: intervals/end-only-no-extend
+title: A later release does not move an assignment's earlier end
+source: https://github.com/getzep/graphiti/pull/1940 (stated guard)
+family: end-only
+judge: scripted
+facts:
+  - {id: assigned, src: Kiran, rel: ASSIGNED_TO, dst: Payments Project,
+     fact: Kiran is assigned to the Payments Project, valid: 2026-01-01, invalid: 2026-02-01}
+incoming:
+  - {id: released, src: Kiran, rel: RELEASED_FROM, dst: Payments Project,
+     fact: Kiran was released from the Payments Project, invalid: 2026-03-01}
+script:
+  Kiran was released from the Payments Project:
+    contradicted: [Kiran is assigned to the Payments Project]
+expect:
+  assigned: {invalid_at: 2026-02-01}

@@ -1,0 +1,18 @@
+id: intervals/backfill-between
+title: A home learned late, between two known homes, ends where the next one starts
+source: Graphiti edge_operations.py resolve_extracted_edge (expiry by the earliest later candidate)
+family: back-fill
+judge: oracle
+facts:
+  - {id: rome, src: Alice, rel: LIVES_IN, dst: Rome, fact: Alice lives in Rome, valid: 2010-01-01,
+     invalid: 2015-01-01, claim: [Alice, home, Rome]}
+  - {id: oslo, src: Alice, rel: LIVES_IN, dst: Oslo, fact: Alice lives in Oslo, valid: 2020-01-01,
+     claim: [Alice, home, Oslo]}
+incoming:
+  - {id: paris, src: Alice, rel: LIVES_IN, dst: Paris, fact: Alice lives in Paris, valid: 2016-01-01,
+     claim: [Alice, home, Paris]}
+expect:
+  rome: {invalid_at: 2015-01-01}
+  paris: {invalid_at: 2020-01-01}
+  oslo: {open: true}
+  open_in_slot: {Alice/home: [oslo]}

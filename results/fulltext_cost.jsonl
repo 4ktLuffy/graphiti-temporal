@@ -1,0 +1,7 @@
+{"meta": {"neo4j": "5.26.2", "repeats": 15}}
+{"facts": 1000, "form": "index limit (current)", "median_ms": 180.9, "p90_ms": 187.3, "rows_returned": 2}
+{"facts": 1000, "form": "no index limit (patch 2)", "median_ms": 7810.7, "p90_ms": 8953.1, "rows_returned": 20}
+{"facts": 10000, "form": "index limit (current)", "median_ms": 25.7, "p90_ms": 27.8, "rows_returned": 2}
+{"facts": 10000, "form": "no index limit (patch 2)", "median_ms": 530.4, "p90_ms": 621.0, "rows_returned": 20}
+{"facts": 50000, "form": "index limit (current)", "median_ms": 29.0, "p90_ms": 31.4, "rows_returned": 2}
+{"facts": 50000, "form": "no index limit (patch 2)", "median_ms": 2411.2, "p90_ms": 2847.2, "rows_returned": 20}

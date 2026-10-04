@@ -1,0 +1,17 @@
+id: invalidation/depth-20
+title: The current home is retired after 20 past homes
+source: graphiti-temporal FINDINGS.md F1 (unreported)
+family: history-depth
+judge: oracle
+moves: {subject: Alice, rel: LIVES_IN, count: 20, start: 1950, slot: home}
+facts:
+  # Phrased less like the new fact than the history is, so it ranks below all 20 (no score ties).
+  - {id: live, src: Alice, rel: LIVES_IN, dst: Tokyo, fact: Alice has made her home in Tokyo since 1990,
+     valid: 1990-01-01, claim: [Alice, home, Tokyo]}
+incoming:
+  - {id: new, src: Alice, rel: LIVES_IN, dst: Berlin, fact: Alice lives in Berlin,
+     valid: 2024-06-01, claim: [Alice, home, Berlin]}
+expect:
+  live: {invalid_at: 2024-06-01, expired: true}
+  new: {open: true}
+  open_in_slot: {Alice/home: [new]}

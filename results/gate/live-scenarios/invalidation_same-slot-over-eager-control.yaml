@@ -1,0 +1,15 @@
+id: invalidation/same-slot-over-eager-control
+title: Control - a real change of employer is still retired when the judge over-flags
+source: https://github.com/getzep/graphiti/issues/1728 (a guard must not block real updates)
+family: over-invalidation
+judge: over_eager
+facts:
+  - {id: acme, src: Alice, rel: WORKS_AT, dst: Acme, fact: Alice works at Acme, valid: 2022-01-01,
+     claim: [Alice, employer, Acme]}
+incoming:
+  - {id: globex, src: Alice, rel: WORKS_AT, dst: Globex, fact: Alice works at Globex,
+     valid: 2024-03-01, claim: [Alice, employer, Globex]}
+expect:
+  acme: {invalid_at: 2024-03-01}
+  globex: {open: true}
+  open_in_slot: {Alice/employer: [globex]}

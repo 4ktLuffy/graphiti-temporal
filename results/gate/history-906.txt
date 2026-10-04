@@ -1,0 +1,15 @@
+== 4dab259
+pass    3/3  intervals/move-control
+FAIL    0/3  invalidation/depth-20
+pass    3/3  invalidation/depth-5-control
+FAIL    0/3  invalidation/unrelated-over-eager
+== 3efe085
+pass    3/3  intervals/move-control
+FAIL    0/3  invalidation/depth-20
+pass    3/3  invalidation/depth-5-control
+FAIL    0/3  invalidation/unrelated-over-eager
+== main
+pass    3/3  intervals/move-control
+FAIL    0/3  invalidation/depth-20
+pass    3/3  invalidation/depth-5-control
+FAIL    0/3  invalidation/unrelated-over-eager

@@ -1,0 +1,21 @@
+id: dedup/duplicate-retires-old
+title: A duplicate that also contradicts an older fact retires it from the duplicate's start
+source: graphiti-temporal DESIGN.md mistake 5 (the independent review's counterexample)
+family: duplicates
+judge: oracle
+facts:
+  - {id: paris, src: Alice, rel: LIVES_IN, dst: Paris, fact: Alice lives in Paris, valid: 2024-01-01,
+     invalid: 2024-01-11, claim: [Alice, home, Paris]}
+  - {id: lives, src: Alice, rel: LIVES_IN, dst: Berlin, fact: Alice lives in Berlin, valid: 2024-01-06,
+     claim: [Alice, home, Berlin]}
+incoming:
+  - {id: resides, src: Alice, rel: LIVES_IN, dst: Berlin, fact: Alice resides in Berlin,
+     valid: 2024-01-21, claim: [Alice, home, Berlin]}
+expect:
+  resides: {merged_into: lives}
+  paris: {invalid_at: 2024-01-06}
+  lives: {open: true}
+note: >-
+  Paris (Jan 1-11) overlaps Berlin from Jan 6. Graphiti resolves the incoming fact to the Jan 6
+  duplicate and ends Paris there. A filter cut at the incoming fact's own date (Jan 21) would drop
+  Paris from the candidates; fix 1's cutoff includes the duplicate's start.

@@ -1,0 +1,134 @@
+{
+ "revision": "pr:1914",
+ "label": "pr:1914, base 5d47d4d, head a08ee17",
+ "scenarios": {
+  "bulk/same-fact-two-episodes": {
+   "id": "bulk/same-fact-two-episodes",
+   "family": "bulk",
+   "status": "expected",
+   "judge": "oracle",
+   "title": "The same fact in two episodes of one bulk batch becomes one edge citing both",
+   "source": "https://github.com/getzep/graphiti/issues/1872 (reporter-stated outcome; PR",
+   "verdict": "fail",
+   "passes": 0,
+   "repeats": 3,
+   "first": {
+    "passed": false,
+    "failures": [
+     "\"Alice works at Acme\" became 2 edges, expected one"
+    ],
+    "state": {
+     "edges_per_fact": {
+      "Alice works at Acme": 2
+     }
+    },
+    "judge_calls": []
+   },
+   "graphiti_core": "./.gate/venvs/f7c3f1025485842d/lib/python3.14/site-packages/graphiti_core/__init__.py",
+   "live": false,
+   "runs": null
+  },
+  "nodes/exact-name-below-cosine": {
+   "id": "nodes/exact-name-below-cosine",
+   "family": "node-dedup",
+   "status": "expected",
+   "judge": "oracle",
+   "title": "An entity with the exact same name is found even when its stored embedding disagrees",
+   "source": "https://github.com/getzep/graphiti/issues/1734 (reporter-stated outcome; PR",
+   "verdict": "fail",
+   "passes": 0,
+   "repeats": 3,
+   "first": {
+    "passed": false,
+    "failures": [
+     "\"DGIA\" resolved to new, expected dgia"
+    ],
+    "state": {
+     "resolved": {
+      "DGIA": "new"
+     }
+    },
+    "judge_calls": []
+   },
+   "graphiti_core": "./.gate/venvs/f7c3f1025485842d/lib/python3.14/site-packages/graphiti_core/__init__.py",
+   "live": false,
+   "runs": null
+  },
+  "nodes/exact-name-control": {
+   "id": "nodes/exact-name-control",
+   "family": "node-dedup",
+   "status": "expected",
+   "judge": "oracle",
+   "title": "Control - an entity with the same name and embedding resolves to itself",
+   "source": "Graphiti node_operations.py resolve_extracted_nodes (semantic candidates, then exact name)",
+   "verdict": "pass",
+   "passes": 3,
+   "repeats": 3,
+   "first": {
+    "passed": true,
+    "failures": [],
+    "state": {
+     "resolved": {
+      "DGIA": "dgia"
+     }
+    },
+    "judge_calls": []
+   },
+   "graphiti_core": "./.gate/venvs/f7c3f1025485842d/lib/python3.14/site-packages/graphiti_core/__init__.py",
+   "live": false,
+   "runs": null
+  },
+  "search/date-filter-and-control": {
+   "id": "search/date-filter-and-control",
+   "family": "search-filters",
+   "status": "expected",
+   "judge": "oracle",
+   "title": "Control - two dates in one AND group select the fact between them",
+   "source": "Graphiti search_filters.py (one OR group, so parameter names do not collide)",
+   "verdict": "pass",
+   "passes": 3,
+   "repeats": 3,
+   "first": {
+    "passed": true,
+    "failures": [],
+    "state": {
+     "returned": [
+      "la"
+     ]
+    },
+    "judge_calls": []
+   },
+   "graphiti_core": "./.gate/venvs/f7c3f1025485842d/lib/python3.14/site-packages/graphiti_core/__init__.py",
+   "live": false,
+   "runs": null
+  },
+  "search/date-filter-or-groups": {
+   "id": "search/date-filter-or-groups",
+   "family": "search-filters",
+   "status": "expected",
+   "judge": "oracle",
+   "title": "A date filter with two OR groups keeps both dates",
+   "source": "https://github.com/getzep/graphiti/issues/488 (PR",
+   "verdict": "fail",
+   "passes": 0,
+   "repeats": 3,
+   "first": {
+    "passed": false,
+    "failures": [
+     "search returned ['la', 'nyc', 'sf'], expected ['nyc', 'sf']"
+    ],
+    "state": {
+     "returned": [
+      "la",
+      "nyc",
+      "sf"
+     ]
+    },
+    "judge_calls": []
+   },
+   "graphiti_core": "./.gate/venvs/f7c3f1025485842d/lib/python3.14/site-packages/graphiti_core/__init__.py",
+   "live": false,
+   "runs": null
+  }
+ }
+}

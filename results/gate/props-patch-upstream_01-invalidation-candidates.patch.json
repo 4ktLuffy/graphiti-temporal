@@ -1,0 +1,546 @@
+{
+ "revision": "patch:upstream/01-invalidation-candidates.patch",
+ "label": "patch:upstream/01-invalidation-candidates.patch, base 5d47d4d, patch 215bb4f",
+ "trials": [
+  {
+   "trial": 0,
+   "homes": 29,
+   "single_current": true,
+   "chronology": false,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 1,
+   "homes": 6,
+   "single_current": true,
+   "chronology": true,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 2,
+   "homes": 29,
+   "single_current": true,
+   "chronology": false,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 3,
+   "homes": 9,
+   "single_current": true,
+   "chronology": true,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 4,
+   "homes": 9,
+   "single_current": true,
+   "chronology": true,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 5,
+   "homes": 21,
+   "single_current": true,
+   "chronology": false,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 6,
+   "homes": 27,
+   "single_current": true,
+   "chronology": false,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 7,
+   "homes": 12,
+   "single_current": true,
+   "chronology": false,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 8,
+   "homes": 9,
+   "single_current": true,
+   "chronology": true,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 9,
+   "homes": 16,
+   "single_current": true,
+   "chronology": false,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 10,
+   "homes": 20,
+   "single_current": true,
+   "chronology": false,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 11,
+   "homes": 16,
+   "single_current": true,
+   "chronology": true,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 12,
+   "homes": 17,
+   "single_current": true,
+   "chronology": false,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 13,
+   "homes": 10,
+   "single_current": true,
+   "chronology": true,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 14,
+   "homes": 5,
+   "single_current": true,
+   "chronology": true,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 15,
+   "homes": 8,
+   "single_current": true,
+   "chronology": true,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 16,
+   "homes": 13,
+   "single_current": true,
+   "chronology": true,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 17,
+   "homes": 18,
+   "single_current": true,
+   "chronology": false,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 18,
+   "homes": 7,
+   "single_current": true,
+   "chronology": true,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 19,
+   "homes": 23,
+   "single_current": true,
+   "chronology": false,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 20,
+   "homes": 30,
+   "single_current": true,
+   "chronology": false,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 21,
+   "homes": 7,
+   "single_current": true,
+   "chronology": true,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 22,
+   "homes": 6,
+   "single_current": true,
+   "chronology": true,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 23,
+   "homes": 26,
+   "single_current": true,
+   "chronology": false,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 24,
+   "homes": 24,
+   "single_current": true,
+   "chronology": false,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 25,
+   "homes": 14,
+   "single_current": true,
+   "chronology": true,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 26,
+   "homes": 25,
+   "single_current": true,
+   "chronology": false,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 27,
+   "homes": 22,
+   "single_current": true,
+   "chronology": false,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 28,
+   "homes": 5,
+   "single_current": true,
+   "chronology": true,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 29,
+   "homes": 19,
+   "single_current": true,
+   "chronology": true,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 30,
+   "homes": 19,
+   "single_current": true,
+   "chronology": false,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 31,
+   "homes": 2,
+   "single_current": true,
+   "chronology": true,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 32,
+   "homes": 4,
+   "single_current": true,
+   "chronology": true,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 33,
+   "homes": 20,
+   "single_current": true,
+   "chronology": false,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 34,
+   "homes": 18,
+   "single_current": true,
+   "chronology": false,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 35,
+   "homes": 19,
+   "single_current": true,
+   "chronology": false,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 36,
+   "homes": 12,
+   "single_current": true,
+   "chronology": true,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 37,
+   "homes": 23,
+   "single_current": true,
+   "chronology": false,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 38,
+   "homes": 22,
+   "single_current": true,
+   "chronology": false,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 39,
+   "homes": 8,
+   "single_current": true,
+   "chronology": true,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 40,
+   "homes": 16,
+   "single_current": true,
+   "chronology": false,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 41,
+   "homes": 14,
+   "single_current": true,
+   "chronology": false,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 42,
+   "homes": 22,
+   "single_current": true,
+   "chronology": false,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 43,
+   "homes": 3,
+   "single_current": true,
+   "chronology": true,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 44,
+   "homes": 15,
+   "single_current": true,
+   "chronology": false,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 45,
+   "homes": 10,
+   "single_current": true,
+   "chronology": true,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 46,
+   "homes": 30,
+   "single_current": true,
+   "chronology": false,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 47,
+   "homes": 13,
+   "single_current": true,
+   "chronology": true,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 48,
+   "homes": 19,
+   "single_current": true,
+   "chronology": false,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 49,
+   "homes": 4,
+   "single_current": true,
+   "chronology": true,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 50,
+   "homes": 17,
+   "single_current": true,
+   "chronology": false,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 51,
+   "homes": 9,
+   "single_current": true,
+   "chronology": true,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 52,
+   "homes": 10,
+   "single_current": true,
+   "chronology": false,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 53,
+   "homes": 21,
+   "single_current": true,
+   "chronology": false,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 54,
+   "homes": 6,
+   "single_current": true,
+   "chronology": true,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 55,
+   "homes": 4,
+   "single_current": true,
+   "chronology": true,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 56,
+   "homes": 29,
+   "single_current": false,
+   "chronology": false,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 2
+  },
+  {
+   "trial": 57,
+   "homes": 3,
+   "single_current": true,
+   "chronology": true,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 58,
+   "homes": 20,
+   "single_current": true,
+   "chronology": false,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  },
+  {
+   "trial": 59,
+   "homes": 9,
+   "single_current": true,
+   "chronology": true,
+   "never_extended": true,
+   "idempotent": true,
+   "open": 1
+  }
+ ]
+}

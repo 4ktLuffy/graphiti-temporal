@@ -1,0 +1,11 @@
+--- a/graphiti_core/utils/maintenance/edge_operations.py
++++ b/graphiti_core/utils/maintenance/edge_operations.py
+@@ -823,7 +823,7 @@
+         resolved_edge.expired_at = now
+ 
+     # Determine if the new_edge needs to be expired
+-    if resolved_edge.expired_at is None:
++    if resolved_edge.expired_at is not None:
+         invalidation_candidates.sort(key=lambda c: (c.valid_at is None, ensure_utc(c.valid_at)))
+         for candidate in invalidation_candidates:
+             candidate_valid_at_utc = ensure_utc(candidate.valid_at)

@@ -1,0 +1,13 @@
+{"meta": {"fix": "none", "graphiti_core": "4f98b7ca45fef96925dc04134c42c526df73bb28", "neo4j": "5.26.2", "llm": "codex:gpt-5.6-luna@low", "argv": ["--fix", "none", "--n-history", "20", "--trials", "12", "--parallel", "2", "--out", "results/real_llm_h20_fix-none.jsonl"], "seconds": 381.4}}
+{"n_history": 20, "seed": 1000, "live_retired": true, "open_after": ["Alice moved to Berlin."], "error": null, "llm_calls": 4, "tokens": 12056}
+{"n_history": 20, "seed": 1001, "live_retired": true, "open_after": ["Alice moved to Berlin."], "error": null, "llm_calls": 3, "tokens": 1837}
+{"n_history": 20, "seed": 1002, "live_retired": true, "open_after": ["Alice moved to Berlin and lives there."], "error": null, "llm_calls": 4, "tokens": 12037}
+{"n_history": 20, "seed": 1003, "live_retired": true, "open_after": ["Alice moved to Berlin."], "error": null, "llm_calls": 3, "tokens": 11850}
+{"n_history": 20, "seed": 1004, "live_retired": false, "open_after": ["Alice moved to Berlin.", "Alice lives in Zagreb"], "error": null, "llm_calls": 3, "tokens": 10888}
+{"n_history": 20, "seed": 1005, "live_retired": false, "open_after": ["Alice moved to Berlin and now lives there.", "Alice lives in Bangkok"], "error": null, "llm_calls": 3, "tokens": 1900}
+{"n_history": 20, "seed": 1006, "live_retired": false, "open_after": ["Alice moved to Berlin.", "Alice lives in Busan"], "error": null, "llm_calls": 3, "tokens": 11933}
+{"n_history": 20, "seed": 1007, "live_retired": true, "open_after": ["Alice moved to Berlin."], "error": null, "llm_calls": 3, "tokens": 1837}
+{"n_history": 20, "seed": 1008, "live_retired": false, "open_after": ["Alice moved to Berlin.", "Alice lives in Aarhus"], "error": null, "llm_calls": 3, "tokens": 1842}
+{"n_history": 20, "seed": 1009, "live_retired": true, "open_after": ["Alice moved to Berlin."], "error": null, "llm_calls": 4, "tokens": 13105}
+{"n_history": 20, "seed": 1010, "live_retired": false, "open_after": ["Alice moved to Berlin.", "Alice lives in Kathmandu"], "error": null, "llm_calls": 4, "tokens": 8225}
+{"n_history": 20, "seed": 1011, "live_retired": false, "open_after": ["Alice moved to Berlin.", "Alice lives in Milan"], "error": null, "llm_calls": 4, "tokens": 3156}

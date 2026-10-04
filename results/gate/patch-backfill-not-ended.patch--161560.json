@@ -1,0 +1,1400 @@
+{
+ "revision": "patch:./results/gate/mutation/backfill-not-ended.patch",
+ "label": "patch:./results/gate/mutation/backfill-not-ended.patch, base 5d47d4d, patch 7dd14f7",
+ "scenarios": {
+  "bulk/same-fact-two-episodes": {
+   "id": "bulk/same-fact-two-episodes",
+   "family": "bulk",
+   "status": "expected",
+   "judge": "oracle",
+   "title": "The same fact in two episodes of one bulk batch becomes one edge citing both",
+   "source": "https://github.com/getzep/graphiti/issues/1872 (reporter-stated outcome; PR",
+   "verdict": "fail",
+   "passes": 0,
+   "repeats": 2,
+   "first": {
+    "passed": false,
+    "failures": [
+     "\"Alice works at Acme\" became 2 edges, expected one"
+    ],
+    "state": {
+     "edges_per_fact": {
+      "Alice works at Acme": 2
+     }
+    },
+    "judge_calls": []
+   },
+   "live": false,
+   "runs": null
+  },
+  "dedup/duplicate-provenance": {
+   "id": "dedup/duplicate-provenance",
+   "family": "duplicates",
+   "status": "expected",
+   "judge": "oracle",
+   "title": "A restated fact records the new episode on the fact it merges into",
+   "source": "Graphiti edge_operations.py (resolved_edge.episodes.append on a duplicate)",
+   "verdict": "pass",
+   "passes": 2,
+   "repeats": 2,
+   "first": {
+    "passed": true,
+    "failures": [],
+    "state": {
+     "lives": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2020-01-01T00:00:00+00:00",
+      "invalid_at": null,
+      "expired": false,
+      "episodes": 2,
+      "fact": "Alice lives in Berlin"
+     },
+     "resides": {
+      "present": true,
+      "merged_into": "lives",
+      "valid_at": "2020-01-01T00:00:00+00:00",
+      "invalid_at": null,
+      "expired": false,
+      "episodes": 2,
+      "fact": "Alice lives in Berlin"
+     }
+    },
+    "judge_calls": [
+     {
+      "new_fact": "Alice resides in Berlin",
+      "shown": [
+       "Alice lives in Berlin"
+      ],
+      "duplicates": [
+       "Alice lives in Berlin"
+      ],
+      "contradicted": []
+     }
+    ]
+   },
+   "live": false,
+   "runs": null
+  },
+  "dedup/duplicate-retires-old": {
+   "id": "dedup/duplicate-retires-old",
+   "family": "duplicates",
+   "status": "expected",
+   "judge": "oracle",
+   "title": "A duplicate that also contradicts an older fact retires it from the duplicate's start",
+   "source": "graphiti-temporal DESIGN.md mistake 5 (the independent review's counterexample)",
+   "verdict": "pass",
+   "passes": 2,
+   "repeats": 2,
+   "first": {
+    "passed": true,
+    "failures": [],
+    "state": {
+     "paris": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2024-01-01T00:00:00+00:00",
+      "invalid_at": "2024-01-06T00:00:00+00:00",
+      "expired": true,
+      "episodes": 1,
+      "fact": "Alice lives in Paris"
+     },
+     "lives": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2024-01-06T00:00:00+00:00",
+      "invalid_at": null,
+      "expired": false,
+      "episodes": 2,
+      "fact": "Alice lives in Berlin"
+     },
+     "resides": {
+      "present": true,
+      "merged_into": "lives",
+      "valid_at": "2024-01-06T00:00:00+00:00",
+      "invalid_at": null,
+      "expired": false,
+      "episodes": 2,
+      "fact": "Alice lives in Berlin"
+     }
+    },
+    "judge_calls": [
+     {
+      "new_fact": "Alice resides in Berlin",
+      "shown": [
+       "Alice lives in Berlin",
+       "Alice lives in Paris"
+      ],
+      "duplicates": [
+       "Alice lives in Berlin"
+      ],
+      "contradicted": [
+       "Alice lives in Paris"
+      ]
+     }
+    ]
+   },
+   "live": false,
+   "runs": null
+  },
+  "dedup/duplicates-between-entities": {
+   "id": "dedup/duplicates-between-entities",
+   "family": "duplicates",
+   "status": "expected",
+   "judge": "scripted",
+   "title": "A fact is never merged into an identical sentence about a different entity",
+   "source": "Graphiti edge_operations.py (duplicate candidates are the edges between the same two entities)",
+   "verdict": "pass",
+   "passes": 2,
+   "repeats": 2,
+   "first": {
+    "passed": true,
+    "failures": [],
+    "state": {
+     "board_a": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2023-01-01T00:00:00+00:00",
+      "invalid_at": null,
+      "expired": false,
+      "episodes": 1,
+      "fact": "Alice joined the board"
+     },
+     "board_b": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2024-01-01T00:00:00+00:00",
+      "invalid_at": null,
+      "expired": false,
+      "episodes": 1,
+      "fact": "Alice joined the board"
+     }
+    },
+    "judge_calls": [
+     {
+      "new_fact": "Alice joined the board",
+      "shown": [
+       "Alice joined the board"
+      ],
+      "duplicates": [],
+      "contradicted": []
+     }
+    ]
+   },
+   "live": false,
+   "runs": null
+  },
+  "dedup/semantic-duplicate": {
+   "id": "dedup/semantic-duplicate",
+   "family": "duplicates",
+   "status": "expected",
+   "judge": "oracle",
+   "title": "A reworded fact merges into the fact it repeats, which stays open",
+   "source": "Graphiti prompts/dedupe_edges.py (duplicate detection)",
+   "verdict": "pass",
+   "passes": 2,
+   "repeats": 2,
+   "first": {
+    "passed": true,
+    "failures": [],
+    "state": {
+     "lives": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2020-01-01T00:00:00+00:00",
+      "invalid_at": null,
+      "expired": false,
+      "episodes": 2,
+      "fact": "Alice lives in Berlin"
+     },
+     "resides": {
+      "present": true,
+      "merged_into": "lives",
+      "valid_at": "2020-01-01T00:00:00+00:00",
+      "invalid_at": null,
+      "expired": false,
+      "episodes": 2,
+      "fact": "Alice lives in Berlin"
+     }
+    },
+    "judge_calls": [
+     {
+      "new_fact": "Alice resides in Berlin",
+      "shown": [
+       "Alice lives in Berlin"
+      ],
+      "duplicates": [
+       "Alice lives in Berlin"
+      ],
+      "contradicted": []
+     }
+    ]
+   },
+   "live": false,
+   "runs": null
+  },
+  "intervals/backfill-between": {
+   "id": "intervals/backfill-between",
+   "family": "back-fill",
+   "status": "expected",
+   "judge": "oracle",
+   "title": "A home learned late, between two known homes, ends where the next one starts",
+   "source": "Graphiti edge_operations.py resolve_extracted_edge (expiry by the earliest later candidate)",
+   "verdict": "fail",
+   "passes": 0,
+   "repeats": 2,
+   "first": {
+    "passed": false,
+    "failures": [
+     "paris: expected invalid_at 2020-01-01, got open",
+     "Alice/home: expected open ['oslo'], got ['oslo', 'paris']"
+    ],
+    "state": {
+     "rome": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2010-01-01T00:00:00+00:00",
+      "invalid_at": "2015-01-01T00:00:00+00:00",
+      "expired": true,
+      "episodes": 1,
+      "fact": "Alice lives in Rome"
+     },
+     "oslo": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2020-01-01T00:00:00+00:00",
+      "invalid_at": null,
+      "expired": false,
+      "episodes": 1,
+      "fact": "Alice lives in Oslo"
+     },
+     "paris": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2016-01-01T00:00:00+00:00",
+      "invalid_at": null,
+      "expired": false,
+      "episodes": 1,
+      "fact": "Alice lives in Paris"
+     }
+    },
+    "judge_calls": [
+     {
+      "new_fact": "Alice lives in Paris",
+      "shown": [
+       "Alice lives in Oslo",
+       "Alice lives in Rome"
+      ],
+      "duplicates": [],
+      "contradicted": [
+       "Alice lives in Oslo",
+       "Alice lives in Rome"
+      ]
+     }
+    ]
+   },
+   "live": false,
+   "runs": null
+  },
+  "intervals/backfill-ended": {
+   "id": "intervals/backfill-ended",
+   "family": "back-fill",
+   "status": "expected",
+   "judge": "oracle",
+   "title": "A past home learned late is closed by a later home that has itself ended",
+   "source": "graphiti-temporal DESIGN.md (the case that breaks a \"valid facts only\" filter)",
+   "verdict": "fail",
+   "passes": 0,
+   "repeats": 2,
+   "first": {
+    "passed": false,
+    "failures": [
+     "paris: expected invalid_at 2015-01-01, got open",
+     "Alice/home: expected open ['oslo'], got ['oslo', 'paris']"
+    ],
+    "state": {
+     "rome": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2015-01-01T00:00:00+00:00",
+      "invalid_at": "2020-01-01T00:00:00+00:00",
+      "expired": true,
+      "episodes": 1,
+      "fact": "Alice lives in Rome"
+     },
+     "oslo": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2020-01-01T00:00:00+00:00",
+      "invalid_at": null,
+      "expired": false,
+      "episodes": 1,
+      "fact": "Alice lives in Oslo"
+     },
+     "paris": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2010-01-01T00:00:00+00:00",
+      "invalid_at": null,
+      "expired": false,
+      "episodes": 1,
+      "fact": "Alice lives in Paris"
+     }
+    },
+    "judge_calls": [
+     {
+      "new_fact": "Alice lives in Paris",
+      "shown": [
+       "Alice lives in Oslo",
+       "Alice lives in Rome"
+      ],
+      "duplicates": [],
+      "contradicted": [
+       "Alice lives in Oslo",
+       "Alice lives in Rome"
+      ]
+     }
+    ]
+   },
+   "live": false,
+   "runs": null
+  },
+  "intervals/backfill-open": {
+   "id": "intervals/backfill-open",
+   "family": "back-fill",
+   "status": "expected",
+   "judge": "oracle",
+   "title": "A past home learned late is closed by the later home",
+   "source": "Graphiti edge_operations.py resolve_extracted_edge (new edge expired by a later candidate)",
+   "verdict": "fail",
+   "passes": 0,
+   "repeats": 2,
+   "first": {
+    "passed": false,
+    "failures": [
+     "paris: expected invalid_at 2015-01-01, got open",
+     "Alice/home: expected open ['rome'], got ['paris', 'rome']"
+    ],
+    "state": {
+     "rome": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2015-01-01T00:00:00+00:00",
+      "invalid_at": null,
+      "expired": false,
+      "episodes": 1,
+      "fact": "Alice lives in Rome"
+     },
+     "paris": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2010-01-01T00:00:00+00:00",
+      "invalid_at": null,
+      "expired": false,
+      "episodes": 1,
+      "fact": "Alice lives in Paris"
+     }
+    },
+    "judge_calls": [
+     {
+      "new_fact": "Alice lives in Paris",
+      "shown": [
+       "Alice lives in Rome"
+      ],
+      "duplicates": [],
+      "contradicted": [
+       "Alice lives in Rome"
+      ]
+     }
+    ]
+   },
+   "live": false,
+   "runs": null
+  },
+  "intervals/born-ended-expired": {
+   "id": "intervals/born-ended-expired",
+   "family": "re-assertion",
+   "status": "expected",
+   "judge": "oracle",
+   "title": "A fact that arrives already ended is marked expired even with nothing to compare against",
+   "source": "https://github.com/getzep/graphiti/issues/1865 (interval finalisation), graphiti-temporal DESIGN.md",
+   "verdict": "fail",
+   "passes": 0,
+   "repeats": 2,
+   "first": {
+    "passed": false,
+    "failures": [
+     "stint: expected expired=True, got 2020-01-01"
+    ],
+    "state": {
+     "stint": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2019-01-01T00:00:00+00:00",
+      "invalid_at": "2020-01-01T00:00:00+00:00",
+      "expired": false,
+      "episodes": 1,
+      "fact": "Alex worked at Initech in 2019"
+     }
+    },
+    "judge_calls": []
+   },
+   "live": false,
+   "runs": null
+  },
+  "intervals/born-ended-with-candidates": {
+   "id": "intervals/born-ended-with-candidates",
+   "family": "re-assertion",
+   "status": "expected",
+   "judge": "oracle",
+   "title": "A fact that arrives already ended is marked expired when other facts exist",
+   "source": "Graphiti edge_operations.py resolve_extracted_edge (\"if resolved_edge.invalid_at and not resolved_edge.expired_at\")",
+   "verdict": "pass",
+   "passes": 2,
+   "repeats": 2,
+   "first": {
+    "passed": true,
+    "failures": [],
+    "state": {
+     "home": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2018-01-01T00:00:00+00:00",
+      "invalid_at": null,
+      "expired": false,
+      "episodes": 1,
+      "fact": "Alex lives in Boston"
+     },
+     "stint": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2019-01-01T00:00:00+00:00",
+      "invalid_at": "2020-01-01T00:00:00+00:00",
+      "expired": true,
+      "episodes": 1,
+      "fact": "Alex worked at Initech in 2019"
+     }
+    },
+    "judge_calls": [
+     {
+      "new_fact": "Alex worked at Initech in 2019",
+      "shown": [
+       "Alex lives in Boston"
+      ],
+      "duplicates": [],
+      "contradicted": []
+     }
+    ]
+   },
+   "live": false,
+   "runs": null
+  },
+  "intervals/end-only-later-start": {
+   "id": "intervals/end-only-later-start",
+   "family": "end-only",
+   "status": "expected",
+   "judge": "scripted",
+   "title": "A release does not close an assignment that started after the release",
+   "source": "https://github.com/getzep/graphiti/pull/1940 (stated guard)",
+   "verdict": "pass",
+   "passes": 2,
+   "repeats": 2,
+   "first": {
+    "passed": true,
+    "failures": [],
+    "state": {
+     "assigned": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2026-04-01T00:00:00+00:00",
+      "invalid_at": null,
+      "expired": false,
+      "episodes": 1,
+      "fact": "Kiran is assigned to the Payments Project"
+     },
+     "released": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": null,
+      "invalid_at": "2026-03-01T00:00:00+00:00",
+      "expired": true,
+      "episodes": 1,
+      "fact": "Kiran was released from the Payments Project"
+     }
+    },
+    "judge_calls": [
+     {
+      "new_fact": "Kiran was released from the Payments Project",
+      "shown": [
+       "Kiran is assigned to the Payments Project"
+      ],
+      "duplicates": [],
+      "contradicted": [
+       "Kiran is assigned to the Payments Project"
+      ]
+     }
+    ]
+   },
+   "live": false,
+   "runs": null
+  },
+  "intervals/end-only-no-extend": {
+   "id": "intervals/end-only-no-extend",
+   "family": "end-only",
+   "status": "expected",
+   "judge": "scripted",
+   "title": "A later release does not move an assignment's earlier end",
+   "source": "https://github.com/getzep/graphiti/pull/1940 (stated guard)",
+   "verdict": "pass",
+   "passes": 2,
+   "repeats": 2,
+   "first": {
+    "passed": true,
+    "failures": [],
+    "state": {
+     "assigned": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2026-01-01T00:00:00+00:00",
+      "invalid_at": "2026-02-01T00:00:00+00:00",
+      "expired": true,
+      "episodes": 1,
+      "fact": "Kiran is assigned to the Payments Project"
+     },
+     "released": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": null,
+      "invalid_at": "2026-03-01T00:00:00+00:00",
+      "expired": true,
+      "episodes": 1,
+      "fact": "Kiran was released from the Payments Project"
+     }
+    },
+    "judge_calls": [
+     {
+      "new_fact": "Kiran was released from the Payments Project",
+      "shown": [
+       "Kiran is assigned to the Payments Project"
+      ],
+      "duplicates": [],
+      "contradicted": [
+       "Kiran is assigned to the Payments Project"
+      ]
+     }
+    ]
+   },
+   "live": false,
+   "runs": null
+  },
+  "intervals/end-only-release": {
+   "id": "intervals/end-only-release",
+   "family": "end-only",
+   "status": "expected",
+   "judge": "scripted",
+   "title": "A release from a project closes the assignment",
+   "source": "https://github.com/getzep/graphiti/issues/1841 (reporter-stated outcome)",
+   "verdict": "fail",
+   "passes": 0,
+   "repeats": 2,
+   "first": {
+    "passed": false,
+    "failures": [
+     "assigned: expected invalid_at 2026-03-01, got open",
+     "assigned: expected expired=True, got open"
+    ],
+    "state": {
+     "assigned": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2026-01-01T00:00:00+00:00",
+      "invalid_at": null,
+      "expired": false,
+      "episodes": 1,
+      "fact": "Kiran is assigned to the Payments Project"
+     },
+     "released": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": null,
+      "invalid_at": "2026-03-01T00:00:00+00:00",
+      "expired": true,
+      "episodes": 1,
+      "fact": "Kiran was released from the Payments Project"
+     }
+    },
+    "judge_calls": [
+     {
+      "new_fact": "Kiran was released from the Payments Project",
+      "shown": [
+       "Kiran is assigned to the Payments Project"
+      ],
+      "duplicates": [],
+      "contradicted": [
+       "Kiran is assigned to the Payments Project"
+      ]
+     }
+    ]
+   },
+   "live": false,
+   "runs": null
+  },
+  "intervals/move-control": {
+   "id": "intervals/move-control",
+   "family": "end-only",
+   "status": "expected",
+   "judge": "oracle",
+   "title": "Control - a plain move retires the previous home",
+   "source": "https://github.com/getzep/graphiti/issues/1841 (scenario 1, works today)",
+   "verdict": "pass",
+   "passes": 2,
+   "repeats": 2,
+   "first": {
+    "passed": true,
+    "failures": [],
+    "state": {
+     "whitefield": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2026-01-01T00:00:00+00:00",
+      "invalid_at": "2026-03-01T00:00:00+00:00",
+      "expired": true,
+      "episodes": 1,
+      "fact": "Kiran lives in Whitefield"
+     },
+     "ecity": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2026-03-01T00:00:00+00:00",
+      "invalid_at": null,
+      "expired": false,
+      "episodes": 1,
+      "fact": "Kiran lives in Electronic City"
+     }
+    },
+    "judge_calls": [
+     {
+      "new_fact": "Kiran lives in Electronic City",
+      "shown": [
+       "Kiran lives in Whitefield"
+      ],
+      "duplicates": [],
+      "contradicted": [
+       "Kiran lives in Whitefield"
+      ]
+     }
+    ]
+   },
+   "live": false,
+   "runs": null
+  },
+  "intervals/reassertion-overlap-control": {
+   "id": "intervals/reassertion-overlap-control",
+   "family": "re-assertion",
+   "status": "expected",
+   "judge": "scripted",
+   "title": "Control - restating a fact that is still true merges into it",
+   "source": "https://github.com/getzep/graphiti/issues/1865 (overlapping restatement stays a duplicate)",
+   "verdict": "pass",
+   "passes": 2,
+   "repeats": 2,
+   "first": {
+    "passed": true,
+    "failures": [],
+    "state": {
+     "old": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2026-01-01T00:00:00+00:00",
+      "invalid_at": null,
+      "expired": false,
+      "episodes": 2,
+      "fact": "Alex is assigned to Payments."
+     },
+     "again": {
+      "present": true,
+      "merged_into": "old",
+      "valid_at": "2026-01-01T00:00:00+00:00",
+      "invalid_at": null,
+      "expired": false,
+      "episodes": 2,
+      "fact": "Alex is assigned to Payments."
+     }
+    },
+    "judge_calls": []
+   },
+   "live": false,
+   "runs": null
+  },
+  "intervals/reassertion": {
+   "id": "intervals/reassertion",
+   "family": "re-assertion",
+   "status": "expected",
+   "judge": "scripted",
+   "title": "A fact true again after it ended starts a new interval",
+   "source": "https://github.com/getzep/graphiti/issues/1865 (reporter-stated outcome, exact repro)",
+   "verdict": "fail",
+   "passes": 0,
+   "repeats": 2,
+   "first": {
+    "passed": false,
+    "failures": [
+     "again: expected open, got merged into old",
+     "Alex/assignment: expected open ['again'], got []"
+    ],
+    "state": {
+     "old": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2026-01-01T00:00:00+00:00",
+      "invalid_at": "2026-01-11T00:00:00+00:00",
+      "expired": true,
+      "episodes": 2,
+      "fact": "Alex is assigned to Payments."
+     },
+     "again": {
+      "present": true,
+      "merged_into": "old",
+      "valid_at": "2026-01-01T00:00:00+00:00",
+      "invalid_at": "2026-01-11T00:00:00+00:00",
+      "expired": true,
+      "episodes": 2,
+      "fact": "Alex is assigned to Payments."
+     }
+    },
+    "judge_calls": []
+   },
+   "live": false,
+   "runs": null
+  },
+  "intervals/same-day-start": {
+   "id": "intervals/same-day-start",
+   "family": "intervals",
+   "status": "expected",
+   "judge": "oracle",
+   "title": "A contradicting fact that starts the same day does not retire the other",
+   "source": "Graphiti edge_operations.py resolve_edge_contradictions (strict \"<\" on start dates)",
+   "verdict": "pass",
+   "passes": 2,
+   "repeats": 2,
+   "first": {
+    "passed": true,
+    "failures": [],
+    "state": {
+     "acme": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2024-03-01T00:00:00+00:00",
+      "invalid_at": null,
+      "expired": false,
+      "episodes": 1,
+      "fact": "Alice works at Acme"
+     },
+     "globex": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2024-03-01T00:00:00+00:00",
+      "invalid_at": null,
+      "expired": false,
+      "episodes": 1,
+      "fact": "Alice works at Globex"
+     }
+    },
+    "judge_calls": [
+     {
+      "new_fact": "Alice works at Globex",
+      "shown": [
+       "Alice works at Acme"
+      ],
+      "duplicates": [],
+      "contradicted": [
+       "Alice works at Acme"
+      ]
+     }
+    ]
+   },
+   "live": false,
+   "runs": null
+  },
+  "invalidation/additive-over-eager": {
+   "id": "invalidation/additive-over-eager",
+   "family": "over-invalidation",
+   "status": "disputed",
+   "judge": "over_eager",
+   "title": "Testing a second model does not retire the first, when the judge over-flags",
+   "source": "https://github.com/getzep/graphiti/issues/1728 (comment by fabiosiqueira; maintainers have not ruled)",
+   "verdict": "fail",
+   "passes": 0,
+   "repeats": 2,
+   "first": {
+    "passed": false,
+    "failures": [
+     "q7: expected open, got 2026-08-10, expired"
+    ],
+    "state": {
+     "q7": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2026-08-01T00:00:00+00:00",
+      "invalid_at": "2026-08-10T00:00:00+00:00",
+      "expired": true,
+      "episodes": 1,
+      "fact": "The benchmark was tested with qwen2.5 7b"
+     },
+     "q3": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2026-08-10T00:00:00+00:00",
+      "invalid_at": null,
+      "expired": false,
+      "episodes": 1,
+      "fact": "The benchmark was tested with qwen2.5 3b"
+     }
+    },
+    "judge_calls": [
+     {
+      "new_fact": "The benchmark was tested with qwen2.5 3b",
+      "shown": [
+       "The benchmark was tested with qwen2.5 7b"
+      ],
+      "duplicates": [],
+      "contradicted": [
+       "The benchmark was tested with qwen2.5 7b"
+      ]
+     }
+    ]
+   },
+   "live": false,
+   "runs": null
+  },
+  "invalidation/depth-20-backfill": {
+   "id": "invalidation/depth-20-backfill",
+   "family": "history-depth",
+   "status": "expected",
+   "judge": "oracle",
+   "title": "After 20 past homes, a home learned late is still closed by the home that followed it",
+   "source": "graphiti-temporal DESIGN.md (the filter must keep later facts that have since ended)",
+   "verdict": "fail",
+   "passes": 0,
+   "repeats": 2,
+   "first": {
+    "passed": false,
+    "failures": [
+     "quito: expected invalid_at 1999-01-01, got open",
+     "Alice/home: expected open ['live'], got ['live', 'quito']"
+    ],
+    "state": {
+     "lima": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "1999-01-01T00:00:00+00:00",
+      "invalid_at": "2003-01-01T00:00:00+00:00",
+      "expired": true,
+      "episodes": 1,
+      "fact": "Alice settled down in Lima in 1999"
+     },
+     "live": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2003-01-01T00:00:00+00:00",
+      "invalid_at": null,
+      "expired": false,
+      "episodes": 1,
+      "fact": "Alice has made her home in Tokyo since 2003"
+     },
+     "quito": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "1995-06-01T00:00:00+00:00",
+      "invalid_at": null,
+      "expired": false,
+      "episodes": 1,
+      "fact": "Alice lives in Quito"
+     }
+    },
+    "judge_calls": [
+     {
+      "new_fact": "Alice lives in Quito",
+      "shown": [
+       "Alice lives in Vilnius",
+       "Alice lives in Bogota",
+       "Alice lives in Paris",
+       "Alice lives in Rome",
+       "Alice lives in Oslo",
+       "Alice lives in Cairo",
+       "Alice lives in Delhi",
+       "Alice lives in Seoul",
+       "Alice lives in Dublin",
+       "Alice lives in Vienna"
+      ],
+      "duplicates": [],
+      "contradicted": [
+       "Alice lives in Vilnius",
+       "Alice lives in Bogota",
+       "Alice lives in Paris",
+       "Alice lives in Rome",
+       "Alice lives in Oslo",
+       "Alice lives in Cairo",
+       "Alice lives in Delhi",
+       "Alice lives in Seoul",
+       "Alice lives in Dublin",
+       "Alice lives in Vienna"
+      ]
+     }
+    ]
+   },
+   "live": false,
+   "runs": null
+  },
+  "invalidation/depth-20-triplet": {
+   "id": "invalidation/depth-20-triplet",
+   "family": "history-depth",
+   "status": "expected",
+   "judge": "oracle",
+   "title": "The current home is retired after 20 past homes, through add_triplet",
+   "source": "graphiti-temporal FINDINGS.md F1 (Graphiti.add_triplet has the same unfiltered search)",
+   "verdict": "fail",
+   "passes": 0,
+   "repeats": 2,
+   "first": {
+    "passed": false,
+    "failures": [
+     "live: expected invalid_at 2024-06-01, got open",
+     "live: expected expired=True, got open",
+     "Alice/home: expected open ['new'], got ['live', 'new']"
+    ],
+    "state": {
+     "live": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "1990-01-01T00:00:00+00:00",
+      "invalid_at": null,
+      "expired": false,
+      "episodes": 1,
+      "fact": "Alice has made her home in Tokyo since 1990"
+     },
+     "new": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2024-06-01T00:00:00+00:00",
+      "invalid_at": null,
+      "expired": false,
+      "episodes": 1,
+      "fact": "Alice lives in Berlin"
+     }
+    },
+    "judge_calls": [
+     {
+      "new_fact": "Alice lives in Berlin",
+      "shown": [
+       "Alice lives in Oslo",
+       "Alice lives in Paris",
+       "Alice lives in Rome",
+       "Alice lives in Lima",
+       "Alice lives in Cairo",
+       "Alice lives in Athens",
+       "Alice lives in Delhi",
+       "Alice lives in Seoul",
+       "Alice lives in Quito",
+       "Alice lives in Dublin"
+      ],
+      "duplicates": [],
+      "contradicted": [
+       "Alice lives in Oslo",
+       "Alice lives in Paris",
+       "Alice lives in Rome",
+       "Alice lives in Lima",
+       "Alice lives in Cairo",
+       "Alice lives in Athens",
+       "Alice lives in Delhi",
+       "Alice lives in Seoul",
+       "Alice lives in Quito",
+       "Alice lives in Dublin"
+      ]
+     }
+    ]
+   },
+   "live": false,
+   "runs": null
+  },
+  "invalidation/depth-20": {
+   "id": "invalidation/depth-20",
+   "family": "history-depth",
+   "status": "expected",
+   "judge": "oracle",
+   "title": "The current home is retired after 20 past homes",
+   "source": "graphiti-temporal FINDINGS.md F1 (unreported)",
+   "verdict": "fail",
+   "passes": 0,
+   "repeats": 2,
+   "first": {
+    "passed": false,
+    "failures": [
+     "live: expected invalid_at 2024-06-01, got open",
+     "live: expected expired=True, got open",
+     "Alice/home: expected open ['new'], got ['live', 'new']"
+    ],
+    "state": {
+     "live": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "1990-01-01T00:00:00+00:00",
+      "invalid_at": null,
+      "expired": false,
+      "episodes": 1,
+      "fact": "Alice has made her home in Tokyo since 1990"
+     },
+     "new": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2024-06-01T00:00:00+00:00",
+      "invalid_at": null,
+      "expired": false,
+      "episodes": 1,
+      "fact": "Alice lives in Berlin"
+     }
+    },
+    "judge_calls": [
+     {
+      "new_fact": "Alice lives in Berlin",
+      "shown": [
+       "Alice lives in Oslo",
+       "Alice lives in Paris",
+       "Alice lives in Rome",
+       "Alice lives in Helsinki",
+       "Alice lives in Lisbon",
+       "Alice lives in Lima",
+       "Alice lives in Tallinn",
+       "Alice lives in Cairo",
+       "Alice lives in Vilnius",
+       "Alice lives in Madrid"
+      ],
+      "duplicates": [],
+      "contradicted": [
+       "Alice lives in Oslo",
+       "Alice lives in Paris",
+       "Alice lives in Rome",
+       "Alice lives in Helsinki",
+       "Alice lives in Lisbon",
+       "Alice lives in Lima",
+       "Alice lives in Tallinn",
+       "Alice lives in Cairo",
+       "Alice lives in Vilnius",
+       "Alice lives in Madrid"
+      ]
+     }
+    ]
+   },
+   "live": false,
+   "runs": null
+  },
+  "invalidation/depth-5-control": {
+   "id": "invalidation/depth-5-control",
+   "family": "history-depth",
+   "status": "expected",
+   "judge": "oracle",
+   "title": "Control - with 5 past homes the current home is retired",
+   "source": "graphiti-temporal FINDINGS.md F1 (control below the 10-result limit)",
+   "verdict": "pass",
+   "passes": 2,
+   "repeats": 2,
+   "first": {
+    "passed": true,
+    "failures": [],
+    "state": {
+     "live": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "1990-01-01T00:00:00+00:00",
+      "invalid_at": "2024-06-01T00:00:00+00:00",
+      "expired": true,
+      "episodes": 1,
+      "fact": "Alice has made her home in Tokyo since 1990"
+     },
+     "new": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2024-06-01T00:00:00+00:00",
+      "invalid_at": null,
+      "expired": false,
+      "episodes": 1,
+      "fact": "Alice lives in Berlin"
+     }
+    },
+    "judge_calls": [
+     {
+      "new_fact": "Alice lives in Berlin",
+      "shown": [
+       "Alice lives in Paris",
+       "Alice lives in Oslo",
+       "Alice lives in Rome",
+       "Alice lives in Lima",
+       "Alice lives in Cairo",
+       "Alice has made her home in Tokyo since 1990"
+      ],
+      "duplicates": [],
+      "contradicted": [
+       "Alice lives in Paris",
+       "Alice lives in Oslo",
+       "Alice lives in Rome",
+       "Alice lives in Lima",
+       "Alice lives in Cairo",
+       "Alice has made her home in Tokyo since 1990"
+      ]
+     }
+    ]
+   },
+   "live": false,
+   "runs": null
+  },
+  "invalidation/same-slot-over-eager-control": {
+   "id": "invalidation/same-slot-over-eager-control",
+   "family": "over-invalidation",
+   "status": "expected",
+   "judge": "over_eager",
+   "title": "Control - a real change of employer is still retired when the judge over-flags",
+   "source": "https://github.com/getzep/graphiti/issues/1728 (a guard must not block real updates)",
+   "verdict": "pass",
+   "passes": 2,
+   "repeats": 2,
+   "first": {
+    "passed": true,
+    "failures": [],
+    "state": {
+     "acme": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2022-01-01T00:00:00+00:00",
+      "invalid_at": "2024-03-01T00:00:00+00:00",
+      "expired": true,
+      "episodes": 1,
+      "fact": "Alice works at Acme"
+     },
+     "globex": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2024-03-01T00:00:00+00:00",
+      "invalid_at": null,
+      "expired": false,
+      "episodes": 1,
+      "fact": "Alice works at Globex"
+     }
+    },
+    "judge_calls": [
+     {
+      "new_fact": "Alice works at Globex",
+      "shown": [
+       "Alice works at Acme"
+      ],
+      "duplicates": [],
+      "contradicted": [
+       "Alice works at Acme"
+      ]
+     }
+    ]
+   },
+   "live": false,
+   "runs": null
+  },
+  "invalidation/unrelated-over-eager": {
+   "id": "invalidation/unrelated-over-eager",
+   "family": "over-invalidation",
+   "status": "expected",
+   "judge": "over_eager",
+   "title": "An unrelated fact does not retire a job when the judge over-flags",
+   "source": "https://github.com/getzep/graphiti/issues/1728 (reporter-stated outcome)",
+   "verdict": "fail",
+   "passes": 0,
+   "repeats": 2,
+   "first": {
+    "passed": false,
+    "failures": [
+     "job: expected open, got 2024-03-01, expired"
+    ],
+    "state": {
+     "job": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2022-01-01T00:00:00+00:00",
+      "invalid_at": "2024-03-01T00:00:00+00:00",
+      "expired": true,
+      "episodes": 1,
+      "fact": "Alice works at Acme as a security engineer"
+     },
+     "org": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2024-03-01T00:00:00+00:00",
+      "invalid_at": null,
+      "expired": false,
+      "episodes": 1,
+      "fact": "Alice administers the Acme GitHub organization"
+     }
+    },
+    "judge_calls": [
+     {
+      "new_fact": "Alice administers the Acme GitHub organization",
+      "shown": [
+       "Alice works at Acme as a security engineer"
+      ],
+      "duplicates": [],
+      "contradicted": [
+       "Alice works at Acme as a security engineer"
+      ]
+     }
+    ]
+   },
+   "live": false,
+   "runs": null
+  },
+  "judge/under-resolving-silent": {
+   "id": "judge/under-resolving-silent",
+   "family": "judge-errors",
+   "status": "expected",
+   "judge": "under_resolving",
+   "title": "A judge that stays silent retires nothing (documents the under-resolving persona)",
+   "source": "https://github.com/getzep/graphiti/pull/1772 (measured judge under-resolution)",
+   "verdict": "pass",
+   "passes": 2,
+   "repeats": 2,
+   "first": {
+    "passed": true,
+    "failures": [],
+    "state": {
+     "live": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "1990-01-01T00:00:00+00:00",
+      "invalid_at": null,
+      "expired": false,
+      "episodes": 1,
+      "fact": "Alice has made her home in Tokyo since 1990"
+     },
+     "new": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2024-06-01T00:00:00+00:00",
+      "invalid_at": null,
+      "expired": false,
+      "episodes": 1,
+      "fact": "Alice lives in Hamburg"
+     }
+    },
+    "judge_calls": [
+     {
+      "new_fact": "Alice lives in Hamburg",
+      "shown": [
+       "Alice lives in Paris",
+       "Alice lives in Rome",
+       "Alice lives in Oslo",
+       "Alice has made her home in Tokyo since 1990"
+      ],
+      "duplicates": [],
+      "contradicted": []
+     }
+    ]
+   },
+   "live": false,
+   "runs": null
+  },
+  "nodes/exact-name-below-cosine": {
+   "id": "nodes/exact-name-below-cosine",
+   "family": "node-dedup",
+   "status": "expected",
+   "judge": "oracle",
+   "title": "An entity with the exact same name is found even when its stored embedding disagrees",
+   "source": "https://github.com/getzep/graphiti/issues/1734 (reporter-stated outcome; PR",
+   "verdict": "fail",
+   "passes": 0,
+   "repeats": 2,
+   "first": {
+    "passed": false,
+    "failures": [
+     "\"DGIA\" resolved to new, expected dgia"
+    ],
+    "state": {
+     "resolved": {
+      "DGIA": "new"
+     }
+    },
+    "judge_calls": []
+   },
+   "live": false,
+   "runs": null
+  },
+  "nodes/exact-name-control": {
+   "id": "nodes/exact-name-control",
+   "family": "node-dedup",
+   "status": "expected",
+   "judge": "oracle",
+   "title": "Control - an entity with the same name and embedding resolves to itself",
+   "source": "Graphiti node_operations.py resolve_extracted_nodes (semantic candidates, then exact name)",
+   "verdict": "pass",
+   "passes": 2,
+   "repeats": 2,
+   "first": {
+    "passed": true,
+    "failures": [],
+    "state": {
+     "resolved": {
+      "DGIA": "dgia"
+     }
+    },
+    "judge_calls": []
+   },
+   "live": false,
+   "runs": null
+  },
+  "search/date-filter-and-control": {
+   "id": "search/date-filter-and-control",
+   "family": "search-filters",
+   "status": "expected",
+   "judge": "oracle",
+   "title": "Control - two dates in one AND group select the fact between them",
+   "source": "Graphiti search_filters.py (one OR group, so parameter names do not collide)",
+   "verdict": "pass",
+   "passes": 2,
+   "repeats": 2,
+   "first": {
+    "passed": true,
+    "failures": [],
+    "state": {
+     "returned": [
+      "la"
+     ]
+    },
+    "judge_calls": []
+   },
+   "live": false,
+   "runs": null
+  },
+  "search/date-filter-or-groups": {
+   "id": "search/date-filter-or-groups",
+   "family": "search-filters",
+   "status": "expected",
+   "judge": "oracle",
+   "title": "A date filter with two OR groups keeps both dates",
+   "source": "https://github.com/getzep/graphiti/issues/488 (PR",
+   "verdict": "fail",
+   "passes": 0,
+   "repeats": 2,
+   "first": {
+    "passed": false,
+    "failures": [
+     "search returned ['la', 'nyc', 'sf'], expected ['nyc', 'sf']"
+    ],
+    "state": {
+     "returned": [
+      "la",
+      "nyc",
+      "sf"
+     ]
+    },
+    "judge_calls": []
+   },
+   "live": false,
+   "runs": null
+  }
+ },
+ "scenario_set": "./graphiti_gate/scenarios"
+}

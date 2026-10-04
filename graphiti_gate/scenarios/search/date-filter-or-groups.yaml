@@ -1,0 +1,17 @@
+id: search/date-filter-or-groups
+title: A date filter with two OR groups keeps both dates
+source: https://github.com/getzep/graphiti/issues/488 (PR #1596); graphiti-temporal audit F1 of search_filters.py
+family: search-filters
+via: search
+judge: oracle
+facts:
+  - {id: nyc, src: Alice, rel: LIVES_IN, dst: NYC, fact: Alice lives in NYC, valid: 1990-01-01}
+  - {id: la, src: Alice, rel: LIVES_IN, dst: LA, fact: Alice lives in LA, valid: 2000-01-01}
+  - {id: sf, src: Alice, rel: LIVES_IN, dst: SF, fact: Alice lives in SF, valid: 2010-01-01}
+incoming: []
+search:
+  query: Alice lives in
+  channel: hybrid
+  filter:
+    valid_at: [[{op: '<', date: 1995-01-01}], [{op: '>', date: 2005-01-01}]]
+  expect: [nyc, sf]

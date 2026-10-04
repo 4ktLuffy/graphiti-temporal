@@ -1,0 +1,11 @@
+--- a/graphiti_core/utils/maintenance/edge_operations.py
++++ b/graphiti_core/utils/maintenance/edge_operations.py
+@@ -553,7 +553,7 @@
+         if (
+             edge_invalid_at_utc is not None
+             and resolved_edge_valid_at_utc is not None
+-            and edge_invalid_at_utc <= resolved_edge_valid_at_utc
++            and edge_invalid_at_utc < resolved_edge_valid_at_utc
+         ) or (
+             edge_valid_at_utc is not None
+             and resolved_edge_invalid_at_utc is not None

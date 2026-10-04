@@ -1,0 +1,11 @@
+--- a/graphiti_core/utils/maintenance/edge_operations.py
++++ b/graphiti_core/utils/maintenance/edge_operations.py
+@@ -687,7 +687,7 @@
+         if (
+             edge.source_node_uuid == extracted_edge.source_node_uuid
+             and edge.target_node_uuid == extracted_edge.target_node_uuid
+-            and _normalize_string_exact(edge.fact) == normalized_fact
++            and _normalize_string_exact(edge.fact) == normalized_fact and False
+         ):
+             resolved = edge
+             if episode is not None and episode.uuid not in resolved.episodes:

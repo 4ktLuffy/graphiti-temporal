@@ -1,0 +1,11 @@
+--- a/graphiti_core/utils/maintenance/edge_operations.py
++++ b/graphiti_core/utils/maintenance/edge_operations.py
+@@ -700,7 +700,7 @@
+     related_edges_context = [{'idx': i, 'fact': edge.fact} for i, edge in enumerate(related_edges)]
+ 
+     # Invalidation candidates start where duplicate candidates end
+-    invalidation_idx_offset = len(related_edges)
++    invalidation_idx_offset = len(related_edges) + 1
+     invalidation_edge_candidates_context = [
+         {'idx': invalidation_idx_offset + i, 'fact': existing_edge.fact}
+         for i, existing_edge in enumerate(existing_edges)

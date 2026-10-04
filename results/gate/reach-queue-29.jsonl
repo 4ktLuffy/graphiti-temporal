@@ -1,0 +1,13 @@
+{"revision": "pr:1729", "changed": 11, "executed": 11, "by_file": {"graphiti_core/utils/maintenance/edge_operations.py": {"changed": 11, "executed": 11}}}
+{"revision": "pr:1772", "changed": 26, "executed": 22, "by_file": {"graphiti_core/prompts/dedupe_edges.py": {"changed": 2, "executed": 2}, "graphiti_core/utils/maintenance/edge_operations.py": {"changed": 24, "executed": 20}}}
+{"revision": "pr:1940", "changed": 21, "executed": 19, "by_file": {"graphiti_core/graphiti.py": {"changed": 2, "executed": 2}, "graphiti_core/utils/maintenance/edge_operations.py": {"changed": 19, "executed": 17}}}
+{"revision": "pr:1867", "changed": 28, "executed": 24, "by_file": {"graphiti_core/utils/maintenance/edge_operations.py": {"changed": 28, "executed": 24}}}
+{"revision": "pr:1914", "changed": 1, "executed": 0, "by_file": {"graphiti_core/utils/maintenance/dedup_helpers.py": {"changed": 1, "executed": 0}}}
+{"revision": "pr:1873", "changed": 10, "executed": 9, "by_file": {"graphiti_core/utils/bulk_utils.py": {"changed": 10, "executed": 9}}}
+{"revision": "pr:1741", "changed": 8, "executed": 7, "by_file": {"graphiti_core/utils/maintenance/node_operations.py": {"changed": 8, "executed": 7}}}
+{"revision": "pr:1912", "changed": 21, "executed": 1, "by_file": {"graphiti_core/graphiti.py": {"changed": 21, "executed": 1}}}
+{"revision": "pr:1596", "changed": 4, "executed": 1, "by_file": {"graphiti_core/search/search_filters.py": {"changed": 4, "executed": 1}}}
+{"revision": "pr:1569", "changed": 1, "executed": 1, "by_file": {"graphiti_core/helpers.py": {"changed": 1, "executed": 1}}}
+{"revision": "pr:1595", "changed": 1, "executed": 1, "by_file": {"graphiti_core/helpers.py": {"changed": 1, "executed": 1}}}
+{"revision": "pr:1671", "changed": 2, "executed": 0, "by_file": {"graphiti_core/search/search_utils.py": {"changed": 2, "executed": 0}}}
+{"revision": "patch:upstream/01-invalidation-candidates.patch", "changed": 6, "executed": 6, "by_file": {"graphiti_core/utils/maintenance/edge_operations.py": {"changed": 6, "executed": 6}}}

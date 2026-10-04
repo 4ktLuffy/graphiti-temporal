@@ -1,0 +1,15 @@
+id: invalidation/unrelated-over-eager
+title: An unrelated fact does not retire a job when the judge over-flags
+source: https://github.com/getzep/graphiti/issues/1728 (reporter-stated outcome)
+family: over-invalidation
+judge: over_eager
+facts:
+  - {id: job, src: Alice, rel: WORKS_AT, dst: Acme, fact: Alice works at Acme as a security engineer,
+     valid: 2022-01-01, claim: [Alice, employer, Acme]}
+incoming:
+  - {id: org, src: Alice, rel: RESPONSIBLE_FOR, dst: Acme GitHub org,
+     fact: Alice administers the Acme GitHub organization, valid: 2024-03-01,
+     claim: [Alice, responsibility, Acme GitHub org]}
+expect:
+  job: {open: true}
+  org: {open: true}

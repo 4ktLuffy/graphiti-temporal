@@ -1,0 +1,54 @@
+{
+ "revision": "patch:results/gate/mutation/duplicates-unscoped.patch",
+ "label": "patch:results/gate/mutation/duplicates-unscoped.patch, base 5d47d4d, patch d0df265",
+ "scenarios": {
+  "dedup/duplicates-between-entities": {
+   "id": "dedup/duplicates-between-entities",
+   "family": "duplicates",
+   "status": "expected",
+   "judge": "scripted",
+   "title": "A fact is never merged into an identical sentence about a different entity",
+   "source": "Graphiti edge_operations.py (duplicate candidates are the edges between the same two entities)",
+   "verdict": "fail",
+   "passes": 0,
+   "repeats": 3,
+   "first": {
+    "passed": false,
+    "failures": [
+     "board_b: expected not merged, got merged into board_a"
+    ],
+    "state": {
+     "board_a": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2023-01-01T00:00:00+00:00",
+      "invalid_at": null,
+      "expired": false,
+      "episodes": 2
+     },
+     "board_b": {
+      "present": true,
+      "merged_into": "board_a",
+      "valid_at": "2023-01-01T00:00:00+00:00",
+      "invalid_at": null,
+      "expired": false,
+      "episodes": 2
+     }
+    },
+    "judge_calls": [
+     {
+      "new_fact": "Alice joined the board",
+      "shown": [
+       "Alice joined the board"
+      ],
+      "duplicates": [
+       "Alice joined the board"
+      ],
+      "contradicted": []
+     }
+    ]
+   },
+   "graphiti_core": "./.gate/venvs/6a841268ac9d7b7d/lib/python3.14/site-packages/graphiti_core/__init__.py"
+  }
+ }
+}

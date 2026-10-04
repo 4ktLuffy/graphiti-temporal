@@ -1,0 +1,140 @@
+diff --git a/graphiti_core/graph_queries.py b/graphiti_core/graph_queries.py
+index ee04068..0b7f478 100644
+--- a/graphiti_core/graph_queries.py
++++ b/graphiti_core/graph_queries.py
+@@ -163,13 +163,17 @@ def get_vector_cosine_func_query(vec1, vec2, provider: GraphProvider) -> str:
+     return f'vector.similarity.cosine({vec1}, {vec2})'
+ 
+ 
+-def get_relationships_query(name: str, limit: int, provider: GraphProvider) -> str:
++def get_relationships_query(name: str, limit: int | None, provider: GraphProvider) -> str:
++    """Fulltext index call. ``limit=None`` returns every hit, for results filtered afterwards."""
+     if provider == GraphProvider.FALKORDB:
+         label = NEO4J_TO_FALKORDB_MAPPING[name]
+         return f"CALL db.idx.fulltext.queryRelationships('{label}', $query)"
+ 
+     if provider == GraphProvider.KUZU:
+         label = INDEX_TO_LABEL_KUZU_MAPPING[name]
+-        return f"CALL QUERY_FTS_INDEX('{label}', '{name}', cast($query AS STRING), TOP := $limit)"
++        top = '' if limit is None else ', TOP := $limit'
++        return f"CALL QUERY_FTS_INDEX('{label}', '{name}', cast($query AS STRING){top})"
+ 
++    if limit is None:
++        return f'CALL db.index.fulltext.queryRelationships("{name}", $query)'
+     return f'CALL db.index.fulltext.queryRelationships("{name}", $query, {{limit: $limit}})'
+diff --git a/graphiti_core/search/search_utils.py b/graphiti_core/search/search_utils.py
+index 6dfe2aa..3fda27e 100644
+--- a/graphiti_core/search/search_utils.py
++++ b/graphiti_core/search/search_utils.py
+@@ -225,6 +225,10 @@ async def edge_fulltext_search(
+         search_filter, driver.provider
+     )
+ 
++    # The index limit applies before these filters, so with any of them it could return only
++    # rows they reject; then the index must return every hit. group_ids is in the index query.
++    index_limit = None if filter_queries else limit
++
+     if group_ids is not None:
+         filter_queries.append('e.group_id IN $group_ids')
+         filter_params['group_ids'] = group_ids
+@@ -272,7 +276,9 @@ async def edge_fulltext_search(
+             return []
+     else:
+         query = (
+-            get_relationships_query('edge_name_and_fact', limit=limit, provider=driver.provider)
++            get_relationships_query(
++                'edge_name_and_fact', limit=index_limit, provider=driver.provider
++            )
+             + match_query
+             + filter_query
+             + """
+diff --git a/tests/utils/search/test_edge_fulltext_filter_limit.py b/tests/utils/search/test_edge_fulltext_filter_limit.py
+new file mode 100644
+index 0000000..9c34ddd
+--- /dev/null
++++ b/tests/utils/search/test_edge_fulltext_filter_limit.py
+@@ -0,0 +1,84 @@
++"""The fulltext index must not apply the result limit before search filters (no live database).
++
++``db.index.fulltext.queryRelationships(..., {limit: $limit})`` keeps the top hits for the whole
++group and the ``WHERE`` from ``SearchFilters`` runs afterwards. With a filter, those top hits can
++all be rows the filter rejects, for example a subject's superseded facts under an "is still
++valid" filter, and the search returns nothing although matching rows exist. With a filter the
++index returns every hit; the query's own ``LIMIT`` still bounds the result.
++"""
++
++from datetime import datetime, timezone
++from typing import Any
++
++import pytest
++
++from graphiti_core.driver.driver import GraphProvider
++from graphiti_core.graph_queries import get_relationships_query
++from graphiti_core.search.search_filters import ComparisonOperator, DateFilter, SearchFilters
++from graphiti_core.search.search_utils import edge_fulltext_search
++
++
++class RecordingDriver:
++    provider = GraphProvider.NEO4J
++    search_interface = None
++    fulltext_syntax = ''
++
++    def __init__(self):
++        self.cypher_query = ''
++        self.params: dict[str, Any] = {}
++
++    async def execute_query(self, cypher_query_: str, **kwargs: Any):
++        self.cypher_query = cypher_query_
++        self.params = kwargs
++        return [], None, None
++
++
++STILL_VALID = SearchFilters(
++    invalid_at=[[DateFilter(comparison_operator=ComparisonOperator.is_null)]]
++)
++
++
++@pytest.mark.asyncio
++@pytest.mark.parametrize(
++    'search_filter',
++    [
++        STILL_VALID,
++        SearchFilters(
++            valid_at=[
++                [
++                    DateFilter(
++                        date=datetime(2024, 1, 1, tzinfo=timezone.utc),
++                        comparison_operator=ComparisonOperator.less_than_equal,
++                    )
++                ]
++            ]
++        ),
++        SearchFilters(edge_uuids=['edge-a', 'edge-b']),
++        SearchFilters(edge_types=['LIVES_IN']),
++    ],
++)
++async def test_filtered_fulltext_search_does_not_limit_inside_the_index(search_filter):
++    driver = RecordingDriver()
++
++    await edge_fulltext_search(driver, 'Alice lives in', search_filter, ['group-a'], limit=20)  # type: ignore[arg-type]
++
++    assert '{limit: $limit}' not in driver.cypher_query
++    assert 'LIMIT $limit' in driver.cypher_query
++    assert driver.params['limit'] == 20
++
++
++@pytest.mark.asyncio
++async def test_unfiltered_fulltext_search_keeps_the_index_limit():
++    driver = RecordingDriver()
++
++    await edge_fulltext_search(driver, 'Alice lives in', SearchFilters(), ['group-a'], limit=20)  # type: ignore[arg-type]
++
++    assert '{limit: $limit}' in driver.cypher_query
++
++
++def test_relationships_query_without_limit():
++    assert get_relationships_query('edge_name_and_fact', None, GraphProvider.NEO4J) == (
++        'CALL db.index.fulltext.queryRelationships("edge_name_and_fact", $query)'
++    )
++    assert 'TOP' not in get_relationships_query('edge_name_and_fact', None, GraphProvider.KUZU)
++    assert 'TOP := $limit' in get_relationships_query('edge_name_and_fact', 5, GraphProvider.KUZU)

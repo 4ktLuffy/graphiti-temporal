@@ -1,0 +1,11 @@
+--- a/graphiti_core/utils/maintenance/edge_operations.py
++++ b/graphiti_core/utils/maintenance/edge_operations.py
+@@ -408,7 +408,7 @@
+         *[
+             search(
+                 clients,
+-                extracted_edge.fact,
++                extracted_edge.name,
+                 group_ids=[extracted_edge.group_id],
+                 config=EDGE_HYBRID_SEARCH_RRF,
+                 search_filter=SearchFilters(),

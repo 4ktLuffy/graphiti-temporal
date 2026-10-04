@@ -1,0 +1,11 @@
+--- a/graphiti_core/utils/maintenance/edge_operations.py
++++ b/graphiti_core/utils/maintenance/edge_operations.py
+@@ -834,7 +834,7 @@
+                 and candidate_valid_at_utc > resolved_edge_valid_at_utc
+             ):
+                 # Expire new edge since we have information about more recent events
+-                resolved_edge.invalid_at = candidate.valid_at
++                resolved_edge.invalid_at = resolved_edge.valid_at
+                 resolved_edge.expired_at = now
+                 break
+ 

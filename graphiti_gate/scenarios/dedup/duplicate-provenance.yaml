@@ -1,0 +1,13 @@
+id: dedup/duplicate-provenance
+title: A restated fact records the new episode on the fact it merges into
+source: Graphiti edge_operations.py (resolved_edge.episodes.append on a duplicate)
+family: duplicates
+judge: oracle
+facts:
+  - {id: lives, src: Alice, rel: LIVES_IN, dst: Berlin, fact: Alice lives in Berlin, valid: 2020-01-01,
+     claim: [Alice, home, Berlin], episodes: 1}
+incoming:
+  - {id: resides, src: Alice, rel: LIVES_IN, dst: Berlin, fact: Alice resides in Berlin,
+     valid: 2024-01-01, claim: [Alice, home, Berlin]}
+expect:
+  resides: {merged_into: lives, episodes: 2}

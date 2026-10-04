@@ -1,0 +1,11 @@
+--- a/graphiti_core/utils/maintenance/edge_operations.py
++++ b/graphiti_core/utils/maintenance/edge_operations.py
+@@ -557,7 +557,7 @@
+         ) or (
+             edge_valid_at_utc is not None
+             and resolved_edge_invalid_at_utc is not None
+-            and resolved_edge_invalid_at_utc <= edge_valid_at_utc
++            and resolved_edge_invalid_at_utc < edge_valid_at_utc
+         ):
+             continue
+         # New edge invalidates edge

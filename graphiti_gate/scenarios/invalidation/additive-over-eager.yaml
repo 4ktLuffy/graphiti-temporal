@@ -1,0 +1,18 @@
+id: invalidation/additive-over-eager
+title: Testing a second model does not retire the first, when the judge over-flags
+source: https://github.com/getzep/graphiti/issues/1728 (comment by fabiosiqueira; maintainers have not ruled)
+family: over-invalidation
+status: disputed
+judge: over_eager
+facts:
+  - {id: q7, src: benchmark, rel: TESTED_WITH, dst: qwen2.5 7b, fact: The benchmark was tested with qwen2.5 7b,
+     valid: 2026-08-01, claim: [benchmark, model qwen2.5 7b, 'yes']}
+incoming:
+  - {id: q3, src: benchmark, rel: TESTED_WITH, dst: qwen2.5 3b, fact: The benchmark was tested with qwen2.5 3b,
+     valid: 2026-08-10, claim: [benchmark, model qwen2.5 3b, 'yes']}
+expect:
+  q7: {open: true}
+  q3: {open: true}
+note: >-
+  Whether a same-relation fact is additive or a replacement depends on cardinality Graphiti does
+  not model; PR #1729 says it cannot tell. Shown, never counted.

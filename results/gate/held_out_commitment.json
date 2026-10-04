@@ -1,0 +1,13 @@
+{
+ "written_at": "2026-10-04T13:49:14Z",
+ "held_out": [
+  "held-retired-not-returned",
+  "held-duplicate-off-by-one",
+  "held-expiry-inverted",
+  "held-batch-dedup-loose",
+  "held-candidates-by-name",
+  "held-keep-overlap"
+ ],
+ "sha256": "5b5bc45569720026252e2e2ee63e5112c2f2ce8b10e407c8b0eea040928f8d0d",
+ "note": "written before any round-1 mutation result was used to add scenarios"
+}
