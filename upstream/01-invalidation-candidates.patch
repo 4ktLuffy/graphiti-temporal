@@ -20,7 +20,7 @@ index 237ee07..c2bd611 100644
          ).edges
  
 diff --git a/graphiti_core/utils/maintenance/edge_operations.py b/graphiti_core/utils/maintenance/edge_operations.py
-index 7d87af2..c639fa1 100644
+index 7d87af2..25cbdde 100644
 --- a/graphiti_core/utils/maintenance/edge_operations.py
 +++ b/graphiti_core/utils/maintenance/edge_operations.py
 @@ -40,7 +40,7 @@ from graphiti_core.prompts.extract_edges import EdgeTimestamps, ExtractedEdges
@@ -32,7 +32,7 @@ index 7d87af2..c639fa1 100644
  from graphiti_core.utils.datetime_utils import ensure_utc, utc_now
  from graphiti_core.utils.maintenance.attribute_utils import apply_capped_attributes
  from graphiti_core.utils.maintenance.dedup_helpers import _normalize_string_exact
-@@ -322,6 +322,33 @@ async def extract_edges(
+@@ -322,6 +322,30 @@ async def extract_edges(
      return edges
  
  
@@ -50,11 +50,8 @@ index 7d87af2..c639fa1 100644
 +    """
 +    if extracted_edge.valid_at is None:
 +        return SearchFilters()
-+    cutoff = min(
-+        ensure_utc(edge.valid_at)
-+        for edge in [extracted_edge, *duplicate_candidates]
-+        if edge.valid_at is not None
-+    )
++    starts = [ensure_utc(edge.valid_at) for edge in [extracted_edge, *duplicate_candidates]]
++    cutoff = min(start for start in starts if start is not None)
 +    return SearchFilters(
 +        invalid_at=[
 +            [DateFilter(comparison_operator=ComparisonOperator.is_null)],
@@ -66,7 +63,7 @@ index 7d87af2..c639fa1 100644
  async def resolve_extracted_edges(
      clients: GraphitiClients,
      extracted_edges: list[EntityEdge],
-@@ -411,9 +438,11 @@ async def resolve_extracted_edges(
+@@ -411,9 +435,11 @@ async def resolve_extracted_edges(
                  extracted_edge.fact,
                  group_ids=[extracted_edge.group_id],
                  config=EDGE_HYBRID_SEARCH_RRF,
