@@ -1,6 +1,6 @@
 {
- "revision": "main",
- "label": "main, base 5d47d4d",
+ "revision": "be224cf",
+ "label": "be224cf, base be224cf",
  "scenarios": {
   "bulk/same-fact-two-episodes": {
    "id": "bulk/same-fact-two-episodes",
@@ -64,6 +64,7 @@
      {
       "new_fact": "Alice resides in Berlin",
       "shown": [
+       "Alice lives in Berlin",
        "Alice lives in Berlin"
       ],
       "duplicates": [
@@ -122,6 +123,7 @@
      {
       "new_fact": "Alice resides in Berlin",
       "shown": [
+       "Alice lives in Berlin",
        "Alice lives in Berlin",
        "Alice lives in Paris"
       ],
@@ -221,6 +223,7 @@
      {
       "new_fact": "Alice resides in Berlin",
       "shown": [
+       "Alice lives in Berlin",
        "Alice lives in Berlin"
       ],
       "duplicates": [
@@ -517,6 +520,7 @@
      {
       "new_fact": "Kiran was released from the Payments Project",
       "shown": [
+       "Kiran is assigned to the Payments Project",
        "Kiran is assigned to the Payments Project"
       ],
       "duplicates": [],
@@ -566,6 +570,7 @@
      {
       "new_fact": "Kiran was released from the Payments Project",
       "shown": [
+       "Kiran is assigned to the Payments Project",
        "Kiran is assigned to the Payments Project"
       ],
       "duplicates": [],
@@ -618,6 +623,7 @@
      {
       "new_fact": "Kiran was released from the Payments Project",
       "shown": [
+       "Kiran is assigned to the Payments Project",
        "Kiran is assigned to the Payments Project"
       ],
       "duplicates": [],
@@ -1295,17 +1301,15 @@
    "judge": "oracle",
    "title": "An entity with the exact same name is found even when its stored embedding disagrees",
    "source": "https://github.com/getzep/graphiti/issues/1734 (reporter-stated outcome; PR",
-   "verdict": "fail",
-   "passes": 0,
+   "verdict": "pass",
+   "passes": 2,
    "repeats": 2,
    "first": {
-    "passed": false,
-    "failures": [
-     "\"DGIA\" resolved to new, expected dgia"
-    ],
+    "passed": true,
+    "failures": [],
     "state": {
      "resolved": {
-      "DGIA": "new"
+      "DGIA": "dgia"
      }
     },
     "judge_calls": []

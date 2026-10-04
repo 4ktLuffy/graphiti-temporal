@@ -13,6 +13,7 @@ graphiti-gate triage pr:1729 pr:1940 ... # a PR queue in one table, with how muc
 graphiti-gate props main pr:1867         # rules on random histories, rates by history size
 graphiti-gate audit                      # damage in a live graph (read-only, proposes repairs)
 graphiti-gate live pr:1940 --repeats 10  # a real model (Codex) as the judge: pass rates vs main
+python -m graphiti_gate.bisect S.yaml --good A --bad main  # the commit that changed a scenario
 ```
 
 ## What it checks
@@ -92,6 +93,32 @@ scenarios, an evaluator that checks the whole stored graph, and the definition a
 - **Earlier rounds.** They used a looser evaluator and counted any verdict change for the gate.
   They gave the same held-out result, 4 of 6 against 1 of 6 (`mutation.jsonl`,
   `mutation-round2*.jsonl`; DESIGN.md, mistakes 9 and 11).
+
+## Real past bugs: what the gate would and would not have caught
+
+Injected bugs are graded by the person who wrote the tool, so the gate was also run against
+Graphiti's own history. We took 13 fixes merged since Sept 2025 that touch the code the gate
+exercises (`bench/real_regressions.py`, `results/gate/real-regressions.jsonl`). The 29 scenarios
+were frozen and none was written for these bugs. Each fix F was tested on its parent and on F.
+
+**The gate would have caught 0 of the 13 before they shipped.** The fixes are about robustness to
+malformed model output (#939, #965, #968), edge-type validation (#948), attributes (#1242, the
+Aug 2026 node-attributes fix) and summaries (#1223). That is a different class of bug from the
+behaviour the gate checks. Every old version runs cleanly: 0 errors after the judge learned to
+answer entity-resolution prompts in each version's schema.
+
+**It did find a regression in the other direction.** The scenario for #1734 (an entity with the
+exact name, below the embedding threshold) was written from the issue text. It **passes** on
+Graphiti from October 2025 and fails on today's main. `python -m graphiti_gate.bisect` searched
+86 commits in 14 steps:
+
+- **Last good:** `7d65d5e` (2026-03-11).
+- **First bad:** `c4e6923`, "Upstream Zep internal improvements" (#1361, 2026-03-31).
+
+That commit replaced the hybrid candidate search in `_collect_candidate_nodes` with a vector-only
+search (`node_similarity_search`, cosine >= 0.6). The diff confirms it (`results/gate/bisect-1734.txt`).
+So #1734 is a regression, and #1741 restores what the hybrid search used to do. Whether the switch
+was a deliberate trade-off cannot be told from the diff.
 
 ## A real model as the judge
 

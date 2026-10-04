@@ -1,6 +1,6 @@
 {
- "revision": "main",
- "label": "main, base 5d47d4d",
+ "revision": "993e081",
+ "label": "993e081, base 993e081",
  "scenarios": {
   "bulk/same-fact-two-episodes": {
    "id": "bulk/same-fact-two-episodes",

@@ -1,6 +1,6 @@
 {
- "revision": "main",
- "label": "main, base 5d47d4d",
+ "revision": "7985997",
+ "label": "7985997, base 7985997",
  "scenarios": {
   "bulk/same-fact-two-episodes": {
    "id": "bulk/same-fact-two-episodes",
@@ -1051,26 +1051,26 @@
       "shown": [
        "Alice lives in Oslo",
        "Alice lives in Paris",
-       "Alice lives in Rome",
-       "Alice lives in Lima",
        "Alice lives in Cairo",
-       "Alice lives in Athens",
-       "Alice lives in Delhi",
+       "Alice lives in Rome",
+       "Alice lives in Vienna",
        "Alice lives in Seoul",
+       "Alice lives in Lima",
        "Alice lives in Quito",
+       "Alice lives in Delhi",
        "Alice lives in Dublin"
       ],
       "duplicates": [],
       "contradicted": [
        "Alice lives in Oslo",
        "Alice lives in Paris",
-       "Alice lives in Rome",
-       "Alice lives in Lima",
        "Alice lives in Cairo",
-       "Alice lives in Athens",
-       "Alice lives in Delhi",
+       "Alice lives in Rome",
+       "Alice lives in Vienna",
        "Alice lives in Seoul",
+       "Alice lives in Lima",
        "Alice lives in Quito",
+       "Alice lives in Delhi",
        "Alice lives in Dublin"
       ]
      }
@@ -1295,17 +1295,15 @@
    "judge": "oracle",
    "title": "An entity with the exact same name is found even when its stored embedding disagrees",
    "source": "https://github.com/getzep/graphiti/issues/1734 (reporter-stated outcome; PR",
-   "verdict": "fail",
-   "passes": 0,
+   "verdict": "pass",
+   "passes": 2,
    "repeats": 2,
    "first": {
-    "passed": false,
-    "failures": [
-     "\"DGIA\" resolved to new, expected dgia"
-    ],
+    "passed": true,
+    "failures": [],
     "state": {
      "resolved": {
-      "DGIA": "new"
+      "DGIA": "dgia"
      }
     },
     "judge_calls": []

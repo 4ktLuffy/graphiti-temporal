@@ -127,6 +127,31 @@ beside it in the prompt.
 - The obvious fix, "search only facts still valid", changes it in 284 of 400 because it breaks
   back-filling.
 
+**What fix 1 costs.** It makes the search cheaper. `bench/fix_cost.py` runs Graphiti's
+invalidation-candidate search (hybrid, limit 10) on Neo4j: medians of 20 warm runs, a person with
+H superseded homes moving once (`results/fix_cost.jsonl`).
+
+| superseded homes | search, main | search, fix 1 | candidate text shown to the model, main → fix 1 |
+|---|---|---|---|
+| 0 | 24.6 ms | 24.6 ms | 20 → 20 characters |
+| 10 | 32.6 ms | 30.6 ms | 199 → 20 |
+| 200 | 48.8 ms | 25.8 ms | 204 → 20 |
+| 1,000 | 113.5 ms | 32.0 ms | 204 → 20 |
+
+**Why it is cheaper.** The vector channel filters before it scores, so stale facts are never
+compared. The model sees the one fact it needs instead of ten stale ones.
+
+**Facts about other slots do not crowd it out.** With 20 superseded homes and up to 30 still-valid
+facts about the same person in other slots (hobbies), the current home was still among the
+candidates in 10 of 10 runs. This uses the word-overlap embedder; a semantic embedder could rank
+differently.
+
+**Who is affected.** Production graphs churn: #1728's reporter measured 1,616 of 3,950 facts
+(41%) with an end date, and another user 16%. The fault needs about 10 superseded facts in one
+subject's history. An app that has called `Graphiti.search(num_results=k)` with k < 10 lowers that
+to k, because the call overwrites the shared recipe (#1594); Graphiti's own e-commerce notebook
+uses `num_results=2`.
+
 **What fix 1 does not fix: back-fill at depth.**
 
 The gate ingests random histories in random order and checks the rules any correct temporal

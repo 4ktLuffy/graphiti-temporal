@@ -1,0 +1,25 @@
+{
+ "revision": "5bca426cd179fe88510b75aa9255a5c0835e1c3e",
+ "label": "5bca426cd179fe88510b75aa9255a5c0835e1c3e, base 5bca426",
+ "scenarios": {
+  "nodes/exact-name-below-cosine": {
+   "id": "nodes/exact-name-below-cosine",
+   "family": "node-dedup",
+   "status": "expected",
+   "judge": "oracle",
+   "title": "An entity with the exact same name is found even when its stored embedding disagrees",
+   "source": "https://github.com/getzep/graphiti/issues/1734 (reporter-stated outcome; PR",
+   "verdict": "error",
+   "passes": 0,
+   "repeats": 2,
+   "first": {
+    "passed": false,
+    "error": "ValidationError: 1 validation error for NodeResolutions\nentity_resolutions.0.duplicate_name\n  Field required [type=missing, input_value={'id': 0, 'name': 'DGIA'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/missing",
+    "trace": "^^^^^^^^^\n  File \"./graphiti_gate/vias.py\", line 100, in run_nodes\n    resolved, uuid_map, _ = await node_operations.resolve_extracted_nodes(clients, extracted, episode, [])  # fmt: skip\n                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"./.gate/venvs/ecb0380ed65d4dcc/lib/python3.14/site-packages/graphiti_core/utils/maintenance/node_operations.py\", line 423, in resolve_extracted_nodes\n    await _resolve_with_llm(\n    ...<7 lines>...\n    )\n  File \"./.gate/venvs/ecb0380ed65d4dcc/lib/python3.14/site-packages/graphiti_core/utils/maintenance/node_operations.py\", line 330, in _resolve_with_llm\n    node_resolutions: list[NodeDuplicate] = NodeResolutions(**llm_response).entity_resolutions\n                                            ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^\n  File \"./.gate/venvs/ecb0380ed65d4dcc/lib/python3.14/site-packages/pydantic/main.py\", line 263, in __init__\n    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)\npydantic_core._pydantic_core.ValidationError: 1 validation error for NodeResolutions\nentity_resolutions.0.duplicate_name\n  Field required [type=missing, input_value={'id': 0, 'name': 'DGIA'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/missing\n"
+   },
+   "live": false,
+   "runs": null
+  }
+ },
+ "scenario_set": "graphiti_gate/scenarios/nodes/exact-name-below-cosine.yaml"
+}

@@ -1,0 +1,14 @@
+{"fix": "73015e9", "parent": "27d4f10", "title": "Fix datetime comparison errors by normalizing to UTC (#988)", "runnable": true, "caught_by": [], "errors_before": 0, "errors_after": 0}
+{"fix": "420676f", "parent": "4d54493", "title": "fix: Prevent duplicate edge facts within same episode (#955)", "runnable": true, "caught_by": [], "errors_before": 0, "errors_after": 0}
+{"fix": "d7828d4", "parent": "27b8dd3", "title": "Fix index out of range errors in LLM deduplication responses (#939)", "runnable": true, "caught_by": [], "errors_before": 0, "errors_after": 0}
+{"fix": "5ca8b95", "parent": "443f972", "title": "fix: Improve deduplication ID validation and logging (#965)", "runnable": true, "caught_by": [], "errors_before": 0, "errors_after": 0}
+{"fix": "5902825", "parent": "4a307db", "title": "fix: Improve edge extraction entity ID validation (#968)", "runnable": true, "caught_by": [], "errors_before": 0, "errors_after": 0}
+{"fix": "3fcd587", "parent": "ded2bad", "title": "fix: Add edge type validation based on node labels (#948)", "runnable": true, "caught_by": [], "errors_before": 0, "errors_after": 0}
+{"fix": "d5c4fc0", "parent": "be224cf", "title": "Fix limited number of edges (#1124)", "runnable": true, "caught_by": [], "errors_before": 0, "errors_after": 0}
+{"fix": "45a3d92", "parent": "37ec7b4", "title": "fix(edges): preserve all signatures when edge type is reused across node pairs (#1197)", "runnable": true, "caught_by": [], "errors_before": 0, "errors_after": 0}
+{"fix": "fe19482", "parent": "6e90bc6", "title": "fix(summary): exclude duplicate edges from node summary generation (#1223)", "runnable": true, "caught_by": [], "errors_before": 0, "errors_after": 0}
+{"fix": "c1afd8b", "parent": "7985997", "title": "fix: extract custom edge attributes on first episode ingestion (#1242)", "runnable": true, "caught_by": [], "errors_before": 0, "errors_after": 0}
+{"fix": "993e081", "parent": "502054a", "title": "fix(attributes): preserve prior node attributes when no entity type applies", "runnable": true, "caught_by": [], "errors_before": 0, "errors_after": 0}
+{"fix": "d9a2db9", "parent": "b0ec6d9", "title": "Consolidate overlapping backend fixes (#1695)", "runnable": true, "caught_by": [], "errors_before": 0, "errors_after": 0}
+{"fix": "3ff5c16", "parent": "2d96f27", "title": "Land contributor fixes from #1686 #1689 #1720 #1761 (#1856)", "runnable": true, "caught_by": [], "errors_before": 0, "errors_after": 0}
+gate would have caught 0 of 13 real fixes before they shipped

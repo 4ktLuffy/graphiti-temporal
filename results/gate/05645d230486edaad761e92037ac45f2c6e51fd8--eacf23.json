@@ -1,0 +1,30 @@
+{
+ "revision": "05645d230486edaad761e92037ac45f2c6e51fd8",
+ "label": "05645d230486edaad761e92037ac45f2c6e51fd8, base 05645d2",
+ "scenarios": {
+  "nodes/exact-name-below-cosine": {
+   "id": "nodes/exact-name-below-cosine",
+   "family": "node-dedup",
+   "status": "expected",
+   "judge": "oracle",
+   "title": "An entity with the exact same name is found even when its stored embedding disagrees",
+   "source": "https://github.com/getzep/graphiti/issues/1734 (reporter-stated outcome; PR",
+   "verdict": "pass",
+   "passes": 2,
+   "repeats": 2,
+   "first": {
+    "passed": true,
+    "failures": [],
+    "state": {
+     "resolved": {
+      "DGIA": "dgia"
+     }
+    },
+    "judge_calls": []
+   },
+   "live": false,
+   "runs": null
+  }
+ },
+ "scenario_set": "graphiti_gate/scenarios/nodes/exact-name-below-cosine.yaml"
+}

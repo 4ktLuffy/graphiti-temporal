@@ -150,6 +150,8 @@ class Judge(LLMClient):
             fact = re.search(r'<FACT>\s*(.*?)\s*</FACT>', messages[-1].content, re.S)
             valid, invalid = self.dates.get(fact.group(1).strip() if fact else '', (None, None))
             return {'valid_at': valid, 'invalid_at': invalid}
+        if name == 'NodeResolutions':
+            return _resolve_nodes(messages[-1].content, response_model)
         if name != 'EdgeDuplicate':
             raise JudgeError(f'the gate does not answer {name or "free-text"} prompts')
 
@@ -205,3 +207,54 @@ def _answer_id(item: Item, response_model: Any, field: str) -> Any:
     if wants_int and not isinstance(item.key, int):
         return item.position
     return item.key
+
+
+def _parse_list(text: str, tag: str) -> list[dict]:
+    """A JSON or Python-literal list between `<tag>` and its closing tag."""
+    import json
+
+    found = _list_span(text, tag)
+    if found is not None:
+        return [v for v in found[2] if isinstance(v, dict)]
+    start = text.find(f'<{tag}>')
+    if start < 0:
+        return []
+    body = start + len(tag) + 2
+    close = text.find(f'</{tag}>', body)
+    while close >= 0:
+        try:
+            value = json.loads(text[body:close].strip())
+            if isinstance(value, list):
+                return [v for v in value if isinstance(v, dict)]
+        except ValueError:
+            pass
+        close = text.find(f'</{tag}>', close + 1)
+    return []
+
+
+def _resolve_nodes(text: str, response_model: Any) -> dict[str, Any]:
+    """Entity resolution, oracle-style: an extracted entity duplicates an existing one only if the
+    names are identical after case folding; otherwise it is new. Answers in the revision's schema
+    (`duplicate_candidate_id` now; `duplicate_idx` and `duplicates` in older versions)."""
+    extracted = _parse_list(text, 'ENTITIES')
+    existing = _parse_list(text, 'EXISTING ENTITIES')
+    by_name = {}
+    for e in existing:
+        key = e.get('candidate_id', e.get('idx', e.get('id')))
+        by_name.setdefault(str(e.get('name', '')).casefold().strip(), key)
+    item_model = None
+    field = getattr(response_model, 'model_fields', {}).get('entity_resolutions')
+    if field is not None:
+        item_model = getattr(field.annotation, '__args__', (None,))[0]
+    resolutions = []
+    names = {e.get('candidate_id', e.get('idx', e.get('id'))): e.get('name', '') for e in existing}
+    for e in extracted:
+        match = by_name.get(str(e.get('name', '')).casefold().strip(), -1)
+        answer = {'id': e.get('id'), 'name': e.get('name'), 'duplicate_candidate_id': match,
+                  'duplicate_idx': match, 'duplicates': [] if match == -1 else [match],
+                  'duplicate_name': names.get(match, '') if match != -1 else ''}  # fmt: skip
+        wanted = getattr(item_model, 'model_fields', {})
+        if wanted:
+            answer = _complete({k: v for k, v in answer.items() if k in wanted}, item_model)
+        resolutions.append(answer)
+    return {'entity_resolutions': resolutions}

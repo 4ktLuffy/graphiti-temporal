@@ -1,0 +1,44 @@
+{"commit": "05645d2", "verdict": "pass"}
+{"commit": "c537ed4", "verdict": "fail"}
+{"commit": "bde2f79", "verdict": "pass"}
+{"commit": "673902c", "verdict": "fail"}
+{"commit": "7d65d5e", "verdict": "pass"}
+{"commit": "3c9547c", "verdict": "fail"}
+{"commit": "c4e6923", "verdict": "fail"}
+{
+ "scenario": "exact-name-below-cosine.yaml",
+ "first_bad": "c4e6923 2026-03-31 Upstream Zep internal improvements (#1361)",
+ "tested": [
+  {
+   "commit": "05645d2",
+   "verdict": "pass"
+  },
+  {
+   "commit": "c537ed4",
+   "verdict": "fail"
+  },
+  {
+   "commit": "bde2f79",
+   "verdict": "pass"
+  },
+  {
+   "commit": "673902c",
+   "verdict": "fail"
+  },
+  {
+   "commit": "7d65d5e",
+   "verdict": "pass"
+  },
+  {
+   "commit": "3c9547c",
+   "verdict": "fail"
+  },
+  {
+   "commit": "c4e6923",
+   "verdict": "fail"
+  }
+ ],
+ "unrunnable_between": [],
+ "candidates": 86,
+ "last_good": "7d65d5e"
+}

@@ -1,0 +1,53 @@
+{
+ "revision": "05645d2",
+ "label": "05645d2, base 05645d2",
+ "scenarios": {
+  "nodes/exact-name-below-cosine": {
+   "id": "nodes/exact-name-below-cosine",
+   "family": "node-dedup",
+   "status": "expected",
+   "judge": "oracle",
+   "title": "An entity with the exact same name is found even when its stored embedding disagrees",
+   "source": "https://github.com/getzep/graphiti/issues/1734 (reporter-stated outcome; PR",
+   "verdict": "pass",
+   "passes": 1,
+   "repeats": 1,
+   "first": {
+    "passed": true,
+    "failures": [],
+    "state": {
+     "resolved": {
+      "DGIA": "dgia"
+     }
+    },
+    "judge_calls": []
+   },
+   "live": false,
+   "runs": null
+  },
+  "nodes/exact-name-control": {
+   "id": "nodes/exact-name-control",
+   "family": "node-dedup",
+   "status": "expected",
+   "judge": "oracle",
+   "title": "Control - an entity with the same name and embedding resolves to itself",
+   "source": "Graphiti node_operations.py resolve_extracted_nodes (semantic candidates, then exact name)",
+   "verdict": "pass",
+   "passes": 1,
+   "repeats": 1,
+   "first": {
+    "passed": true,
+    "failures": [],
+    "state": {
+     "resolved": {
+      "DGIA": "dgia"
+     }
+    },
+    "judge_calls": []
+   },
+   "live": false,
+   "runs": null
+  }
+ },
+ "scenario_set": "graphiti_gate/scenarios/nodes"
+}
