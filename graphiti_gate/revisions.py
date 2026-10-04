@@ -90,10 +90,11 @@ def ensure_mirror() -> None:
 
 
 def _sha(ref: str) -> str:
+    """A branch name resolves to the freshly fetched remote branch, never a stale local one."""
     try:
-        return _git('rev-parse', '--verify', f'{ref}^{{commit}}')
-    except RevisionError:
         return _git('rev-parse', '--verify', f'origin/{ref}^{{commit}}')
+    except RevisionError:
+        return _git('rev-parse', '--verify', f'{ref}^{{commit}}')
 
 
 def prepare(spec: str, base: str = 'main') -> Revision:

@@ -41,6 +41,8 @@ testpaths = ["tests"]
 
 [tool.ruff]
 line-length = 100
+# One-off issue reproductions, kept as run; see triage/README.md.
+extend-exclude = ["triage"]
 
 [tool.ruff.lint]
 # The same rules as graphiti-core.
