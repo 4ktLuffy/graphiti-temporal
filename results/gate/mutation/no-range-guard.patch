@@ -1,0 +1,11 @@
+--- a/graphiti_core/utils/maintenance/edge_operations.py
++++ b/graphiti_core/utils/maintenance/edge_operations.py
+@@ -741,7 +741,7 @@
+             len(related_edges) - 1,
+         )
+ 
+-    duplicate_fact_ids: list[int] = [i for i in duplicate_facts if 0 <= i < len(related_edges)]
++    duplicate_fact_ids: list[int] = list(duplicate_facts)
+ 
+     resolved_edge = extracted_edge
+     for duplicate_fact_id in duplicate_fact_ids:

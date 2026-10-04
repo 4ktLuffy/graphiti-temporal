@@ -1,0 +1,15 @@
+{
+ "graphiti_base": "b7fc30f",
+ "gate_fingerprint": "a910ce46483aee6b89c1b4a32f4a1beea2237512360e14aa5045349d9de82d9f",
+ "scenarios": 34,
+ "watched_files": [
+  "graphiti_core/utils/maintenance/edge_operations.py",
+  "graphiti_core/utils/maintenance/node_operations.py",
+  "graphiti_core/utils/maintenance/dedup_helpers.py",
+  "graphiti_core/utils/bulk_utils.py",
+  "graphiti_core/search/search_filters.py",
+  "graphiti_core/search/search_utils.py"
+ ],
+ "rule": "A fix is caught if a frozen scenario passes on the fix and fails or errors on its parent.",
+ "timestamp": "the commit that adds this file on github.com/4ktLuffy/graphiti-temporal"
+}

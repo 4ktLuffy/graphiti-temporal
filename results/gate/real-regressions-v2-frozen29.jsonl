@@ -1,6 +1,6 @@
 {"fix": "73015e9", "parent": "27d4f10", "title": "Fix datetime comparison errors by normalizing to UTC (#988)", "runnable": true, "caught_by": [], "errors_before": 0, "errors_after": 0}
 {"fix": "420676f", "parent": "4d54493", "title": "fix: Prevent duplicate edge facts within same episode (#955)", "runnable": true, "caught_by": [], "errors_before": 0, "errors_after": 0}
-{"fix": "d7828d4", "parent": "27b8dd3", "title": "Fix index out of range errors in LLM deduplication responses (#939)", "runnable": true, "caught_by": ["robustness/exact-name-control-noisy"], "errors_before": 1, "errors_after": 0}
+{"fix": "d7828d4", "parent": "27b8dd3", "title": "Fix index out of range errors in LLM deduplication responses (#939)", "runnable": true, "caught_by": [], "errors_before": 0, "errors_after": 0}
 {"fix": "5ca8b95", "parent": "443f972", "title": "fix: Improve deduplication ID validation and logging (#965)", "runnable": true, "caught_by": [], "errors_before": 0, "errors_after": 0}
 {"fix": "5902825", "parent": "4a307db", "title": "fix: Improve edge extraction entity ID validation (#968)", "runnable": true, "caught_by": [], "errors_before": 0, "errors_after": 0}
 {"fix": "3fcd587", "parent": "ded2bad", "title": "fix: Add edge type validation based on node labels (#948)", "runnable": true, "caught_by": [], "errors_before": 0, "errors_after": 0}

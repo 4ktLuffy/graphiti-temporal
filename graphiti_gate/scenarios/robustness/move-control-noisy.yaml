@@ -1,0 +1,35 @@
+id: robustness/move-control-noisy
+title: a plain move retires the previous home, with a model that also returns junk ids
+source: 'Graphiti fixes for malformed model output (#939, #965, #968); same outcome as intervals/move-control'
+family: robustness
+judge: noisy
+facts:
+- id: whitefield
+  src: Kiran
+  rel: LIVES_IN
+  dst: Whitefield
+  fact: Kiran lives in Whitefield
+  valid: 2026-01-01
+  claim:
+  - Kiran
+  - home
+  - Whitefield
+incoming:
+- id: ecity
+  src: Kiran
+  rel: LIVES_IN
+  dst: Electronic City
+  fact: Kiran lives in Electronic City
+  valid: 2026-03-01
+  claim:
+  - Kiran
+  - home
+  - Electronic City
+expect:
+  whitefield:
+    invalid_at: 2026-03-01
+  ecity:
+    open: true
+  open_in_slot:
+    Kiran/home:
+    - ecity

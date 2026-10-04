@@ -1,0 +1,42 @@
+id: robustness/depth-5-control-noisy
+title: with 5 past homes the current home is retired, with a model that also returns junk ids
+source: 'Graphiti fixes for malformed model output (#939, #965, #968); same outcome as invalidation/depth-5-control'
+family: robustness
+judge: noisy
+moves:
+  subject: Alice
+  rel: LIVES_IN
+  count: 5
+  start: 1950
+  slot: home
+facts:
+- id: live
+  src: Alice
+  rel: LIVES_IN
+  dst: Tokyo
+  fact: Alice has made her home in Tokyo since 1990
+  valid: 1990-01-01
+  claim:
+  - Alice
+  - home
+  - Tokyo
+incoming:
+- id: new
+  src: Alice
+  rel: LIVES_IN
+  dst: Berlin
+  fact: Alice lives in Berlin
+  valid: 2024-06-01
+  claim:
+  - Alice
+  - home
+  - Berlin
+expect:
+  live:
+    invalid_at: 2024-06-01
+    expired: true
+  new:
+    open: true
+  open_in_slot:
+    Alice/home:
+    - new

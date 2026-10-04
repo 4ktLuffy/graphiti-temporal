@@ -986,27 +986,27 @@
       "shown": [
        "Alice lives in Oslo",
        "Alice lives in Paris",
-       "Alice lives in Cairo",
        "Alice lives in Rome",
-       "Alice lives in Athens",
-       "Alice lives in Dublin",
        "Alice lives in Lima",
+       "Alice lives in Cairo",
+       "Alice lives in Athens",
+       "Alice lives in Delhi",
        "Alice lives in Seoul",
-       "Alice lives in Vienna",
-       "Alice lives in Delhi"
+       "Alice lives in Quito",
+       "Alice lives in Dublin"
       ],
       "duplicates": [],
       "contradicted": [
        "Alice lives in Oslo",
        "Alice lives in Paris",
-       "Alice lives in Cairo",
        "Alice lives in Rome",
-       "Alice lives in Athens",
-       "Alice lives in Dublin",
        "Alice lives in Lima",
+       "Alice lives in Cairo",
+       "Alice lives in Athens",
+       "Alice lives in Delhi",
        "Alice lives in Seoul",
-       "Alice lives in Vienna",
-       "Alice lives in Delhi"
+       "Alice lives in Quito",
+       "Alice lives in Dublin"
       ]
      }
     ]
@@ -1336,6 +1336,236 @@
      }
     },
     "judge_calls": []
+   },
+   "live": false,
+   "runs": null
+  },
+  "robustness/backfill-open-noisy": {
+   "id": "robustness/backfill-open-noisy",
+   "family": "robustness",
+   "status": "expected",
+   "judge": "noisy",
+   "title": "A past home learned late is closed by the later home, with a model that also returns junk ids",
+   "source": "Graphiti fixes for malformed model output (#939, #965, #968); same outcome as intervals/backfill-open",
+   "verdict": "pass",
+   "passes": 2,
+   "repeats": 2,
+   "first": {
+    "passed": true,
+    "failures": [],
+    "state": {
+     "rome": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2015-01-01T00:00:00+00:00",
+      "invalid_at": null,
+      "expired": false,
+      "episodes": 1,
+      "fact": "Alice lives in Rome"
+     },
+     "paris": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2010-01-01T00:00:00+00:00",
+      "invalid_at": "2015-01-01T00:00:00+00:00",
+      "expired": true,
+      "episodes": 1,
+      "fact": "Alice lives in Paris"
+     }
+    },
+    "judge_calls": [
+     {
+      "new_fact": "Alice lives in Paris",
+      "shown": [
+       "Alice lives in Rome"
+      ],
+      "duplicates": [],
+      "contradicted": [
+       "Alice lives in Rome"
+      ]
+     }
+    ]
+   },
+   "live": false,
+   "runs": null
+  },
+  "robustness/depth-5-control-noisy": {
+   "id": "robustness/depth-5-control-noisy",
+   "family": "robustness",
+   "status": "expected",
+   "judge": "noisy",
+   "title": "with 5 past homes the current home is retired, with a model that also returns junk ids",
+   "source": "Graphiti fixes for malformed model output (#939, #965, #968); same outcome as invalidation/depth-5-control",
+   "verdict": "pass",
+   "passes": 2,
+   "repeats": 2,
+   "first": {
+    "passed": true,
+    "failures": [],
+    "state": {
+     "live": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "1990-01-01T00:00:00+00:00",
+      "invalid_at": "2024-06-01T00:00:00+00:00",
+      "expired": true,
+      "episodes": 1,
+      "fact": "Alice has made her home in Tokyo since 1990"
+     },
+     "new": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2024-06-01T00:00:00+00:00",
+      "invalid_at": null,
+      "expired": false,
+      "episodes": 1,
+      "fact": "Alice lives in Berlin"
+     }
+    },
+    "judge_calls": [
+     {
+      "new_fact": "Alice lives in Berlin",
+      "shown": [
+       "Alice lives in Oslo",
+       "Alice lives in Paris",
+       "Alice lives in Rome",
+       "Alice lives in Lima",
+       "Alice lives in Cairo",
+       "Alice has made her home in Tokyo since 1990"
+      ],
+      "duplicates": [],
+      "contradicted": [
+       "Alice lives in Oslo",
+       "Alice lives in Paris",
+       "Alice lives in Rome",
+       "Alice lives in Lima",
+       "Alice lives in Cairo",
+       "Alice has made her home in Tokyo since 1990"
+      ]
+     }
+    ]
+   },
+   "live": false,
+   "runs": null
+  },
+  "robustness/exact-name-control-noisy": {
+   "id": "robustness/exact-name-control-noisy",
+   "family": "robustness",
+   "status": "expected",
+   "judge": "noisy",
+   "title": "an entity with the same name and embedding resolves to itself, with a model that also returns junk ids",
+   "source": "Graphiti fixes for malformed model output (#939, #965, #968); same outcome as nodes/exact-name-control",
+   "verdict": "pass",
+   "passes": 2,
+   "repeats": 2,
+   "first": {
+    "passed": true,
+    "failures": [],
+    "state": {
+     "resolved": {
+      "DGIA": "dgia"
+     }
+    },
+    "judge_calls": []
+   },
+   "live": false,
+   "runs": null
+  },
+  "robustness/move-control-noisy": {
+   "id": "robustness/move-control-noisy",
+   "family": "robustness",
+   "status": "expected",
+   "judge": "noisy",
+   "title": "a plain move retires the previous home, with a model that also returns junk ids",
+   "source": "Graphiti fixes for malformed model output (#939, #965, #968); same outcome as intervals/move-control",
+   "verdict": "pass",
+   "passes": 2,
+   "repeats": 2,
+   "first": {
+    "passed": true,
+    "failures": [],
+    "state": {
+     "whitefield": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2026-01-01T00:00:00+00:00",
+      "invalid_at": "2026-03-01T00:00:00+00:00",
+      "expired": true,
+      "episodes": 1,
+      "fact": "Kiran lives in Whitefield"
+     },
+     "ecity": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2026-03-01T00:00:00+00:00",
+      "invalid_at": null,
+      "expired": false,
+      "episodes": 1,
+      "fact": "Kiran lives in Electronic City"
+     }
+    },
+    "judge_calls": [
+     {
+      "new_fact": "Kiran lives in Electronic City",
+      "shown": [
+       "Kiran lives in Whitefield"
+      ],
+      "duplicates": [],
+      "contradicted": [
+       "Kiran lives in Whitefield"
+      ]
+     }
+    ]
+   },
+   "live": false,
+   "runs": null
+  },
+  "robustness/semantic-duplicate-noisy": {
+   "id": "robustness/semantic-duplicate-noisy",
+   "family": "robustness",
+   "status": "expected",
+   "judge": "noisy",
+   "title": "A reworded fact merges into the fact it repeats, which stays open, with a model that also returns junk ids",
+   "source": "Graphiti fixes for malformed model output (#939, #965, #968); same outcome as dedup/semantic-duplicate",
+   "verdict": "pass",
+   "passes": 2,
+   "repeats": 2,
+   "first": {
+    "passed": true,
+    "failures": [],
+    "state": {
+     "lives": {
+      "present": true,
+      "merged_into": null,
+      "valid_at": "2020-01-01T00:00:00+00:00",
+      "invalid_at": null,
+      "expired": false,
+      "episodes": 2,
+      "fact": "Alice lives in Berlin"
+     },
+     "resides": {
+      "present": true,
+      "merged_into": "lives",
+      "valid_at": "2020-01-01T00:00:00+00:00",
+      "invalid_at": null,
+      "expired": false,
+      "episodes": 2,
+      "fact": "Alice lives in Berlin"
+     }
+    },
+    "judge_calls": [
+     {
+      "new_fact": "Alice resides in Berlin",
+      "shown": [
+       "Alice lives in Berlin",
+       "Alice lives in Berlin"
+      ],
+      "duplicates": [
+       "Alice lives in Berlin"
+      ],
+      "contradicted": []
+     }
+    ]
    },
    "live": false,
    "runs": null

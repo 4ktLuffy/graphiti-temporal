@@ -9,6 +9,9 @@ A scenario names a judge persona:
 - `under_resolving`: the oracle, but it returns nothing for about half the questions, chosen
   deterministically per fact. #1772 measured this on deepseek-v4-flash.
 - `scripted`: the scenario lists, per incoming fact, the duplicates and contradictions to report.
+- `noisy`: the oracle's answer plus the junk real models emit: ids out of range, negative ids,
+  repeated ids, and a duplicate id taken from the wrong list. Graphiti must ignore the junk:
+  a noisy scenario expects exactly the oracle's outcome, and never a crash.
 
 The judge reads the facts out of whatever prompt the revision sends and answers in whatever ids that
 revision uses: integer `idx` on main, `"E0"`/`"I2"` strings in #1772. A gate that only spoke one
@@ -27,7 +30,7 @@ from graphiti_core.llm_client.client import LLMClient
 from graphiti_core.llm_client.config import DEFAULT_MAX_TOKENS, LLMConfig, ModelSize
 from graphiti_core.prompts.models import Message
 
-PERSONAS = ('oracle', 'over_eager', 'under_resolving', 'scripted')
+PERSONAS = ('oracle', 'over_eager', 'under_resolving', 'scripted', 'noisy')
 _ITEM = re.compile(r"\{'(?:idx|id)':[^{}]*?'fact':\s*(?:'(?:[^'\\]|\\.)*'|\"(?:[^\"\\]|\\.)*\")\}")
 
 
@@ -131,6 +134,7 @@ class Judge(LLMClient):
             if item.fact in rules.get('duplicates', []):
                 return 'duplicate'
             return 'contradicted' if item.fact in rules.get('contradicted', []) else None
+        # `noisy` decides like the oracle; its junk is added to the answer afterwards.
         new, old = self.claims.get(new_fact), self.claims.get(item.fact)
         if new is None or old is None or old.subject != new.subject:
             return None
@@ -151,7 +155,17 @@ class Judge(LLMClient):
             valid, invalid = self.dates.get(fact.group(1).strip() if fact else '', (None, None))
             return {'valid_at': valid, 'invalid_at': invalid}
         if name == 'NodeResolutions':
-            return _resolve_nodes(messages[-1].content, response_model)
+            result = _resolve_nodes(messages[-1].content, response_model)
+            if self.persona == 'noisy':
+                for r in result['entity_resolutions']:
+                    for key in ('duplicate_candidate_id', 'duplicate_idx'):
+                        if key in r and r[key] == -1:
+                            r[key] = 999  # an out-of-range candidate must mean "no duplicate"
+                if result['entity_resolutions']:  # an answer for an entity never asked about
+                    result['entity_resolutions'].append(
+                        {**result['entity_resolutions'][0], 'id': 999}
+                    )
+            return result
         if name != 'EdgeDuplicate':
             raise JudgeError(f'the gate does not answer {name or "free-text"} prompts')
 
@@ -186,6 +200,8 @@ class Judge(LLMClient):
             'duplicate_facts': [_answer_id(i, response_model, 'duplicate_facts') for i in duplicates],
             'contradicted_facts': [_answer_id(i, response_model, 'contradicted_facts') for i in contradicted],
         }  # fmt: skip
+        if self.persona == 'noisy':
+            answer = _add_junk(answer, items, response_model)
         return _complete(answer, response_model)
 
 
@@ -258,3 +274,15 @@ def _resolve_nodes(text: str, response_model: Any) -> dict[str, Any]:
             answer = _complete({k: v for k, v in answer.items() if k in wanted}, item_model)
         resolutions.append(answer)
     return {'entity_resolutions': resolutions}
+
+
+def _add_junk(answer: dict[str, Any], items: list[Item], response_model: Any) -> dict[str, Any]:
+    """Out-of-range, negative, repeated and wrong-list ids, in the revision's id type."""
+    ints = _answer_id(Item('x', '', 'existing', 0), response_model, 'duplicate_facts') == 0
+    n = len(items)
+    junk = [n + 7, -1, 999] if ints else ['E99', 'I99', 'X1', '']
+    wrong_list = [_answer_id(i, response_model, 'duplicate_facts') for i in items if i.section == 'candidates'][:1]  # fmt: skip
+    return {
+        'duplicate_facts': answer['duplicate_facts'] * 2 + junk + wrong_list,
+        'contradicted_facts': answer['contradicted_facts'] * 2 + junk,
+    }

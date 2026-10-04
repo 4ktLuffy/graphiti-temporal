@@ -80,7 +80,7 @@ class Scenario(BaseModel):
     source: str
     family: str
     status: Literal['expected', 'known_gap', 'disputed'] = 'expected'
-    judge: Literal['oracle', 'over_eager', 'under_resolving', 'scripted'] = 'oracle'
+    judge: Literal['oracle', 'over_eager', 'under_resolving', 'scripted', 'noisy'] = 'oracle'
     via: Literal['resolve', 'triplet', 'search', 'nodes', 'bulk_dedupe'] = 'resolve'
     facts: list[FactSpec] = Field(default_factory=list)
     moves: Moves | None = None

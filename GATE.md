@@ -18,8 +18,9 @@ python -m graphiti_gate.bisect S.yaml --good A --bad main  # the commit that cha
 
 ## What it checks
 
-- **29 scenarios** (`graphiti_gate/scenarios/`), in seven families: history depth, over-invalidation,
-  intervals, duplicates, search filters, entity resolution, bulk ingestion. Each holds a starting graph, incoming facts, and
+- **34 scenarios** (`graphiti_gate/scenarios/`), in eight families: history depth, over-invalidation,
+  intervals, duplicates, search filters, entity resolution, bulk ingestion, and robustness to
+  junk model output. Each holds a starting graph, incoming facts, and
   the graph expected afterwards, and names its source: an issue, a PR, or a line of Graphiti's
   code.
   - **Every fact is checked**, including facts the scenario does not mention: any unexpected
@@ -31,7 +32,8 @@ python -m graphiti_gate.bisect S.yaml --good A --bad main  # the commit that cha
   - `oracle`: answers from ground truth,
   - `over_eager`: flags unrelated facts, as in #1728,
   - `under_resolving`: stays silent, as #1772 measured on deepseek,
-  - `scripted`.
+  - `scripted`,
+  - `noisy`: right answers plus junk ids, as real models return.
 
   The judge reads the facts out of whichever prompt the revision sends, and answers in its id
   format: integers on main, `"E0"`/`"I2"` in #1772.
@@ -106,6 +108,22 @@ malformed model output (#939, #965, #968), edge-type validation (#948), attribut
 Aug 2026 node-attributes fix) and summaries (#1223). That is a different class of bug from the
 behaviour the gate checks. Every old version runs cleanly: 0 errors after the judge learned to
 answer entity-resolution prompts in each version's schema.
+
+**After the fact: a judge that returns junk.** The misses showed what the gate lacked: real models
+return out-of-range, repeated and wrong-list ids, and several fixes exist because of that. The
+`noisy` persona gives the oracle's answer plus that junk, and five `robustness/` scenarios expect
+exactly the oracle's outcome.
+
+- **Do they test anything?** On main with the id range guard removed, 4 of 5 crash.
+- **Did it reproduce a real bug?** On the commit before #939, the noisy entity-resolution
+  scenario reproduces that bug exactly: `IndexError` at `state.unresolved_indices[relative_id]`.
+  It passes on #939 itself.
+- **The re-measured count is 1 of 13**, counted as after the fact, because the persona was
+  designed after seeing these fixes (`results/gate/real-regressions.jsonl`; the frozen-scenario
+  run is `real-regressions-v2-frozen29.jsonl`).
+- **The prospective test.** The honest test is the next fixes Graphiti merges. It is
+  pre-registered in [PROSPECTIVE.md](PROSPECTIVE.md), with the frozen gate's fingerprint
+  committed publicly.
 
 **It did find a regression in the other direction.** The scenario for #1734 (an entity with the
 exact name, below the embedding threshold) was written from the issue text. It **passes** on

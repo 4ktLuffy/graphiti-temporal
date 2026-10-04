@@ -1,0 +1,15 @@
+id: robustness/exact-name-control-noisy
+title: an entity with the same name and embedding resolves to itself, with a model that also returns junk
+  ids
+source: 'Graphiti fixes for malformed model output (#939, #965, #968); same outcome as nodes/exact-name-control'
+family: robustness
+via: nodes
+judge: noisy
+incoming: []
+nodes:
+- id: dgia
+  name: DGIA
+incoming_nodes:
+- DGIA
+expect_nodes:
+  DGIA: dgia
