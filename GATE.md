@@ -250,6 +250,75 @@ It also found a planted inverted interval and a planted ended-but-not-expired fa
   memberships); the audit cannot tell, which is why it calls them candidates. The zero-false-alarm
   result applies to these graphs only.
 
+## Finding bugs nobody wrote a test for: the fuzzer
+
+The scenarios check bugs someone already thought of. `graphiti_gate/fuzz.py` looks for the rest.
+It generates random fact histories: people change homes and employers, facts arrive out of order,
+some are restated in other words, and they enter through `resolve_extracted_edges` or
+`add_triplet`. Each history runs through Graphiti's real code, and the result is checked three
+ways, none of which needs a hand-written expected answer:
+
+1. **Rules.** At most one current value per person and relation, and each value ends exactly
+   where the next one starts.
+2. **Search against a reference.** "As of T" searches, and searches with two date ranges OR-ed
+   together, must return exactly the facts the stored graph says match. The reference is computed
+   from the stored graph itself, so each database is checked on its own.
+3. **Databases against each other.** Neo4j, FalkorDB and Kuzu, given the same history, must store
+   the same facts with the same dates.
+
+A finding is reported only if it reproduces on a second run. `fuzz_shrink.py` then removes steps
+while the same finding still appears, and saves the minimal case to `graphiti_gate/fuzz_cases/`.
+
+```
+python -m graphiti_gate.fuzz --trials 50 --backends neo4j falkordb kuzu
+python -m graphiti_gate.fuzz_shrink results/fuzz/run.jsonl
+```
+
+**What it found (main at `b7fc30f`).**
+
+| run | histories | what it reported |
+|---|---|---|
+| 1: short histories | 300 | no rule or database differences. All 217 findings came from the optional concurrency check, which is not a fault (see below) |
+| 2: adds restatements and OR-ed date ranges | 30 | 162 wrong search results on all three databases. All were one bug, already fixed by open PR #1596. With #1596 merged: 0 |
+
+- **The date-filter bug.** In `search_filters.py`, each date is stored under a parameter named
+  only by its position inside its own OR group (`'valid_at_' + str(j)`). The second group
+  overwrites the first, so every group is compared against the last date. The shrinker reduced it
+  to one fact and one search: a fact starting 1997-01-01, filtered "before 1997 or after 1998", is
+  returned. The MCP server only builds single ranges, so it is not affected. Evidence is posted on
+  #1596.
+- **Concurrency is a documented limit.** `--concurrency` runs one group's facts in parallel. That
+  gives different graphs, but `add_episode`'s docstring requires episodes of a group to be added
+  one at a time. The MCP server's queue is meant to do that, and `triage/mcp-queue/repro.py`
+  shows it can start two workers for one group, 2 episodes at once against 1 with the fix. Open
+  PR #1915 already fixes it.
+- **The fuzzer catches injected bugs.** With the back-fill-latest mutant in place, seed 6 fails.
+- **Not reported.** Kuzu's driver never creates fulltext indexes (`build_indices` is a no-op), so
+  the fuzzer creates them itself. Kuzu is deprecated and Graphiti's tests skip it.
+
+**Long histories (`--deep`).** 40 histories of 12 to 30 changes for one to three people, on main and
+on main with PR #1957 (fix 1). Here ranking decides which 10 facts Graphiti sees, so the databases
+are not compared, only the rules and searches (`results/fuzz/run-3-deep-*.jsonl`).
+
+| histories ending with... | main | with #1957 |
+|---|---|---|
+| two current values for one person | 2 of 40 | **0 of 40** |
+| a value that does not end where the next starts | 2 of 40 | 1 of 40 |
+| the OR-ed date search wrong (#1596) | 40 of 40 | 40 of 40 |
+
+- **Fix 1 is needed earlier than "ten past values".** In seed 3010 Bruno had only 5 employers when
+  he was left with two current ones. The 10 candidate places are searched across the whole
+  group, so other people's similar facts compete for them, as the shrinker showed earlier for
+  homes. #1957 removes ended facts from the race, and the double-current cases go to 0.
+- **The one failure left with #1957 is the known back-fill limit.** It shrinks from 30 changes to
+  12, and removing any one makes it vanish. A fact back-filled to 1994 should end in 2006, when
+  the next job starts, but that 2006 fact is not among the 10 candidates, and a later one is. It
+  ends in 2008 instead. Saved as
+  `fuzz_cases/backfill-crowded-neo4j-seed3009-pr1957.json`; the bounded back-fill fix in the
+  backlog targets it.
+- **Kuzu showed neither failure**, with the same histories. Its fulltext ranking differs, so other
+  facts win the 10 places. This is not evidence Kuzu is safe.
+
 ## In CI
 
 `ci/graphiti-memory-gate.yml` is a drop-in workflow for Graphiti's repository. It runs on PRs

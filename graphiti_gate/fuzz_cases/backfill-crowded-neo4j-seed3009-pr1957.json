@@ -1,0 +1,116 @@
+{
+ "signature": [
+  "rule",
+  "neo4j",
+  "interval-chain"
+ ],
+ "from_seed": 3009,
+ "ops_before": 30,
+ "ops": [
+  {
+   "via": "triplet",
+   "subject": "Bruno",
+   "slot": "home",
+   "value": "Cairo",
+   "year": 2014,
+   "reworded": true
+  },
+  {
+   "via": "resolve",
+   "subject": "Alice",
+   "slot": "employer",
+   "value": "Initech",
+   "year": 2011,
+   "reworded": true
+  },
+  {
+   "via": "resolve",
+   "subject": "Alice",
+   "slot": "employer",
+   "value": "Umbrella",
+   "year": 1991,
+   "reworded": false
+  },
+  {
+   "via": "resolve",
+   "subject": "Bruno",
+   "slot": "home",
+   "value": "Oslo",
+   "year": 2003,
+   "reworded": false
+  },
+  {
+   "via": "resolve",
+   "subject": "Bruno",
+   "slot": "home",
+   "value": "Paris",
+   "year": 2002,
+   "reworded": false
+  },
+  {
+   "via": "resolve",
+   "subject": "Bruno",
+   "slot": "employer",
+   "value": "Globex",
+   "year": 2015,
+   "reworded": false
+  },
+  {
+   "via": "triplet",
+   "subject": "Bruno",
+   "slot": "employer",
+   "value": "Acme",
+   "year": 2006,
+   "reworded": true
+  },
+  {
+   "via": "resolve",
+   "subject": "Bruno",
+   "slot": "employer",
+   "value": "Hooli",
+   "year": 2009,
+   "reworded": false
+  },
+  {
+   "via": "resolve",
+   "subject": "Alice",
+   "slot": "employer",
+   "value": "Vandelay",
+   "year": 2008,
+   "reworded": false
+  },
+  {
+   "via": "resolve",
+   "subject": "Bruno",
+   "slot": "employer",
+   "value": "Umbrella",
+   "year": 2008,
+   "reworded": false
+  },
+  {
+   "via": "resolve",
+   "subject": "Alice",
+   "slot": "employer",
+   "value": "Hooli",
+   "year": 2010,
+   "reworded": false
+  },
+  {
+   "via": "resolve",
+   "subject": "Bruno",
+   "slot": "employer",
+   "value": "Initech",
+   "year": 1994,
+   "reworded": false
+  }
+ ],
+ "backends": [
+  "neo4j"
+ ],
+ "concurrency": false,
+ "finding": {
+  "oracle": "rule",
+  "backend": "neo4j",
+  "detail": "Bruno/employer: \"Bruno works at Initech\" ends 2008-01-01, next starts 2006-01-01"
+ }
+}

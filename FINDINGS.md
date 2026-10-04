@@ -250,6 +250,26 @@ been measured on Neo4j or with a real model.
 
 ---
 
+## F4. Search filters with more than one OR-ed date range use the wrong dates
+
+**Intent: unintended.** Status: already fixed by open PR #1596 (unmerged since June 2026). Found by
+the fuzzer with no prior knowledge; evidence posted on that PR.
+
+**Mechanism.** `edge_search_filter_query_constructor` names each date parameter by its position
+inside its own OR group only (`search_filters.py:157`, `'valid_at_' + str(j)`; the same for
+`invalid_at`, `created_at`, `expired_at`). A second group overwrites the first group's value, so
+every group is compared against the last date. Filters whose other groups hold only `IS NULL`,
+such as the usual "valid now" filter, are not affected. Neither is the MCP server, which builds
+single ranges (`mcp_server/src/utils/type_config.py:149`).
+
+**Evidence.** Shrunk to one fact and one search: a fact starting 1997-01-01, filtered
+`valid_at=[[< 1997-01-01], [> 1998-01-01]]`, is returned on Neo4j, FalkorDB and Kuzu
+(`graphiti_gate/fuzz_cases/`). Across 30 random histories × 3 databases: 162 wrong results on
+main `b7fc30f`, 0 with #1596 merged onto it (`results/fuzz/run-2-main.jsonl`,
+`run-2-pr1596.jsonl`).
+
+---
+
 ## Not faults
 
 - **`lucene_sanitize` escaping the letters O, R, N, T, A, D** (#1302, PRs #1569 and #1595).

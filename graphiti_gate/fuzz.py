@@ -42,7 +42,7 @@ from graphiti_gate.judges import Claim, Judge
 from graphiti_temporal.testing import HashEmbedder, NullCrossEncoder, hash_embedding
 
 UTC = timezone.utc
-SUBJECTS = ['Alice', 'Bruno']
+SUBJECTS = ['Alice', 'Bruno', 'Chen']
 SLOTS = {
     'home': ('LIVES_IN', '{s} lives in {v}', ['Paris', 'Rome', 'Oslo', 'Lima', 'Cairo', 'Seoul', 'Quito', 'Dublin']),
     'employer': ('WORKS_AT', '{s} works at {v}', ['Acme', 'Globex', 'Initech', 'Umbrella', 'Hooli', 'Vandelay']),
@@ -66,12 +66,18 @@ class Op:
         return template.format(s=self.subject, v=self.value)
 
 
-def workload(seed: int, max_ops: int = 8) -> list[Op]:
-    """Random ops; distinct years per person and slot (equal starts are a documented no-op)."""
+def workload(seed: int, max_ops: int = 8, deep: bool = False) -> list[Op]:
+    """Random ops; distinct years per person and slot (equal starts are a documented no-op).
+
+    `deep` makes long histories for one to three people (12 to 30 ops), past the 10-candidate
+    search limit, where ranking decides what Graphiti sees. Backend differences are then
+    expected and only the rule and search oracles are meaningful.
+    """
     rng = random.Random(seed)
     ops, used = [], set()
-    for _ in range(rng.randint(2, max_ops)):
-        subject, slot = rng.choice(SUBJECTS), rng.choice(list(SLOTS))
+    subjects = SUBJECTS[: rng.randint(1, 3)] if deep else SUBJECTS[:2]
+    for _ in range(rng.randint(12, 30) if deep else rng.randint(2, max_ops)):
+        subject, slot = rng.choice(subjects), rng.choice(list(SLOTS))
         year = rng.choice([y for y in range(1990, 2025) if (subject, slot, y) not in used])
         used.add((subject, slot, year))
         value = rng.choice(SLOTS[slot][2])
@@ -291,18 +297,22 @@ def rule_findings(ops: list[Op], result: dict[str, Any]) -> list[str]:
     return found
 
 
-async def trial(seed: int, backends: list[str], concurrency: bool) -> dict[str, Any]:
-    result = await trial_ops(workload(seed), backends, concurrency)
+async def trial(
+    seed: int, backends: list[str], concurrency: bool, deep: bool = False
+) -> dict[str, Any]:
+    result = await trial_ops(workload(seed, deep=deep), backends, concurrency, compare=not deep)
     return {'seed': seed, **result}
 
 
-async def trial_ops(ops: list[Op], backends: list[str], concurrency: bool) -> dict[str, Any]:
+async def trial_ops(
+    ops: list[Op], backends: list[str], concurrency: bool, compare: bool = True
+) -> dict[str, Any]:
     results = {b: await run(ops, b) for b in backends}
     findings = []
     for b, r in results.items():
         findings += [{'oracle': 'rule', 'backend': b, 'detail': d} for d in rule_findings(ops, r)]
     states = {b: r['state'] for b, r in results.items() if not r['error']}
-    if len(set(map(json.dumps, states.values()))) > 1:
+    if compare and len(set(map(json.dumps, states.values()))) > 1:
         ref = backends[0]
         for b, st in states.items():
             if st != states.get(ref):
@@ -331,9 +341,10 @@ async def main() -> None:
     ap.add_argument('--first-seed', type=int, default=0)
     ap.add_argument('--backends', nargs='+', default=['neo4j', 'falkordb', 'kuzu'])
     ap.add_argument('--concurrency', action='store_true')
+    ap.add_argument('--deep', action='store_true', help='histories past the candidate limit')
     args = ap.parse_args()
     for seed in range(args.first_seed, args.first_seed + args.trials):
-        result = await trial(seed, args.backends, args.concurrency)
+        result = await trial(seed, args.backends, args.concurrency, args.deep)
         print(json.dumps(result), flush=True)
 
 

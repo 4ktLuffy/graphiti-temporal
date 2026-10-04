@@ -31,7 +31,9 @@ Graphiti's memory, in about a minute, with no model. It works from 29 scenarios 
 Graphiti's issues, judges that make real models' mistakes, and rules checked on random histories.
 On bugs injected into Graphiti that were held out from its design, it caught 4 of 6 against 1 of 6
 for Graphiti's own 500 tests. Run on the open PR queue, it shows which of four competing temporal
-PRs fixes what, that none breaks the others, and which PRs it cannot judge yet.
+PRs fixes what, that none breaks the others, and which PRs it cannot judge yet. Its fuzzer
+generates random histories, checks them on Neo4j, FalkorDB and Kuzu, and shrinks what fails. With
+no prior knowledge it found a date-filter bug on all three databases, which open PR #1596 fixes.
 
 **What is here**
 
