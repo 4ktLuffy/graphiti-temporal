@@ -31,7 +31,10 @@ jobs:
           for i in $(seq 1 60); do curl -sf http://127.0.0.1:7474 >/dev/null && break; sleep 2; done
       - uses: astral-sh/setup-uv@v6
       - name: Install the gate
-        run: uv tool install "graphiti-temporal @ git+https://github.com/4ktLuffy/graphiti-temporal"
+        # Pinned to a gate commit, so a change to the gate never changes a PR's verdict.
+        run: uv tool install "graphiti-temporal @ git+https://github.com/4ktLuffy/graphiti-temporal@${GATE_REF}"
+        env:
+          GATE_REF: d0a683b
       - name: Scorecard against the base branch
         env:
           NEO4J_URI: bolt://127.0.0.1:7687
