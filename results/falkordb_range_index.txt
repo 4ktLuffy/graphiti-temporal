@@ -1,0 +1,12 @@
+## gt-falkor4 (ver 41003)
+no index:   v <= '2002' -> [2001]
+with index: v <= '2002' -> [2001, 2003, 2005]
+with index: v < '2002' -> [2001, 2003, 2005]
+with index: v >= '2002' -> [2003, 2005]
+with index: v > '2002' -> [2003, 2005]
+## gt-falkor6 (ver 60001)
+no index:   v <= '2002' -> [2001]
+with index: v <= '2002' -> [2001]
+with index: v < '2002' -> [2001]
+with index: v >= '2002' -> [2003, 2005]
+with index: v > '2002' -> [2003, 2005]

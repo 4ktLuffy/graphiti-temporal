@@ -1,7 +1,7 @@
 """graphiti-gate: run Graphiti's memory-logic scenarios on any revision, and compare revisions.
 
     graphiti-gate run    REV [--scenarios DIR] [--repeats 5]
-    graphiti-gate diff   BASE HEAD                  # the scorecard for one change
+    graphiti-gate diff   BASE HEAD                  # the scorecard; exits 1 if HEAD breaks or errors
     graphiti-gate triage REV [REV ...] --base main  # many revisions against one base, one table
     graphiti-gate props  REV [REV ...] [--trials 40] # rules on random histories, rates by size
     graphiti-gate audit  [--group G] [--json]        # damage in a live graph; read-only
@@ -51,9 +51,13 @@ def run(
                     f'(recorded answers replay for free). {r["quota_exhausted"]}'
                 )
             results[r['id']] = r
-    if out.returncode != 0 and not results:
-        raise RuntimeError(f'worker failed on {spec}: {out.stderr[-1500:]}')
-    record = {'revision': spec, 'label': rev.label, 'scenarios': results}
+    if out.returncode != 0:  # a crash after some results must not pass as a partial success
+        raise RuntimeError(
+            f'worker exited {out.returncode} on {spec} after {len(results)} scenarios: '
+            f'{out.stderr[-1500:]}'
+        )
+    record = {'revision': spec, 'label': rev.label,
+              'scenarios': complete(results, scenarios, repeats)}  # fmt: skip
     RESULTS.mkdir(parents=True, exist_ok=True)
     kind, _, rest = spec.partition(':')
     # Never put local paths in result names: a patch or checkout is named by its last component.
@@ -67,7 +71,12 @@ def run(
     record['scenario_set'] = (
         str(resolved.relative_to(ROOT)) if resolved.is_relative_to(ROOT) else resolved.name
     )  # never a local absolute path
-    (RESULTS / f'{prefix}{name}--{scen}.json').write_text(json.dumps(record, indent=1))
+    # Never replace an earlier result: a rerun of the same revision and scenarios gets -run2, -run3.
+    path, n = RESULTS / f'{prefix}{name}--{scen}.json', 1
+    while path.exists():
+        n += 1
+        path = RESULTS / f'{prefix}{name}--{scen}-run{n}.json'
+    path.write_text(json.dumps(record, indent=1))
     return record
 
 
@@ -116,6 +125,26 @@ def live_table(base: dict, heads: list[dict]) -> str:
         misses.append(str(fresh))
     lines.append('| *answers not in the cache (fresh Codex calls)* | ' + ' | '.join(misses) + ' |')
     return '\n'.join(lines)
+
+
+def complete(results: dict, scenarios: Path, repeats: int) -> dict:
+    """Every expected scenario has a result; one the worker never reported is an error."""
+    from graphiti_gate.scenario import load
+
+    out = dict(results)
+    for s in load([Path(scenarios)]):
+        out.setdefault(s.id, {'id': s.id, 'verdict': 'error', 'passes': 0, 'repeats': repeats,
+                              'first': {'error': 'no result: the worker never reported it'}})  # fmt: skip
+    return out
+
+
+def exit_code(base: dict, head: dict) -> int:
+    """1 if the head breaks or errors on any scenario, or does not merge; else 0."""
+    if head.get('conflict'):
+        return 1
+    ids = set(base['scenarios']) | set(head['scenarios'])
+    changes = {_change(base['scenarios'].get(i), head['scenarios'].get(i)) for i in ids}
+    return 1 if changes & {'broke', 'error'} else 0
 
 
 def _cell(r: dict | None) -> str:
@@ -212,7 +241,13 @@ def props(spec: str, trials: int, max_homes: int, seed: int, base: str = 'main')
     kind, _, rest = spec.partition(':')
     shown = f'{kind}-{Path(rest).name}' if kind in ('patch', 'path') else spec
     name = shown.replace(':', '-').replace('/', '_')
-    (RESULTS / f'props-{name}.json').write_text(json.dumps(record, indent=1))
+    # Named by run settings too, so a second run on the same revision never replaces the first.
+    settings = f't{trials}-h{max_homes}-s{seed}'
+    path, n = RESULTS / f'props-{name}--{settings}.json', 1
+    while path.exists():
+        n += 1
+        path = RESULTS / f'props-{name}--{settings}-run{n}.json'
+    path.write_text(json.dumps(record, indent=1))
     return record
 
 
@@ -285,6 +320,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.cmd == 'diff':
         for h in results:
             print(scorecard(base, h), '\n')
+        return max(exit_code(base, h) for h in results)
     else:
         from graphiti_gate.reach import reach
 

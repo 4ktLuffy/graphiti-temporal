@@ -250,9 +250,10 @@ It also found a planted inverted interval and a planted ended-but-not-expired fa
   memberships); the audit cannot tell, which is why it calls them candidates. The zero-false-alarm
   result applies to these graphs only.
 
-## Finding bugs nobody wrote a test for: the fuzzer
+## The fuzzer: random histories on three databases
 
-The scenarios check bugs someone already thought of. `graphiti_gate/fuzz.py` looks for the rest.
+The scenarios check bugs someone already thought of. `graphiti_gate/fuzz.py` generates the cases
+instead.
 It generates random fact histories: people change homes and employers, facts arrive out of order,
 some are restated in other words, and they enter through `resolve_extracted_edges` or
 `add_triplet`. Each history runs through Graphiti's real code, and the result is checked three
@@ -279,8 +280,10 @@ python -m graphiti_gate.fuzz_shrink results/fuzz/run.jsonl
 | run | histories | what it reported |
 |---|---|---|
 | 1: short histories | 300 | no rule or database differences. All 217 findings came from the optional concurrency check, which is not a fault (see below) |
-| 2: adds restatements and OR-ed date ranges | 30 | 162 wrong search results on all three databases. All were one bug, already fixed by open PR #1596. With #1596 merged: 0 |
+| 2: adds restatements and OR-ed date ranges | 30 | 162 wrong search results on all three databases, all from one known bug (#488, fixed by open PR #1596). With #1596 merged: 0 |
 
+- **No new bug yet.** The OR-ed date search was added knowing #488, which the scenario set
+  already covers. The fuzzer confirmed it on three databases and minimized it.
 - **The date-filter bug.** In `search_filters.py`, each date is stored under a parameter named
   only by its position inside its own OR group (`'valid_at_' + str(j)`). The second group
   overwrites the first, so every group is compared against the last date. The shrinker reduced it
@@ -295,6 +298,30 @@ python -m graphiti_gate.fuzz_shrink results/fuzz/run.jsonl
 - **The fuzzer catches injected bugs.** With the back-fill-latest mutant in place, seed 6 fails.
 - **Not reported.** Kuzu's driver never creates fulltext indexes (`build_indices` is a no-op), so
   the fuzzer creates them itself. Kuzu is deprecated and Graphiti's tests skip it.
+- **What it missed, and the mode that catches it.** Fix 3's first version was wrong on FalkorDB
+  (FINDINGS.md, "Fix 3"). Deep runs did not catch it, with two wordings per fact or with five
+  (`--varied`, `results/fuzz/run-6-*`): their histories rarely push the fact open at a
+  back-fill's start out of the candidates. `--crowded` builds that case on purpose: one person's
+  14-30 homes in date order, then one home back-filled into the middle, its two true neighbours
+  worded apart from the rest. 20 seeds (`results/fuzz/run-7-*`):
+
+  | histories failing the back-fill rules, of 20 | Neo4j | FalkorDB |
+  |---|---|---|
+  | main | 20 | 18 |
+  | #1957 (fix 1) | 13 | 9 |
+  | fix 1 + fix 3, first version | 0 | **8** |
+  | fix 1 + fix 3, final | **0** | **0** |
+
+  On main, 8 of the 20 also end with two current homes on each database. Every run, the final
+  one included, also flags the OR-ed date search in 20 of 20 seeds: that is the known #488
+  (#1596 is not applied in these runs), and the table leaves it out.
+- **Two ingestion paths (`--via`).** The same facts go through `resolve_extracted_edges` only and
+  through `add_triplet` only; with a correct judge both must store the same facts and dates. It
+  is a consistency check, not a correctness one, and on main crowded histories make it noisy
+  (FINDINGS.md, "Same facts, same history"). On main it found no difference, confirmed or not,
+  in 40 short and 20 long histories, and no empty or inverted interval
+  (`results/fuzz/run-8-via-*.jsonl`). The resolve path here saves one edge per call, not a whole
+  episode's batch.
 
 **Long histories (`--deep`).** 40 histories of 12 to 30 changes for one to three people, on main and
 on main with PR #1957 (fix 1). Here ranking decides which 10 facts Graphiti sees, so the databases
@@ -323,6 +350,9 @@ are not compared, only the rules and searches (`results/fuzz/run-3-deep-*.jsonl`
 
 `ci/graphiti-memory-gate.yml` is a drop-in workflow for Graphiti's repository. It runs on PRs
 that touch resolution or search, uses the Neo4j version in their `unit_tests.yml`, and writes the
-scorecard to the job summary. It never comments on a PR. Installed with `uv tool install`, the
+scorecard to the job summary. It never comments on a PR. `diff` exits 1 when the PR breaks a
+scenario, errors on one, or does not merge, so the job goes red. A worker that crashes is an error
+even after reporting some scenarios, and a scenario it never reports counts as an error
+(`tests/test_gate_ci.py`). Installed with `uv tool install`, the
 gate scored a plain Graphiti checkout with fix 1 against main the same way it does in development
 (3 fixed, 0 broken of the 24 scenarios it had then).

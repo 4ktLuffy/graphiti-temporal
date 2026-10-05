@@ -261,3 +261,43 @@ breakdown gives 56 ms.
         ran.
     - **What the review confirmed.** The arithmetic of every reported mutation count, the #906
       result, and all 2,018 tests.
+
+12. **A rediscovered bug was presented as a discovery.** The fuzzer's first finding, the OR-ed
+    date filter, was described as found "with no prior knowledge". The scenario set already
+    covered it (#488, fixed by open PR #1596), and the fuzzer's OR-ed search was written knowing
+    it. A review by gpt-6-astra caught the claim; README, GATE.md and FINDINGS.md now call it a
+    confirmation on three databases.
+13. **The gate could not fail a CI job.** `diff` printed regressions and exited 0, a worker that
+    crashed after some scenarios was accepted, and the fuzzer reported findings before seeing them
+    twice. The same review found all three. Each now fails visibly, with tests
+    (`tests/test_gate_ci.py`) that fail without the change.
+14. **A FalkorDB bug looked like a Graphiti one, and its first explanation was wrong.** In the
+    regression pack, the OR-ed date test failed on FalkorDB even with #1596. A raw query showed
+    FalkorDB 4.10.3 returning an edge that matches neither range. The first explanation was that
+    deleted edges leave stale index entries. A later minimal case, with no deletions, showed the
+    real cause: with a range index on a string property, `<` and `<=` return every row as soon as
+    any value lies below the bound. 6.0.1 is correct, and Graphiti's CI uses `falkordb:latest`, so
+    nothing was reported. The pack starts each revision on a fresh FalkorDB graph, which avoided
+    the bug only because a fresh graph has no lower values.
+15. **A results file was about to be overwritten again.** `graphiti-gate props` names its output
+    by revision only, so a second run on the same patch replaces the first. The first run's data
+    was copied aside before the deep run finished (`props-*-max30.json`). Output names now include
+    the run settings (`props-<revision>--t60-h30-s0.json`). A final check found two committed
+    results overwritten by tonight's reruns anyway (`props-main.json` and a gate run); both were
+    restored from git, tonight's copies kept under new names, and no result file is ever replaced
+    now: a rerun gets `-run2`, `-run3` (`tests/test_gate_ci.py`).
+16. **A formatter changed a file outside the patch.** Running ruff on Graphiti's whole package
+    reformatted `llm_client/client.py`. It was caught in `git diff --stat` before the patch file
+    was used, and reverted.
+17. **Fix 3's first version was wrong on FalkorDB.** It asked the database for facts open at the
+    new fact's start with `valid_at <= $start`, which mistake 14's FalkorDB bug turns into "every
+    fact". A Sonnet review found it by reading the query and reproducing it; neither the
+    regression test (which only covered the "later" side) nor the deep fuzzer did. Deep runs
+    check rules per database instead of comparing databases, and their histories rarely crowd out
+    the fact open at the start. A `--crowded` fuzz mode now builds that case on purpose; it flags
+    the first version on FalkorDB in 8 of 20 seeds and the final version in none. The check now
+    runs in Python, the test covers both sides, and the fuzzer gained `--varied` wordings.
+18. **A cost was measured on the wrong query.** `bench/neighbors_cost.py` first timed a simpler
+    one-sided query (about 17 ms at 1,000 facts), and that number was used to choose the design.
+    The same review timed the real function at about 80 ms. The bench now times the patch's own
+    function on both databases, and FINDINGS quotes that.

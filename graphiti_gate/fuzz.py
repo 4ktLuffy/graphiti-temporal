@@ -1,4 +1,4 @@
-"""Find Graphiti bugs nobody wrote a test for: random workloads, three oracles, minimal cases.
+"""Random workloads, three oracles, minimal cases: Graphiti checked without hand-written answers.
 
 The fuzzer generates small random histories (people changing homes and employers, facts arriving
 out of order, through `resolve_extracted_edges` or `add_triplet`), runs them through Graphiti's
@@ -30,7 +30,7 @@ import os
 import random
 import uuid
 import warnings
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
 from datetime import datetime, timezone
 from typing import Any
 
@@ -40,6 +40,7 @@ from graphiti_core.nodes import EntityNode, EpisodeType, EpisodicNode
 from graphiti_gate.compat import build_indices, make_clients
 from graphiti_gate.judges import Claim, Judge
 from graphiti_temporal.testing import HashEmbedder, NullCrossEncoder, hash_embedding
+from graphiti_temporal.world import CITIES
 
 UTC = timezone.utc
 SUBJECTS = ['Alice', 'Bruno', 'Chen']
@@ -49,6 +50,15 @@ SLOTS = {
 }  # fmt: skip
 # The same claim in other words, which sends Graphiti down its duplicate path.
 REWORDED = {'home': '{s} resides in {v}', 'employer': '{s} is employed by {v}'}
+# More wordings for `--varied`: ranked search then misses a fact's true neighbours more often.
+WORDINGS = {
+    'home': ['{s} has made a home in {v}', '{s} rents a flat in {v}', '{s} is based in {v}'],
+    'employer': [
+        '{s} has a job at {v}',
+        '{s} draws a salary from {v}',
+        '{s} is on the payroll of {v}',
+    ],
+}
 
 
 @dataclass(frozen=True)
@@ -59,19 +69,42 @@ class Op:
     value: str
     year: int
     reworded: bool = False
+    wording: int = 0  # 1-3 picks from WORDINGS (`--varied`); 0 keeps the two above
 
     @property
     def fact(self) -> str:
-        template = REWORDED[self.slot] if self.reworded else SLOTS[self.slot][1]
+        if self.wording:
+            template = WORDINGS[self.slot][self.wording - 1]
+        else:
+            template = REWORDED[self.slot] if self.reworded else SLOTS[self.slot][1]
         return template.format(s=self.subject, v=self.value)
 
 
-def workload(seed: int, max_ops: int = 8, deep: bool = False) -> list[Op]:
+def crowded(seed: int) -> list[Op]:
+    """One person's homes in date order, then one home back-filled into the middle.
+
+    The back-filled home's two true neighbours, the home before it and the home after it, are
+    worded differently from every other home, so ranked search prefers the rest and can leave
+    both out of the 10 candidate places. A correct Graphiti ends the back-filled home where the
+    next begins and shortens the one before. Long histories: databases are not compared.
+    """
+    rng = random.Random(f'crowded-{seed}')
+    years = sorted(rng.sample(range(1950, 2025), rng.randint(14, 30)))
+    late = rng.randrange(2, len(years) - 2)
+    homes = rng.sample(CITIES, len(years))  # distinct, so no home is a duplicate of another
+    ops = [Op(rng.choice(['resolve', 'triplet']), 'Alice', 'home', homes[i], y,
+              wording=2 if i in (late - 1, late + 1) else 0)
+           for i, y in enumerate(years)]  # fmt: skip
+    return [*ops[:late], *ops[late + 1 :], ops[late]]
+
+
+def workload(seed: int, max_ops: int = 8, deep: bool = False, varied: bool = False) -> list[Op]:
     """Random ops; distinct years per person and slot (equal starts are a documented no-op).
 
     `deep` makes long histories for one to three people (12 to 30 ops), past the 10-candidate
     search limit, where ranking decides what Graphiti sees. Backend differences are then
-    expected and only the rule and search oracles are meaningful.
+    expected and only the rule and search oracles are meaningful. `varied` words facts five ways
+    instead of two; workloads without it are unchanged for every seed.
     """
     rng = random.Random(seed)
     ops, used = [], set()
@@ -83,6 +116,9 @@ def workload(seed: int, max_ops: int = 8, deep: bool = False) -> list[Op]:
         value = rng.choice(SLOTS[slot][2])
         ops.append(Op(rng.choice(['resolve', 'resolve', 'triplet']), subject, slot, value, year,
                       reworded=rng.random() < 0.25))  # fmt: skip
+    if varied:
+        wordings = random.Random(f'{seed}-wording')
+        ops = [replace(o, wording=wordings.randrange(4)) for o in ops]
     return ops
 
 
@@ -283,6 +319,9 @@ def rule_findings(ops: list[Op], result: dict[str, Any]) -> list[str]:
     rel_of = {o.fact: o.slot for o in ops}
     for s, _d, f, v, i, x in result['state']:
         by_slot.setdefault((s, rel_of.get(f, slot_of.get('?'))), []).append((v, i, x, f))
+    for s, _d, f, v, i, _x in result['state']:
+        if v is not None and i is not None and i <= v:
+            found.append(f'{s}: "{f}" has an empty or inverted interval {v} to {i}')
     for (s, slot), facts in sorted(by_slot.items(), key=str):
         open_now = [f for (_v, i, x, f) in facts if i is None and not x]
         if len(open_now) > 1:
@@ -298,14 +337,54 @@ def rule_findings(ops: list[Op], result: dict[str, Any]) -> list[str]:
 
 
 async def trial(
-    seed: int, backends: list[str], concurrency: bool, deep: bool = False
+    seed: int,
+    backends: list[str],
+    concurrency: bool,
+    deep: bool = False,
+    varied: bool = False,
+    crowd: bool = False,
+    via: bool = False,
 ) -> dict[str, Any]:
-    result = await trial_ops(workload(seed, deep=deep), backends, concurrency, compare=not deep)
+    ops = crowded(seed) if crowd else workload(seed, deep=deep, varied=varied)
+    result = await trial_ops(ops, backends, concurrency, compare=not (deep or crowd), via=via)
     return {'seed': seed, **result}
 
 
+async def confirmed(
+    result: dict[str, Any], backends, concurrency, deep, via=False
+) -> dict[str, Any]:
+    """Rerun a workload with findings; only findings seen on both runs stay in `findings`."""
+    if not result['findings']:
+        return result
+    ops = [Op(**o) for o in result['ops']]
+    again = await trial_ops(ops, backends, concurrency, compare=not deep, via=via)
+    seen = {json.dumps(f, sort_keys=True, default=str) for f in again['findings']}
+    keep = [f for f in result['findings'] if json.dumps(f, sort_keys=True, default=str) in seen]
+    gone = [f for f in result['findings'] if f not in keep]
+    return {**result, 'findings': keep, 'unconfirmed': gone}
+
+
+async def via_findings(ops: list[Op], backend: str) -> list[dict[str, Any]]:
+    """The same facts through `resolve_extracted_edges` only and through `add_triplet` only.
+
+    With a correct judge both ingestion paths must store the same facts with the same dates.
+    """
+    paths = {
+        via: await run([replace(o, via=via) for o in ops], backend)
+        for via in ('resolve', 'triplet')
+    }
+    if (
+        any(r['error'] for r in paths.values())
+        or paths['resolve']['state'] == paths['triplet']['state']
+    ):
+        return []
+    a, b = (set(map(tuple, paths[v]['state'])) for v in ('resolve', 'triplet'))
+    return [{'oracle': 'via', 'backend': backend,
+             'detail': {'resolve_only': sorted(a - b), 'triplet_only': sorted(b - a)}}]  # fmt: skip
+
+
 async def trial_ops(
-    ops: list[Op], backends: list[str], concurrency: bool, compare: bool = True
+    ops: list[Op], backends: list[str], concurrency: bool, compare: bool = True, via: bool = False
 ) -> dict[str, Any]:
     results = {b: await run(ops, b) for b in backends}
     findings = []
@@ -320,6 +399,8 @@ async def trial_ops(
                 only_ref = sorted(set(map(tuple, states[ref])) - set(map(tuple, st)))
                 findings.append({'oracle': 'backends', 'backend': f'{b} vs {ref}',
                                  'detail': {'only_' + b: only_b, 'only_' + ref: only_ref}})  # fmt: skip
+    if via:
+        findings += await via_findings(ops, backends[0])
     if concurrency:
         seq = results.get('neo4j') or await run(ops, 'neo4j')
         par = await run(ops, 'neo4j', concurrent=True)
@@ -342,9 +423,17 @@ async def main() -> None:
     ap.add_argument('--backends', nargs='+', default=['neo4j', 'falkordb', 'kuzu'])
     ap.add_argument('--concurrency', action='store_true')
     ap.add_argument('--deep', action='store_true', help='histories past the candidate limit')
+    ap.add_argument('--varied', action='store_true', help='word each fact one of five ways')
+    ap.add_argument('--crowded', action='store_true', help='back-fill one home into a long history')
+    ap.add_argument('--via', action='store_true', help='compare add_episode and add_triplet paths')
     args = ap.parse_args()
     for seed in range(args.first_seed, args.first_seed + args.trials):
-        result = await trial(seed, args.backends, args.concurrency, args.deep)
+        result = await trial(
+            seed, args.backends, args.concurrency, args.deep, args.varied, args.crowded, args.via
+        )
+        result = await confirmed(
+            result, args.backends, args.concurrency, args.deep or args.crowded, args.via
+        )
         print(json.dumps(result), flush=True)
 
 

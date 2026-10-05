@@ -15,6 +15,7 @@ matter. A new edge without `valid_at` keeps the unfiltered search.
 
 `apply()` installs this and fix 2 (below) on graphiti-core at runtime; `upstream/01-*.patch` and
 `upstream/02-*.patch` are the same changes as diffs against graphiti-core.
+`apply_backfill_neighbors()` installs fix 3 (`upstream/03-*.patch`), separately, on top of fix 1.
 `Graphiti.add_episode` and `Graphiti.add_triplet` pick it up wherever they were imported. Code that
 imported `resolve_extracted_edges` by name before `apply()` keeps the unfiltered original, so call
 it through `graphiti_core.utils.maintenance.edge_operations` or call `apply()` first.
@@ -189,6 +190,132 @@ def apply_fulltext_filter_order() -> None:
     su.edge_fulltext_search = edge_fulltext_search
     search_module.edge_fulltext_search = edge_fulltext_search
     _fulltext_applied = True
+
+
+TEMPORAL_NEIGHBORS = 3
+OPEN_SCAN = 50
+_neighbor_driver: contextvars.ContextVar[Any] = contextvars.ContextVar(
+    'graphiti_temporal_neighbor_driver', default=None
+)
+_neighbors_applied = False
+
+
+async def _nearest_own_edges(driver, edge, start, later, exclude, name, limit):
+    """The subject's facts starting after `start`, or open at `start`, nearest first.
+
+    Only `>` and `IS NULL` reach the database: FalkorDB 4.x ignores the bound of a string `<` or
+    `<=` under a range index, so "started at or before `start`" is checked here.
+    """
+    from graphiti_core.edges import get_entity_edge_from_record
+    from graphiti_core.models.edges.edge_db_queries import get_entity_edge_return_query
+
+    where = 'e.valid_at > $start' if later else '(e.invalid_at IS NULL OR e.invalid_at > $start)'
+    if name is not None:
+        where += ' AND e.name = $name'
+    records, _, _ = await driver.execute_query(
+        'MATCH (n:Entity {uuid: $source_uuid})-[e:RELATES_TO {group_id: $group_id}]->(m:Entity) '
+        f'WHERE {where} AND NOT e.uuid IN $exclude '
+        f'RETURN {get_entity_edge_return_query(driver.provider)} '
+        'ORDER BY e.valid_at ASC LIMIT $limit',
+        source_uuid=edge.source_node_uuid,
+        group_id=edge.group_id,
+        start=start,
+        name=name,
+        exclude=exclude,
+        limit=limit if later else OPEN_SCAN,
+        routing_='r',
+    )
+    edges = [get_entity_edge_from_record(r, driver.provider) for r in records]
+    if later:
+        return edges
+    return [e for e in edges if e.valid_at is not None and ensure_utc(e.valid_at) <= start][::-1][
+        :limit
+    ]
+
+
+async def temporal_neighbors(driver, extracted_edge: EntityEdge, candidates: list[EntityEdge],
+                             limit: int = TEMPORAL_NEIGHBORS) -> list[EntityEdge]:  # fmt: skip
+    """Fix 3: the subject's facts nearest in time to the edge being resolved, if search missed them.
+
+    The same function as upstream/03-backfill-temporal-neighbors.patch: up to `limit` facts
+    starting after the edge and up to `limit` open at its start, same relation name first.
+    Neo4j and FalkorDB only; nothing is added without `valid_at`.
+    """
+    from graphiti_core.driver.driver import GraphProvider
+
+    if extracted_edge.valid_at is None or driver.provider not in (
+        GraphProvider.NEO4J,
+        GraphProvider.FALKORDB,
+    ):
+        return []
+    start = ensure_utc(extracted_edge.valid_at)
+    exclude = [e.uuid for e in candidates] + [extracted_edge.uuid]
+    for name in (extracted_edge.name, None):
+        found = [
+            *await _nearest_own_edges(driver, extracted_edge, start, True, exclude, name, limit),
+            *await _nearest_own_edges(driver, extracted_edge, start, False, exclude, name, limit),
+        ]
+        if found:
+            return found
+    return []
+
+
+def apply_backfill_neighbors() -> None:
+    """Fix 3: show the model the subject's temporal neighbours too. Idempotent; use with fix 1.
+
+    Graphiti resolves each edge in `resolve_extracted_edge`, which does not see the driver, so
+    the driver is passed in a context variable set by `resolve_extracted_edges` and
+    `Graphiti.add_triplet`.
+    """
+    global _neighbors_applied
+    if _neighbors_applied:
+        return
+    from graphiti_core import graphiti as g
+    from graphiti_core.utils.maintenance import edge_operations as eo
+
+    resolve_one = eo.resolve_extracted_edge
+
+    @functools.wraps(resolve_one)
+    async def resolve_extracted_edge(llm_client, extracted_edge, related_edges, existing_edges,
+                                     *args: Any, **kwargs: Any):  # fmt: skip
+        driver = _neighbor_driver.get()
+        if driver is not None:
+            extra = await temporal_neighbors(
+                driver, extracted_edge, [*related_edges, *existing_edges]
+            )
+            existing_edges = [*existing_edges, *extra]
+        return await resolve_one(
+            llm_client, extracted_edge, related_edges, existing_edges, *args, **kwargs
+        )
+
+    eo.resolve_extracted_edge = resolve_extracted_edge
+    g.resolve_extracted_edge = resolve_extracted_edge
+
+    resolve_many = eo.resolve_extracted_edges
+
+    @functools.wraps(resolve_many)
+    async def resolve_extracted_edges(clients, *args: Any, **kwargs: Any):
+        token = _neighbor_driver.set(clients.driver)
+        try:
+            return await resolve_many(clients, *args, **kwargs)
+        finally:
+            _neighbor_driver.reset(token)
+
+    eo.resolve_extracted_edges = resolve_extracted_edges
+    g.resolve_extracted_edges = resolve_extracted_edges
+
+    add_triplet = g.Graphiti.add_triplet
+
+    @functools.wraps(add_triplet)
+    async def add_triplet_with_neighbors(self, *args: Any, **kwargs: Any):
+        token = _neighbor_driver.set(self.driver)
+        try:
+            return await add_triplet(self, *args, **kwargs)
+        finally:
+            _neighbor_driver.reset(token)
+
+    g.Graphiti.add_triplet = add_triplet_with_neighbors
+    _neighbors_applied = True
 
 
 def apply() -> None:

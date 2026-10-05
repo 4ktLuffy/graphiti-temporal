@@ -30,6 +30,8 @@ def kind(finding: dict) -> str:
         return 'or-date-search'
     if detail.startswith('search'):
         return 'as-of-search'
+    if 'inverted interval' in detail:
+        return 'inverted-interval'
     return 'two-current' if 'current values' in detail else 'interval-chain'
 
 

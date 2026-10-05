@@ -160,3 +160,76 @@ def test_fix1_runtime_leaves_shared_text_unfiltered():
         assert fix._filter_from(fix._cutoffs.get()[('same text', 'g')]) == SearchFilters()
     finally:
         fix._cutoffs.reset(token)
+
+
+class NeighborDriver:
+    """Answers fix 3's queries from a list of edges, honouring only `>` and `IS NULL`."""
+
+    def __init__(self, edges, provider=GraphProvider.NEO4J):
+        self.edges, self.provider, self.queries = edges, provider, []
+
+    async def execute_query(self, query, **params):
+        self.queries.append(query)
+        start, name, exclude = params['start'], params['name'], set(params['exclude'])
+        later = 'e.valid_at > $start' in query
+        rows = [e for e in self.edges if e.uuid not in exclude and (name is None or e.name == name)
+                and (e.valid_at > start if later else (e.invalid_at is None or e.invalid_at > start))]  # fmt: skip
+        return sorted(rows, key=lambda e: e.valid_at)[: params['limit']], None, None
+
+
+def _home(year: int, end: int | None = None, name: str = 'LIVES_IN') -> EntityEdge:
+    return EntityEdge(source_node_uuid='alice', target_node_uuid=f'c{year}', name=name, group_id='g',
+                      fact=f'home {year}', episodes=[], created_at=datetime.now(UTC),
+                      valid_at=datetime(year, 1, 1, tzinfo=UTC),
+                      invalid_at=datetime(end, 1, 1, tzinfo=UTC) if end else None)  # fmt: skip
+
+
+@pytest.mark.asyncio
+async def test_fix3_neighbors_are_the_next_facts_and_the_one_open_at_start(monkeypatch):
+    monkeypatch.setattr('graphiti_core.edges.get_entity_edge_from_record', lambda r, p: r)
+    history = [_home(y, y + 2) for y in range(1950, 1980, 2)] + [_home(1980)]
+    new = _home(1961)
+    found = await fix.temporal_neighbors(NeighborDriver(history), new, [])
+    assert [e.fact for e in found] == ['home 1962', 'home 1964', 'home 1966', 'home 1960']
+
+
+@pytest.mark.asyncio
+async def test_fix3_adds_nothing_without_valid_at_or_on_other_providers():
+    undated = _home(1961).model_copy(update={'valid_at': None})
+    assert await fix.temporal_neighbors(NeighborDriver([_home(1960)]), undated, []) == []
+    kuzu = NeighborDriver([_home(1960)], provider=GraphProvider.KUZU)
+    assert await fix.temporal_neighbors(kuzu, _home(1961), []) == []
+    assert kuzu.queries == []
+
+
+@pytest.mark.asyncio
+async def test_fix3_runtime_passes_neighbors_to_the_resolver(monkeypatch):
+    from graphiti_core import graphiti as g
+
+    monkeypatch.setattr('graphiti_core.edges.get_entity_edge_from_record', lambda r, p: r)
+    seen = {}
+
+    async def resolver_underneath(llm, edge, related, existing, *a, **k):
+        seen['existing'] = [e.fact for e in existing]
+        return edge, [], []
+
+    # Install fix 3 afresh on top of a stand-in for Graphiti's resolver; monkeypatch restores all.
+    monkeypatch.setattr(fix, '_neighbors_applied', False)
+    monkeypatch.setattr(edge_operations, 'resolve_extracted_edge', resolver_underneath)
+    monkeypatch.setattr(g, 'resolve_extracted_edge', resolver_underneath)
+    monkeypatch.setattr(
+        edge_operations, 'resolve_extracted_edges', edge_operations.resolve_extracted_edges
+    )
+    monkeypatch.setattr(g, 'resolve_extracted_edges', g.resolve_extracted_edges)
+    monkeypatch.setattr(g.Graphiti, 'add_triplet', g.Graphiti.add_triplet)
+    fix.apply_backfill_neighbors()
+
+    await edge_operations.resolve_extracted_edge(None, _home(1961), [], [_home(1970)], None)
+    assert seen['existing'] == ['home 1970']  # no driver in context: nothing added
+
+    token = fix._neighbor_driver.set(NeighborDriver([_home(1960, 1962), _home(1962)]))
+    try:
+        await edge_operations.resolve_extracted_edge(None, _home(1961), [], [], None)
+    finally:
+        fix._neighbor_driver.reset(token)
+    assert seen['existing'] == ['home 1962', 'home 1960']

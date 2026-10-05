@@ -1,0 +1,14 @@
+## main
+405 passed, 11 skipped, 1 warning, 5 errors in 7.00s
+ERROR tests/cross_encoder/test_gemini_reranker_client.py
+ERROR tests/embedder/test_gemini.py
+ERROR tests/embedder/test_voyage.py
+ERROR tests/llm_client/test_anthropic_client.py
+ERROR tests/llm_client/test_gemini_client.py
+## patch:bench/patches/01+03-neighbors.patch
+414 passed, 11 skipped, 1 warning, 5 errors in 6.99s
+ERROR tests/cross_encoder/test_gemini_reranker_client.py
+ERROR tests/embedder/test_gemini.py
+ERROR tests/embedder/test_voyage.py
+ERROR tests/llm_client/test_anthropic_client.py
+ERROR tests/llm_client/test_gemini_client.py
