@@ -28,7 +28,7 @@ index 237ee07..a929756 100644
          resolved_edge, invalidated_edges, _ = await resolve_extracted_edge(
              self.llm_client,
 diff --git a/graphiti_core/utils/maintenance/edge_operations.py b/graphiti_core/utils/maintenance/edge_operations.py
-index 7d87af2..3e905c3 100644
+index 7d87af2..3c4d6c5 100644
 --- a/graphiti_core/utils/maintenance/edge_operations.py
 +++ b/graphiti_core/utils/maintenance/edge_operations.py
 @@ -27,11 +27,13 @@ from graphiti_core.edges import (
@@ -54,7 +54,7 @@ index 7d87af2..3e905c3 100644
  from graphiti_core.utils.datetime_utils import ensure_utc, utc_now
  from graphiti_core.utils.maintenance.attribute_utils import apply_capped_attributes
  from graphiti_core.utils.maintenance.dedup_helpers import _normalize_string_exact
-@@ -322,6 +324,112 @@ async def extract_edges(
+@@ -322,6 +324,119 @@ async def extract_edges(
      return edges
  
  
@@ -142,9 +142,9 @@ index 7d87af2..3e905c3 100644
 +
 +    A back-filled fact must be ended by the earliest later fact of the same kind, and may end a
 +    fact still open at its start. Ranked search can miss both once the subject has more relevant
-+    facts than the result limit, so the `limit` nearest on each side are added from the subject's
-+    own facts, preferring facts with the same relation name. Without `valid_at` nothing is added.
-+    Only Neo4j and FalkorDB are queried; other providers add nothing.
++    facts than the result limit, so for a back-fill the `limit` nearest on each side are added
++    from the subject's own facts with the same relation name. Nothing is added for an ordinary
++    update, without `valid_at`, or on providers other than Neo4j and FalkorDB.
 +    """
 +    if extracted_edge.valid_at is None or driver.provider not in (
 +        GraphProvider.NEO4J,
@@ -154,20 +154,27 @@ index 7d87af2..3e905c3 100644
 +    start = ensure_utc(extracted_edge.valid_at)
 +    assert start is not None
 +    exclude = [e.uuid for e in candidates] + [extracted_edge.uuid]
-+    for name in (extracted_edge.name, None):
-+        found = [
-+            *await _nearest_own_edges(driver, extracted_edge, start, True, exclude, name, limit),
-+            *await _nearest_own_edges(driver, extracted_edge, start, False, exclude, name, limit),
-+        ]
-+        if found:
-+            return found
-+    return []
++    # Only a back-fill needs neighbours: the subject already has a later fact with the same
++    # relation name. An ordinary update is left to the ranked search. Other relations are never
++    # used: a later fact of another kind (a job started after a move) would make an ordinary move
++    # look like a back-fill and put unrelated facts in front of the model.
++    name = extracted_edge.name
++    later = await _nearest_own_edges(
++        driver, extracted_edge, start, True, [extracted_edge.uuid], name, limit
++    )
++    if not later:
++        return []
++    open_at_start = await _nearest_own_edges(
++        driver, extracted_edge, start, False, exclude, name, limit
++    )
++    shown = set(exclude)
++    return [*(e for e in later if e.uuid not in shown), *open_at_start]
 +
 +
  async def resolve_extracted_edges(
      clients: GraphitiClients,
      extracted_edges: list[EntityEdge],
-@@ -411,9 +519,11 @@ async def resolve_extracted_edges(
+@@ -411,9 +526,11 @@ async def resolve_extracted_edges(
                  extracted_edge.fact,
                  group_ids=[extracted_edge.group_id],
                  config=EDGE_HYBRID_SEARCH_RRF,
@@ -181,7 +188,7 @@ index 7d87af2..3e905c3 100644
          ]
      )
  
-@@ -429,6 +539,17 @@ async def resolve_extracted_edges(
+@@ -429,6 +546,17 @@ async def resolve_extracted_edges(
          ]
          edge_invalidation_candidates.append(deduplicated)
  
@@ -200,7 +207,7 @@ index 7d87af2..3e905c3 100644
          f'Related edges: {[e.uuid for edges_lst in related_edges_lists for e in edges_lst]}'
      )
 diff --git a/tests/utils/maintenance/test_edge_operations.py b/tests/utils/maintenance/test_edge_operations.py
-index c8111da..3303689 100644
+index c8111da..f118630 100644
 --- a/tests/utils/maintenance/test_edge_operations.py
 +++ b/tests/utils/maintenance/test_edge_operations.py
 @@ -5,13 +5,17 @@ from unittest.mock import AsyncMock, MagicMock
@@ -221,7 +228,7 @@ index c8111da..3303689 100644
  )
  
  
-@@ -771,3 +775,256 @@ async def test_resolve_extracted_edge_overcap_attribute_preserves_prior(monkeypa
+@@ -771,3 +775,269 @@ async def test_resolve_extracted_edge_overcap_attribute_preserves_prior(monkeypa
      assert resolved.attributes['is_current'] == 'true'
      assert dupes == []
      assert invalidated == []
@@ -478,3 +485,16 @@ index c8111da..3303689 100644
 +    kuzu = _FakeNeighborDriver(history, provider=GraphProvider.KUZU)
 +    assert await temporal_neighbors(kuzu, dated, []) == []
 +    assert kuzu.queries == []
++
++
++@pytest.mark.asyncio
++async def test_temporal_neighbors_leave_an_ordinary_update_alone(monkeypatch):
++    """A move to a new home has nothing later of its kind; a later job must not count."""
++    monkeypatch.setattr(
++        'graphiti_core.utils.maintenance.edge_operations.get_entity_edge_from_record',
++        lambda record, provider: record,
++    )
++    history = [_home(1950, 1960), _home(1960), _home(1990, name='WORKS_AT')]
++    new = _dated_edge('home 1970', datetime(1970, 1, 1, tzinfo=timezone.utc))
++
++    assert await temporal_neighbors(_FakeNeighborDriver(history), new, []) == []

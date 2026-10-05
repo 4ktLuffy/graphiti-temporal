@@ -233,3 +233,12 @@ async def test_fix3_runtime_passes_neighbors_to_the_resolver(monkeypatch):
     finally:
         fix._neighbor_driver.reset(token)
     assert seen['existing'] == ['home 1962', 'home 1960']
+
+
+@pytest.mark.asyncio
+async def test_fix3_leaves_an_ordinary_update_alone(monkeypatch):
+    """A move to a new home has nothing later; fix 3 must add no candidates (not even a job)."""
+    monkeypatch.setattr('graphiti_core.edges.get_entity_edge_from_record', lambda r, p: r)
+    job = _home(1990, name='WORKS_AT')
+    history = [_home(1950, 1960), _home(1960), job]
+    assert await fix.temporal_neighbors(NeighborDriver(history), _home(1970), []) == []

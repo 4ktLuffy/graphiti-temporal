@@ -236,14 +236,14 @@ not separated:
   up to about 30 facts and fails beyond them; fix 3 holds at every depth tried.
 - **Nothing else changes.** All other rules pass. The gate's 34 scenarios show no pass/fail change
   (one row, `additive-over-eager`, is a known gap and fails in both). Graphiti's CI unit command
-  gives 405 passes on main and 414 with fixes 1 and 3, the 9 extra being their new tests, with
+  gives 405 passes on main and 415 with fixes 1 and 3, the 10 extra being their new tests, with
   the same 5 files failing to load on both for missing optional clients (`results/unit-suite.txt`).
 - **Both databases.** The regression test (`upstream/tests/test_temporal_regressions.py`, both
   neighbours worded so ranked search misses them) fails on main, #1596, #1957 and fix 1 alone, and
   passes with fix 3 on Neo4j and FalkorDB.
 - **Cost** (`bench/neighbors_cost.py`, the patch's own function, history back-filled in the
-  middle): 29, 44 and 77 ms at 10, 100 and 1,000 facts on Neo4j; 11, 40 and 63 ms on FalkorDB.
-  Reading the subject's whole history instead costs 288 and 612 ms at 1,000 facts.
+  middle): 29, 47 and 75 ms at 10, 100 and 1,000 facts on Neo4j; 12, 40 and 65 ms on FalkorDB.
+  Reading the subject's whole history instead costs 265 and 606 ms at 1,000 facts.
 - **The trade-off: more candidates, more exposure to a wrong model.** One synthetic relation with
   many true values (12 open "likes", one back-filled; `bench/multivalued.py`, 20 trials): with a
   correct judge, nothing is ended in either version. With a judge that calls every shown fact a
@@ -281,15 +281,30 @@ not separated:
 
   The batched arm is wrong in all 20 on every version. In the 2 seeds where the two are the
   latest homes, both stay open: two current homes from one message. In the rest, both are ended,
-  at the wrong dates. Whether
-  a real model avoids this by setting the end date during extraction is not yet measured (it
-  needs Codex), so this is not reported as a fault.
+  at the wrong dates.
+
+  **With a real model it does not happen, so it is not a fault.** `bench/realistic.py --episode
+  two-moves` sends "In Y Alice moved to Bergen, and in Y+1 she moved again, to Beirut." through
+  the full `add_episode` with `gpt-5.6-luna`, 30 seeds per arm: the model ended Bergen during
+  extraction in 30/30 on main and 30/30 with fixes 1 and 3. Every extra open home in those runs
+  was the depth fault F1 (main left an old home open in 21/30, fixes 1 and 3 in 9/30).
 - **Usable today.** `fix.apply_invalidation_filter(); fix.apply_backfill_neighbors()` installs
   fixes 1 and 3 at runtime. On unpatched main, with them installed, the regression tests give the
   same results as the patches: depth and back-fill tests pass on Neo4j and FalkorDB, and the
   OR-ed date tests still fail (`bench/plugins/runtime_fixes.py`, `results/runtime_fixes_pack.txt`).
-- **Not yet run with a real model.** Every fix 3 number above uses the oracle or over-eager judge.
-  `bench/realistic.py --fix 1+3` is ready and waits on Codex credits.
+- **Fix 3 with a real model, and what it changed.** The first real-model run of fix 3 (v3,
+  `results/realistic/d20-gpt-5.6-luna-fix1+3-v3.jsonl`), on the same 30 seeds as fix 1 alone and
+  an ordinary move, did worse: the current home was retired in 25/28 against 30/30 (2 runs
+  errored in Codex), 3 seeds failed only with fix 3 and none only without it, and tokens rose.
+  The cause was in fix 3's design: when no fact of the same relation was nearby, it fell back to
+  the subject's other relations, and in this world Alice's job started after her move, so every
+  ordinary move looked like a back-fill and the model was shown her job and hobby as candidates.
+  Fix 3 now acts only on a back-fill, judged by a later fact with the same relation name, and
+  never shows other relations (`tests/test_fix.py`, the upstream patch's tests). An ordinary
+  update is then exactly fix 1. The cost: when the model names the relation differently (say
+  `MOVED_TO` against `LIVES_IN`), fix 3 does nothing and fix 1's behaviour remains. The real-model
+  run of this version is waiting on Codex credits; every other fix 3 number above was re-measured
+  on it.
 - **How a review changed it.** The first version asked FalkorDB for "started at or before" with
   `<=`. On FalkorDB 4.10.3, a range index makes a string `<` or `<=` return every row; 6.0.1 is
   correct (`bench/falkordb_range_index.sh`, `results/falkordb_range_index.txt`). A Sonnet review (standing in for Codex while its credits were out) found it. That check

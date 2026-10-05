@@ -1,6 +1,6 @@
 {
  "revision": "patch:bench/patches/01+03-neighbors.patch",
- "label": "patch:bench/patches/01+03-neighbors.patch, base b7fc30f, patch 8f44fbe",
+ "label": "patch:bench/patches/01+03-neighbors.patch, base b7fc30f, patch 017e8f7",
  "trials": [
   {
    "trial": 0,

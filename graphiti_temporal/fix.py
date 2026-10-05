@@ -237,9 +237,11 @@ async def temporal_neighbors(driver, extracted_edge: EntityEdge, candidates: lis
                              limit: int = TEMPORAL_NEIGHBORS) -> list[EntityEdge]:  # fmt: skip
     """Fix 3: the subject's facts nearest in time to the edge being resolved, if search missed them.
 
-    The same function as upstream/03-backfill-temporal-neighbors.patch: up to `limit` facts
-    starting after the edge and up to `limit` open at its start, same relation name first.
-    Neo4j and FalkorDB only; nothing is added without `valid_at`.
+    The same function as upstream/03-backfill-temporal-neighbors.patch: for a back-filled edge
+    (the subject already has a later fact with the same relation name), up to `limit` facts
+    starting after it and up to `limit` open at its start, same relation name only. Nothing is
+    added for an ordinary update, without `valid_at`, or on providers other than Neo4j and
+    FalkorDB.
     """
     from graphiti_core.driver.driver import GraphProvider
 
@@ -250,14 +252,23 @@ async def temporal_neighbors(driver, extracted_edge: EntityEdge, candidates: lis
         return []
     start = ensure_utc(extracted_edge.valid_at)
     exclude = [e.uuid for e in candidates] + [extracted_edge.uuid]
-    for name in (extracted_edge.name, None):
-        found = [
-            *await _nearest_own_edges(driver, extracted_edge, start, True, exclude, name, limit),
-            *await _nearest_own_edges(driver, extracted_edge, start, False, exclude, name, limit),
-        ]
-        if found:
-            return found
-    return []
+    # Only facts with the same relation name count. Falling back to other relations made an
+    # ordinary move look like a back-fill whenever the subject had a later fact of another kind
+    # (a job started after the move), and showed the model those unrelated facts; with a real
+    # model that cost retirements (FINDINGS.md, "Fix 3 with a real model").
+    name = extracted_edge.name
+    # Only a back-fill needs neighbours: the subject already has a later fact. An ordinary update
+    # (nothing later) is left exactly as fix 1 handles it.
+    later = await _nearest_own_edges(
+        driver, extracted_edge, start, True, [extracted_edge.uuid], name, limit
+    )
+    if not later:
+        return []
+    open_at_start = await _nearest_own_edges(
+        driver, extracted_edge, start, False, exclude, name, limit
+    )
+    shown = set(exclude)
+    return [*(e for e in later if e.uuid not in shown), *open_at_start]
 
 
 def apply_backfill_neighbors() -> None:

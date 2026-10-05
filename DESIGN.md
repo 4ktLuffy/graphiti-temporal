@@ -301,3 +301,14 @@ breakdown gives 56 ms.
     one-sided query (about 17 ms at 1,000 facts), and that number was used to choose the design.
     The same review timed the real function at about 80 ms. The bench now times the patch's own
     function on both databases, and FINDINGS quotes that.
+19. **Fix 3 helped the oracle and hurt the real model.** Every fix 3 measurement used the oracle
+    or an over-eager judge until Codex credits returned. The first real-model run, on ordinary
+    moves where fix 3 should do nothing, retired the current home in 25/28 against fix 1's 30/30.
+    Fix 3's fallback to "any relation" had turned every ordinary move into an apparent back-fill
+    and shown the model unrelated facts. An oracle ignores unrelated candidates, so none of the
+    synthetic runs could see it. Fix 3 now acts only on back-fills of the same relation, and all
+    its synthetic numbers were re-measured; its real-model rerun waits on credits.
+20. **An open question closed by measurement, not argument.** Two homes in one message are
+    resolved in one batch and cannot see each other (0/20 correct with the oracle). With a real
+    model the extraction step ended the earlier home itself in 30/30, so it was never reported as
+    a fault.

@@ -1,6 +1,6 @@
-{"backend": "neo4j", "facts": 10, "returned": 4, "neighbors_p50_ms": 29.2, "neighbors_p95_ms": 31.1, "read_all_p50_ms": 15.9, "read_all_p95_ms": 17.1}
-{"backend": "neo4j", "facts": 100, "returned": 4, "neighbors_p50_ms": 43.8, "neighbors_p95_ms": 47.4, "read_all_p50_ms": 39.7, "read_all_p95_ms": 53.0}
-{"backend": "neo4j", "facts": 1000, "returned": 4, "neighbors_p50_ms": 77.0, "neighbors_p95_ms": 81.7, "read_all_p50_ms": 287.6, "read_all_p95_ms": 316.1}
-{"backend": "falkordb", "facts": 10, "returned": 4, "neighbors_p50_ms": 10.8, "neighbors_p95_ms": 13.1, "read_all_p50_ms": 9.8, "read_all_p95_ms": 12.3}
-{"backend": "falkordb", "facts": 100, "returned": 4, "neighbors_p50_ms": 39.7, "neighbors_p95_ms": 41.4, "read_all_p50_ms": 63.4, "read_all_p95_ms": 65.4}
-{"backend": "falkordb", "facts": 1000, "returned": 4, "neighbors_p50_ms": 63.3, "neighbors_p95_ms": 64.7, "read_all_p50_ms": 611.6, "read_all_p95_ms": 637.9}
+{"backend": "neo4j", "facts": 10, "returned": 4, "neighbors_p50_ms": 29.2, "neighbors_p95_ms": 32.9, "read_all_p50_ms": 16.6, "read_all_p95_ms": 18.5}
+{"backend": "neo4j", "facts": 100, "returned": 4, "neighbors_p50_ms": 46.8, "neighbors_p95_ms": 52.5, "read_all_p50_ms": 40.0, "read_all_p95_ms": 41.8}
+{"backend": "neo4j", "facts": 1000, "returned": 4, "neighbors_p50_ms": 75.1, "neighbors_p95_ms": 84.8, "read_all_p50_ms": 264.5, "read_all_p95_ms": 289.3}
+{"backend": "falkordb", "facts": 10, "returned": 4, "neighbors_p50_ms": 12.2, "neighbors_p95_ms": 18.1, "read_all_p50_ms": 11.2, "read_all_p95_ms": 13.3}
+{"backend": "falkordb", "facts": 100, "returned": 4, "neighbors_p50_ms": 40.2, "neighbors_p95_ms": 41.6, "read_all_p50_ms": 64.2, "read_all_p95_ms": 65.4}
+{"backend": "falkordb", "facts": 1000, "returned": 4, "neighbors_p50_ms": 64.9, "neighbors_p95_ms": 67.2, "read_all_p50_ms": 605.6, "read_all_p95_ms": 642.5}

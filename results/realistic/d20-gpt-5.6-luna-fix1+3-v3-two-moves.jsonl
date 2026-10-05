@@ -1,0 +1,31 @@
+{"meta": {"fix": "1+3", "model": "gpt-5.6-luna", "effort": "low", "embedder": "BAAI/bge-small-en-v1.5", "neo4j": "5.26.2", "argv": ["--n-history", "20", "--trials", "30", "--parallel", "4", "--model", "gpt-5.6-luna", "--fix", "1+3", "--episode", "two-moves", "--out", "results/realistic/d20-gpt-5.6-luna-fix1+3-two-moves.jsonl"], "seconds": 603.7}}
+{"n_history": 20, "seed": 5000, "episode": "two-moves", "open_homes": ["Beirut", "Lima"], "retired": false, "shown": true, "collateral": [], "error": null, "seconds": 74.5, "llm_calls": 5, "tokens": 6682}
+{"n_history": 20, "seed": 5001, "episode": "two-moves", "open_homes": ["Beirut"], "retired": true, "shown": true, "collateral": [], "error": null, "seconds": 75.5, "llm_calls": 5, "tokens": 7015}
+{"n_history": 20, "seed": 5002, "episode": "two-moves", "open_homes": ["Beirut", "Bratislava"], "retired": false, "shown": true, "collateral": [], "error": null, "seconds": 84.1, "llm_calls": 5, "tokens": 16025}
+{"n_history": 20, "seed": 5003, "episode": "two-moves", "open_homes": ["Beirut"], "retired": true, "shown": true, "collateral": [], "error": null, "seconds": 52.7, "llm_calls": 5, "tokens": 3766}
+{"n_history": 20, "seed": 5004, "episode": "two-moves", "open_homes": ["Beirut"], "retired": true, "shown": true, "collateral": [], "error": null, "seconds": 69.0, "llm_calls": 5, "tokens": 6936}
+{"n_history": 20, "seed": 5005, "episode": "two-moves", "open_homes": ["Beirut"], "retired": true, "shown": true, "collateral": [], "error": null, "seconds": 74.8, "llm_calls": 5, "tokens": 6764}
+{"n_history": 20, "seed": 5006, "episode": "two-moves", "open_homes": ["Beirut"], "retired": true, "shown": true, "collateral": [], "error": null, "seconds": 99.0, "llm_calls": 5, "tokens": 6962}
+{"n_history": 20, "seed": 5007, "episode": "two-moves", "open_homes": ["Beirut"], "retired": true, "shown": true, "collateral": [], "error": null, "seconds": 58.7, "llm_calls": 4, "tokens": 3265}
+{"n_history": 20, "seed": 5008, "episode": "two-moves", "open_homes": ["Beirut"], "retired": true, "shown": true, "collateral": [], "error": null, "seconds": 66.9, "llm_calls": 5, "tokens": 7046}
+{"n_history": 20, "seed": 5009, "episode": "two-moves", "open_homes": ["Beirut"], "retired": true, "shown": true, "collateral": [], "error": null, "seconds": 60.2, "llm_calls": 5, "tokens": 18055}
+{"n_history": 20, "seed": 5010, "episode": "two-moves", "open_homes": ["Beirut"], "retired": true, "shown": true, "collateral": [], "error": null, "seconds": 65.3, "llm_calls": 5, "tokens": 6834}
+{"n_history": 20, "seed": 5011, "episode": "two-moves", "open_homes": ["Beirut"], "retired": true, "shown": true, "collateral": [], "error": null, "seconds": 51.8, "llm_calls": 5, "tokens": 15755}
+{"n_history": 20, "seed": 5012, "episode": "two-moves", "open_homes": ["Beirut"], "retired": true, "shown": true, "collateral": [], "error": null, "seconds": 70.5, "llm_calls": 5, "tokens": 6844}
+{"n_history": 20, "seed": 5013, "episode": "two-moves", "open_homes": ["Beirut", "Chisinau"], "retired": false, "shown": true, "collateral": [], "error": null, "seconds": 70.8, "llm_calls": 5, "tokens": 6862}
+{"n_history": 20, "seed": 5014, "episode": "two-moves", "open_homes": ["Beirut", "Riga"], "retired": false, "shown": true, "collateral": [], "error": null, "seconds": 149.9, "llm_calls": 6, "tokens": 18744}
+{"n_history": 20, "seed": 5015, "episode": "two-moves", "open_homes": ["Apia", "Beirut"], "retired": false, "shown": true, "collateral": [], "error": null, "seconds": 59.6, "llm_calls": 5, "tokens": 7020}
+{"n_history": 20, "seed": 5016, "episode": "two-moves", "open_homes": ["Beirut", "Zurich"], "retired": false, "shown": true, "collateral": [], "error": null, "seconds": 61.8, "llm_calls": 5, "tokens": 6803}
+{"n_history": 20, "seed": 5017, "episode": "two-moves", "open_homes": ["Beirut", "Kyiv"], "retired": false, "shown": true, "collateral": [], "error": null, "seconds": 96.3, "llm_calls": 5, "tokens": 6804}
+{"n_history": 20, "seed": 5018, "episode": "two-moves", "open_homes": ["Beirut"], "retired": true, "shown": true, "collateral": [], "error": null, "seconds": 54.4, "llm_calls": 5, "tokens": 6894}
+{"n_history": 20, "seed": 5019, "episode": "two-moves", "open_homes": ["Beirut"], "retired": true, "shown": true, "collateral": [], "error": null, "seconds": 76.2, "llm_calls": 4, "tokens": 3154}
+{"n_history": 20, "seed": 5020, "episode": "two-moves", "open_homes": ["Beirut"], "retired": true, "shown": true, "collateral": [], "error": null, "seconds": 87.1, "llm_calls": 5, "tokens": 3687}
+{"n_history": 20, "seed": 5021, "episode": "two-moves", "open_homes": ["Beirut"], "retired": true, "shown": true, "collateral": [], "error": null, "seconds": 60.9, "llm_calls": 5, "tokens": 6777}
+{"n_history": 20, "seed": 5022, "episode": "two-moves", "open_homes": ["Beirut"], "retired": true, "shown": true, "collateral": [], "error": null, "seconds": 54.1, "llm_calls": 5, "tokens": 6795}
+{"n_history": 20, "seed": 5023, "episode": "two-moves", "open_homes": ["Beirut", "Riga"], "retired": false, "shown": true, "collateral": [], "error": null, "seconds": 86.1, "llm_calls": 4, "tokens": 14393}
+{"n_history": 20, "seed": 5024, "episode": "two-moves", "open_homes": ["Beirut", "Muscat"], "retired": false, "shown": true, "collateral": [], "error": null, "seconds": 58.0, "llm_calls": 5, "tokens": 7241}
+{"n_history": 20, "seed": 5025, "episode": "two-moves", "open_homes": ["Beirut"], "retired": true, "shown": true, "collateral": [], "error": null, "seconds": 108.2, "llm_calls": 5, "tokens": 16786}
+{"n_history": 20, "seed": 5026, "episode": "two-moves", "open_homes": ["Beirut"], "retired": true, "shown": true, "collateral": [], "error": null, "seconds": 70.7, "llm_calls": 5, "tokens": 3846}
+{"n_history": 20, "seed": 5027, "episode": "two-moves", "open_homes": ["Beirut"], "retired": true, "shown": true, "collateral": [], "error": null, "seconds": 58.4, "llm_calls": 5, "tokens": 7006}
+{"n_history": 20, "seed": 5028, "episode": "two-moves", "open_homes": ["Beirut"], "retired": true, "shown": true, "collateral": [], "error": null, "seconds": 88.6, "llm_calls": 5, "tokens": 6663}
+{"n_history": 20, "seed": 5029, "episode": "two-moves", "open_homes": ["Beirut"], "retired": true, "shown": true, "collateral": [], "error": null, "seconds": 65.4, "llm_calls": 5, "tokens": 6980}
