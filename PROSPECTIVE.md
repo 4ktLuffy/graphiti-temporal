@@ -13,6 +13,7 @@ fixes: the frozen scenarios run on the fix's parent and on the fix.
 parent. `bench/prospective.py --check-freeze` proves the gate used is the frozen one.
 
 **Why.** Every earlier number in GATE.md was measured by the people who built the gate, on bugs
-they had seen or written. This one cannot be tuned: the bugs do not exist yet.
+they had seen or written. These fixes did not exist when the gate was frozen, so it could not be
+tuned to them.
 
 **Results so far.** None. They will be reported as they come, misses included.

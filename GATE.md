@@ -121,7 +121,7 @@ exactly the oracle's outcome.
 - **The re-measured count is 1 of 13**, counted as after the fact, because the persona was
   designed after seeing these fixes (`results/gate/real-regressions.jsonl`; the frozen-scenario
   run is `real-regressions-v2-frozen29.jsonl`).
-- **The prospective test.** The honest test is the next fixes Graphiti merges. It is
+- **The prospective test.** The real test is the fixes Graphiti merges next. It is
   pre-registered in [PROSPECTIVE.md](PROSPECTIVE.md), with the frozen gate's fingerprint
   committed publicly.
 
@@ -216,7 +216,7 @@ history while the rule still fails on two consecutive runs.
 
 The traced back-fill failure of fix 1 shrinks from 12 homes plus 4 of another person's facts to
 8 homes plus those 4. That is 12 facts competing for 10 places, and removing any one makes the
-failure vanish. That is the mechanism, read directly off the minimal case.
+failure vanish, which shows the mechanism.
 
 ## Audit of a live graph
 

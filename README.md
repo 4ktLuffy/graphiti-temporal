@@ -1,7 +1,7 @@
 # graphiti-temporal
 
-**Graphiti forgets to retire an old fact once the subject has a long history. This finds it,
-fixes it, measures it, and ships a PR gate and fuzzer for Graphiti's memory logic.**
+**Graphiti can fail to retire the current fact once a subject has a long history. This repo
+has the fix, the measurements behind it, and a PR gate and fuzzer for Graphiti's memory logic.**
 
 [Graphiti](https://github.com/getzep/graphiti) invalidates a fact when a newer one contradicts it,
 so you can ask what is true now. To find what a new fact contradicts, it searches for 10
@@ -22,8 +22,8 @@ reaches 0/12 at 50 past homes (12/12 with the fix); with a perfect model in plac
 starts at 10 past values. Scope and caveats: FINDINGS.md, F1.
 
 **Upstream:** issue [#1956](https://github.com/getzep/graphiti/issues/1956), PR
-[#1957](https://github.com/getzep/graphiti/pull/1957) (28 lines, CI green, awaiting review). Or
-today, at runtime:
+[#1957](https://github.com/getzep/graphiti/pull/1957) (28 lines, CI green, awaiting review). It
+can also be applied at runtime:
 
 ```python
 from graphiti_temporal import fix
@@ -55,8 +55,8 @@ memory, in about a minute, with no model:
   fix is safe, and the mistakes this repository made and corrected. One of them is a first
   version of the fix that an independent review proved wrong.
 - `upstream/01-invalidation-candidates.patch`: the fix as a change to graphiti-core, with tests
-  in Graphiti's style. It applies to main at `5d47d4d`. Graphiti's CI unit suite passes with it,
-  and the new tests fail when the fix, or its use of duplicate candidates, is reverted.
+  in Graphiti's style. It applies cleanly to main at `b7fc30f`. Graphiti's CI unit suite passes
+  with it, and the new tests fail when the fix, or its use of duplicate candidates, is reverted.
 - `upstream/03-backfill-temporal-neighbors.patch`: fix 3, for the case fix 1 leaves open. An
   older fact added late must end where the subject's next fact begins; at depth that fact is
   crowded out of the candidates. Fix 3 adds the subject's nearest facts in time as candidates.
@@ -77,7 +77,7 @@ memory, in about a minute, with no model:
 **Why the fix is safe.** The filter keeps out only facts that ended before the earliest start
 among the new fact and its possible duplicates. Graphiti's own interval rules would ignore those
 facts anyway. Through Graphiti's real resolver, this repository checked 2,000 random histories and
-an independent review checked 30,000 more. Neither found a change to which fact gets resolved, its
+a separate Codex review checked 30,000 more. Neither found a change to which fact gets resolved, its
 dates, or what gets retired. The two exceptions (inverted intervals, and `expired_at` on an
 already-ended fact) are documented and tested. The obvious alternative, "search only facts still
 valid", changes 284 of 400 decisions, because it breaks back-filling.
@@ -87,26 +87,27 @@ valid", changes 284 of 400 decisions, because it breaks back-filling.
 ```bash
 docker run -d --name gt-neo4j -p 7687:7687 -e NEO4J_AUTH=neo4j/$NEO4J_PASSWORD neo4j:5.26.2
 uv sync --extra dev
-uv run pytest                            # 2010 tests, no database or model needed
+uv run pytest                            # 2,039 tests, no database or model needed
 NEO4J_PASSWORD=... bench/run_oracle.sh   # oracle sweeps and as-of search, about 30 min
 NEO4J_PASSWORD=... bench/run_real.sh     # real-model arms; needs the Codex CLI signed in
 uv run python bench/summarize.py         # every table, from results/
 ```
 
-Pinned to graphiti-core `4f98b7c` (0.30.2) and Neo4j 5.26.2, the version in Graphiti's CI. The
+The first measurements used graphiti-core `4f98b7c` (0.30.2); the later ones, including the
+realistic run and fix 3, use main at `b7fc30f`. Neo4j is 5.26.2, the version in Graphiti's CI. The
 real-model runs use the Codex CLI as Graphiti's LLM (`graphiti_temporal/codex_llm.py`), so no API
 key is needed.
 
 ## Limits
 
-- Measured on Neo4j only. FalkorDB, Kuzu and Neptune share the invalidation code, but their
-  search paths differ.
+- The model-based measurements are on Neo4j only. The regression tests also run on FalkorDB,
+  and the fuzzer on FalkorDB and Kuzu. Neptune is not tested.
 - Most runs use a lexical hash embedder, so they need no model. One run uses a semantic embedder,
   paraphrased facts and other people in the group (FINDINGS.md, "realistic retrieval"): the
-  current home was retired 12/30 times on main and 30/30 with the fix, at 20 past homes, with
-  one judge model so far.
-- Real-model arms are 12 seeds each, with one model.
+  current home was retired 12/30 times on main and 30/30 with the fix, at 20 past homes.
+- All real-model runs use one model (gpt-5.6-luna), with 12 or 30 seeds per arm. Fix 3 has not
+  yet been run with a real model in its current form.
 
 ## License
 
-Apache-2.0, the same as Graphiti.
+Apache-2.0
